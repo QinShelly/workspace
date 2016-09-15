@@ -1,0 +1,3 @@
+[submodule "Vertica/vertica-kit"]
+	path = Vertica/vertica-kit
+	url = git://github.com/NorbertKrupa/vertica-kit.git

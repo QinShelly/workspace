@@ -1,0 +1,21 @@
+find . -name "*.java" -exec grep -n -H "new .*Db.*" {} \;
+
+find . -name "*.java" -not -regex ".*Db\.java" -exec grep -n -H "new .*Db.*" {} \;
+
+wget --mirror --html-extension --convert-links -P c:\wget_files\example
+
+curl -d "birthday=1980&press=ok" www.hotmail.com
+
+Ruby (open Excel)
+
+Ant (clean files & zip)
+
+svn st | grep '^\?' | tr '^\?' ' ' | sed 's/[]*//' sed 's/[ ]/\\ /g' | xargs svn add
+
+Ruby (split SQL query)
+
+Groovy （generate mapping file）
+
+dbDeploy
+
+C# (SVN to wiki)

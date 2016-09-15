@@ -1,0 +1,383 @@
+([PRODUCT].[UPC].[UPC].Members,[Measures].[Store On Hand Volume Cases Internal]) = [Measures].[Store On Hand Volume Units Internal] * 1.0/ [PRODUCT].[UPC].CURRENTMEMBER.Properties( "VENDOR PACK QTY");
+([PRODUCT].[UPC].[UPC].Members,[Measures].[Store On Hand Volume Equivalent Units Internal]) = [Measures].[Store On Hand Volume Units] * [PRODUCT].[UPC].CURRENTMEMBER.Properties("EQUIVALENT UNIT");
+
+[Measures].[Store On Hand Volume Equivalent Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store On Hand Volume Equivalent Units Internal]);
+[Measures].[Store On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store On Hand Volume Units Internal]);
+[Measures].[Avg Store On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store On Hand Volume Units Internal]);
+[Measures].[Store On Hand Volume Units Non-Negative] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store On Hand Volume Units Non-Negative Internal]);
+[Measures].[ASC Distribution Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[ASC Distribution Flag Internal]);
+[Measures].[CAO Order Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[CAO Order Flag Internal]);
+[Measures].[Cost Retail Authorized Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Cost Retail Authorized Flag Internal]);
+[Measures].[DSD_IND] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[DSD_IND Internal]);
+[Measures].[Net Cost Per Unit] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Net Cost Per Unit Internal]);
+[Measures].[POG Authorized Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[POG Authorized Flag Internal]);
+[Measures].[POG Commodity Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[POG Commodity Flag Internal]);
+[Measures].[POG_IND] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[POG_IND Internal]);
+[Measures].[Promotion Calendar Indicator] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Promotion Calendar Indicator Internal]);
+[Measures].[Store BRI Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store BRI Amount Internal]);
+[Measures].[Avg Store BRI Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store BRI Amount Internal]);
+[Measures].[Store BRI Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store BRI Volume Units Internal]);
+[Measures].[Store BRI Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store BRI Volume Cases Internal]);
+[Measures].[Avg Store BRI Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store BRI Volume Cases Internal]);
+[Measures].[Avg Store BRI Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store BRI Volume Units Internal]);
+[Measures].[Store Mezzanine On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Mezzanine On Hand Amount Internal]);
+[Measures].[Avg Store Mezzanine On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Mezzanine On Hand Amount Internal]);
+[Measures].[Store Mezzanine On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Mezzanine On Hand Volume Units Internal]);
+[Measures].[Store Mezzanine On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Mezzanine On Hand Volume Cases Internal]);
+[Measures].[Avg Store Mezzanine On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Mezzanine On Hand Volume Cases Internal]);
+[Measures].[Avg Store Mezzanine On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Mezzanine On Hand Volume Units Internal]);
+[Measures].[Store On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store On Hand Amount Internal]);
+[Measures].[Avg Store On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store On Hand Amount Internal]);
+[Measures].[Store On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store On Hand Volume Cases Internal]);
+[Measures].[Avg Store On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store On Hand Volume Cases Internal]);
+[Measures].[Store Secondary Shelf Capacity Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Secondary Shelf Capacity Amount Internal]);
+[Measures].[Store Secondary Shelf Capacity Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Secondary Shelf Capacity Volume Units Internal]);
+[Measures].[Store Secondary Shelf Capacity Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Secondary Shelf Capacity Volume Cases Internal]);
+[Measures].[Store Shelf Capacity Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Shelf Capacity Amount Internal]);
+[Measures].[Store Shelf Capacity Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Shelf Capacity Volume Units Internal]);
+[Measures].[Store Shelf Capacity Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Shelf Capacity Volume Cases Internal]);
+[Measures].[Store Shelf On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Shelf On Hand Amount Internal]);
+[Measures].[Avg Store Shelf On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Shelf On Hand Amount Internal]);
+[Measures].[Store Shelf On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Shelf On Hand Volume Units Internal]);
+[Measures].[Store Shelf On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Store Shelf On Hand Volume Cases Internal]);
+[Measures].[Avg Store Shelf On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Shelf On Hand Volume Cases Internal]);
+[Measures].[Avg Store Shelf On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Shelf On Hand Volume Units Internal]);
+[Measures].[WIC Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[WIC Flag Internal]);
+[Measures].[Avg Store Receipts Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[Avg Store Receipts Volume Units Internal]);
+[Measures].[RS Demand Volume Units Since Last Scan] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[RS Demand Volume Units Since Last Scan Internal]);
+[Measures].[RS Demand Amount Since Last Scan] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[RS Demand Amount Since Last Scan Internal]);
+
+--REPEAT START--
+	([LY Range], [Measures].[LY $(CoreMeasureName)]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[$(CoreMeasureName)]);
+--REPEAT END--
+
+-- LY Range metrics
+
+([LY Range], [Measures].[LY DC OOS Indicator]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[DC OOS Indicator]);
+([LY Range], [Measures].[LY OOS Indicator]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[OOS Indicator]);
+([LY Range], [Measures].[LY STORE SALES Count]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[STORE SALES Count]);
+
+([LY Range], [Measures].[LY DC On Hand Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[DC On Hand Volume Units]);
+([LY Range], [Measures].[LY Avg DC On Hand Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Avg DC On Hand Volume Units]);
+([LY Range], [Measures].[LY Total Sales Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Total Sales Volume Units]);
+([LY Range], [Measures].[LY Promoted Sales Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Promoted Sales Volume Units]);
+([LY Range], [Measures].[LY Regular Sales Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Regular Sales Volume Units]);
+([LY Range], [Measures].[LY Store On Hand Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store On Hand Volume Units]);
+([LY Range], [Measures].[LY Avg Store On Hand Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Avg Store On Hand Volume Units]);
+([LY Range], [Measures].[LY Store Ordered Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store Ordered Volume Units]);
+([LY Range], [Measures].[LY Store Receipts Volume Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store Receipts Volume Units]);
+
+([LY Range],[Measures].[LY DC On Hand Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[DC On Hand Volume Cases]);
+([LY Range],[Measures].[LY Total Sales Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Total Sales Volume Cases]);
+([LY Range],[Measures].[LY Promoted Sales Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Promoted Sales Volume Cases]);
+([LY Range],[Measures].[LY Regular Sales Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Regular Sales Volume Cases]);
+([LY Range],[Measures].[LY Store On Hand Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store On Hand Volume Cases]);
+([LY Range],[Measures].[LY Store Ordered Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store Ordered Volume Cases]);
+([LY Range],[Measures].[LY Store Receipts Volume Cases]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store Receipts Volume Cases]);
+
+([LY Range], [Measures].[LY Total Sales Amount]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Total Sales Amount]);
+([LY Range], [Measures].[LY Promoted Sales Amount]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Promoted Sales Amount]);
+([LY Range], [Measures].[LY Regular Sales Amount]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Regular Sales Amount]);
+
+([LY Range], [Measures].[LY DC On Hand Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[DC On Hand Volume Equivalent Units]);
+([LY Range], [Measures].[LY Total Sales Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Total Sales Volume Equivalent Units]);
+([LY Range], [Measures].[LY Promoted Sales Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Promoted Sales Volume Equivalent Units]);
+([LY Range], [Measures].[LY Regular Sales Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Regular Sales Volume Equivalent Units]);
+([LY Range], [Measures].[LY Store On Hand Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store On Hand Volume Equivalent Units]);
+([LY Range], [Measures].[LY Store Ordered Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store Ordered Volume Equivalent Units]);
+([LY Range], [Measures].[LY Store Receipts Volume Equivalent Units]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store Receipts Volume Equivalent Units]);
+
+([LY Range],[Measures].[LY Store On Hand Volume Units Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store On Hand Volume Units]);
+([LY Range],[Measures].[LY Avg Store On Hand Volume Units Internal]) =([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Avg Store On Hand Volume Units]);
+([LY Range],[Measures].[LY Display Indicator Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Display Indicator]);
+([LY Range],[Measures].[LY Facing Quantity Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Facing Quantity]);
+([LY Range],[Measures].[LY Shelf Capacity Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Shelf Capacity]);
+([LY Range],[Measures].[LY Shelf Min Quantity Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Shelf Min Quantity]);
+([LY Range],[Measures].[LY CAO Order Flag Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[CAO Order Flag Internal]);
+([LY Range],[Measures].[LY Store On Hand Volume Cases Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store On Hand Volume Cases]);
+([LY Range],[Measures].[LY Avg Store On Hand Volume Cases Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Avg Store On Hand Volume Cases]);
+([LY Range],[Measures].[LY Store On Hand Volume Units Non-Negative Internal]) = ([Calendar].[Date].CurrentMember.lag(1092), [Measures].[Store On Hand Volume Units Non-Negative]);
+
+[Measures].[LY Store On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store On Hand Volume Units Internal]);
+[Measures].[LY Avg Store On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store On Hand Volume Units Internal]);
+[Measures].[LY ASC Distribution Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY ASC Distribution Flag Internal]);
+[Measures].[LY CAO Order Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY CAO Order Flag Internal]);
+[Measures].[LY Cost Retail Authorized Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Cost Retail Authorized Flag Internal]);
+[Measures].[LY DSD_IND] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY DSD_IND Internal]);
+[Measures].[LY Net Cost Per Unit] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Net Cost Per Unit Internal]);
+[Measures].[LY POG Authorized Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY POG Authorized Flag Internal]);
+[Measures].[LY POG Commodity Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY POG Commodity Flag Internal]);
+[Measures].[LY POG_IND] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY POG_IND Internal]);
+[Measures].[LY Promotion Calendar Indicator] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Promotion Calendar Indicator Internal]);
+[Measures].[LY Store BRI Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store BRI Amount Internal]);
+[Measures].[LY Avg Store BRI Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store BRI Amount Internal]);
+[Measures].[LY Store BRI Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store BRI Volume Units Internal]);
+[Measures].[LY Store BRI Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store BRI Volume Cases Internal]);
+[Measures].[LY Avg Store BRI Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store BRI Volume Cases Internal]);
+[Measures].[LY Avg Store BRI Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store BRI Volume Units Internal]);
+[Measures].[LY Store Mezzanine On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Mezzanine On Hand Amount Internal]);
+[Measures].[LY Avg Store Mezzanine On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store Mezzanine On Hand Amount Internal]);
+[Measures].[LY Store Mezzanine On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Mezzanine On Hand Volume Units Internal]);
+[Measures].[LY Store Mezzanine On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Mezzanine On Hand Volume Cases Internal]);
+[Measures].[LY Avg Store Mezzanine On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store Mezzanine On Hand Volume Cases Internal]);
+[Measures].[LY Avg Store Mezzanine On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store Mezzanine On Hand Volume Units Internal]);
+[Measures].[LY Store On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store On Hand Amount Internal]);
+[Measures].[LY Avg Store On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store On Hand Amount Internal]);
+[Measures].[LY Store On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store On Hand Volume Cases Internal]);
+[Measures].[LY Avg Store On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store On Hand Volume Cases Internal]);
+[Measures].[LY Store Secondary Shelf Capacity Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Secondary Shelf Capacity Amount Internal]);
+[Measures].[LY Store Secondary Shelf Capacity Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Secondary Shelf Capacity Volume Units Internal]);
+[Measures].[LY Store Secondary Shelf Capacity Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Secondary Shelf Capacity Volume Cases Internal]);
+[Measures].[LY Store Shelf Capacity Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Shelf Capacity Amount Internal]);
+[Measures].[LY Store Shelf Capacity Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Shelf Capacity Volume Units Internal]);
+[Measures].[LY Store Shelf Capacity Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Shelf Capacity Volume Cases Internal]);
+[Measures].[LY Store Shelf On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Shelf On Hand Amount Internal]);
+[Measures].[LY Avg Store Shelf On Hand Amount] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store Shelf On Hand Amount Internal]);
+[Measures].[LY Store Shelf On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Shelf On Hand Volume Units Internal]);
+[Measures].[LY Store Shelf On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Store Shelf On Hand Volume Cases Internal]);
+[Measures].[LY Avg Store Shelf On Hand Volume Cases] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store Shelf On Hand Volume Cases Internal]);
+[Measures].[LY Avg Store Shelf On Hand Volume Units] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY Avg Store Shelf On Hand Volume Units Internal]);
+[Measures].[LY WIC Flag] = sum({existing [CALENDAR].[Ahold Ad Calendar Name].[Ahold Ad Calendar Name].MEMBERS},[Measures].[LY WIC Flag Internal]);
+
+[Measures].[Store On Hand Volume Units Modeled] = null;
+
+[Measures].[Store Out Of Stock Indicator Modeled] = null;
+
+[Measures].[Store Out Of Stock Indicator Modeled Count] = null;
+
+([D0], [Measures].[Store On Hand Volume Units Modeled]) = ([DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]);
+
+([D1], [Measures].[Store On Hand Volume Units Modeled]) = ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+                                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx])
+                                                     - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx]);
+
+([D2], [Measures].[Store On Hand Volume Units Modeled]) = ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+                                    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+                                    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx]);
+
+([D3], [Measures].[Store On Hand Volume Units Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx]);
+
+([D4], [Measures].[Store On Hand Volume Units Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx]);
+
+([D5], [Measures].[Store On Hand Volume Units Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx]);
+
+([D6], [Measures].[Store On Hand Volume Units Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store On Hand Volume Units Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store On Hand Volume Units Modeledx]);
+
+
+([D0], [Measures].[Store Out Of Stock Indicator Modeled]) = ([DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]);
+
+([D1], [Measures].[Store Out Of Stock Indicator Modeled]) = ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+                                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx])
+                                                     - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx]);
+
+([D2], [Measures].[Store Out Of Stock Indicator Modeled]) = ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+                                    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+                                    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx]);
+
+([D3], [Measures].[Store Out Of Stock Indicator Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx]);
+
+([D4], [Measures].[Store Out Of Stock Indicator Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx]);
+
+([D5], [Measures].[Store Out Of Stock Indicator Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx]);
+
+([D6], [Measures].[Store Out Of Stock Indicator Modeled]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx]);
+
+([D0], [Measures].[Store Out Of Stock Indicator Modeled Count]) = ([DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]);
+
+([D1], [Measures].[Store Out Of Stock Indicator Modeled Count]) = ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+                                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count])
+                                                     - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count]);
+
+([D2], [Measures].[Store Out Of Stock Indicator Modeled Count]) = ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+                                    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+                                    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+                                    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count]);
+
+([D3], [Measures].[Store Out Of Stock Indicator Modeled Count]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count]);
+
+([D4], [Measures].[Store Out Of Stock Indicator Modeled Count]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count]);
+
+([D5], [Measures].[Store Out Of Stock Indicator Modeled Count]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count]);
+
+([D6], [Measures].[Store Out Of Stock Indicator Modeled Count]) = 
+([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    + ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Store Out Of Stock Indicator Modeledx Count]) 
+    - ([Calendar].[Date].CURRENTMEMBER, [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count])
+    - ([Calendar].[Date].CURRENTMEMBER.lag(3).lag(3).lag(3).lag(3).lag(3), [DISTINCT TYPE].[KEY TYPE].&[2], [Last Store Out Of Stock Indicator Modeledx Count]);
+
+
+create hidden set [LastCalendarSet] as filter([PD],[Calendar].[Date].currentmember.properties("key1")="155");
+(INTERSECT(LastCalendarSet, [D0]), [Measures].[Plan Day Count Internal]) = 
+iif(
+    ([Calendar].[Date].currentmember,[Measures].[Plan Item Count Internal])>0  or 
+    ([Calendar].[Date].currentmember.prevmember,[Measures].[Plan Item Count Internal])>0 or 
+    ([Calendar].[Date].currentmember.prevmember.prevmember,[Measures].[Plan Item Count Internal])>0  
+    ,1,null
+);
+(INTERSECT(LastCalendarSet, [D1]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D2]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D3]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D4]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D5]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D6]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet,[FirstPartialWeek]), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(-3), [Measures].[Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet,except([WeeklyDSDaysFinal],[PD])), [Measures].[Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[Plan Day Count Internal]);
+(except(PD,[LastCalendarSet]),[Measures].[Plan Day Count Internal])=null;
+([Calendar].[Date].[Date], [Measures].[Plan Day Count]) = ([CALENDAR].[Date].CURRENTMEMBER,[Measures].[Plan Day Count Internal]);
+
+(INTERSECT(LastCalendarSet, [D0]), [Measures].[LY Plan Day Count Internal]) = 
+iif(
+    ([Calendar].[Date].currentmember,[Measures].[LY Plan Item Count Internal])>0  or 
+    ([Calendar].[Date].currentmember.prevmember,[Measures].[LY Plan Item Count Internal])>0 or 
+    ([Calendar].[Date].currentmember.prevmember.prevmember,[Measures].[LY Plan Item Count Internal])>0 
+    ,1,null
+);
+(INTERSECT(LastCalendarSet, [D1]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D2]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D3]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D4]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D5]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D6]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet,[FirstPartialWeek]), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(-3), [Measures].[LY Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet,except([WeeklyDSDaysFinal],[PD])), [Measures].[LY Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[LY Plan Day Count Internal]);
+(except(PD,[LastCalendarSet]),[Measures].[LY Plan Day Count Internal])=null;
+([Calendar].[Date].[Date], [Measures].[LY Plan Day Count]) = ([CALENDAR].[Date].CURRENTMEMBER,[Measures].[LY Plan Day Count Internal]);
+
+(INTERSECT(LastCalendarSet, [D0]), [Measures].[2YA Plan Day Count Internal]) = 
+iif(
+    ([Calendar].[Date].currentmember,[Measures].[2YA Plan Item Count Internal])>0  or 
+    ([Calendar].[Date].currentmember.prevmember,[Measures].[2YA Plan Item Count Internal])>0 or 
+    ([Calendar].[Date].currentmember.prevmember.prevmember,[Measures].[2YA Plan Item Count Internal])>0 
+    ,1,null
+);
+(INTERSECT(LastCalendarSet, [D1]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D2]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D3]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D4]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D5]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet, [D6]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet,[FirstPartialWeek]), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(-3), [Measures].[2YA Plan Day Count Internal]);
+(INTERSECT(LastCalendarSet,except([WeeklyDSDaysFinal],[PD])), [Measures].[2YA Plan Day Count Internal]) = ([CALENDAR].[Date].currentmember.lag(3), [Measures].[2YA Plan Day Count Internal]);
+(except(PD,[LastCalendarSet]),[Measures].[2YA Plan Day Count Internal])=null;
+([Calendar].[Date].[Date], [Measures].[2YA Plan Day Count]) = ([CALENDAR].[Date].CURRENTMEMBER,[Measures].[2YA Plan Day Count Internal]);

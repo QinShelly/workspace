@@ -1,0 +1,18 @@
+
+ select 'KELLOGGS_AHOLD' as name union all
+
+ select 'KELLOGGS_AHOLD' as name union all
+
+ select 'KELLOGGS_AHOLD' as name union all
+
+ select 'KELLOGGS_AHOLD' as name union all
+
+ select 'KELLOGGS_AHOLD' as name union all
+
+ select 'KELLOGGS_AHOLD' as name union all
+
+ select 'KMCLRK_AHOLD' as name union all
+
+ select 'KMCLRK_AHOLD' as name union all
+
+ select 'KMCLRK_AHOLD' as name union all

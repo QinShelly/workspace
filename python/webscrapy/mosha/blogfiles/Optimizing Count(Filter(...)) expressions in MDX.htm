@@ -1,0 +1,857 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+<head>
+<title>Microsoft OLAP by Mosha Pasumansky : Optimizing Count(Filter(...)) expressions in MDX</title>
+<meta name="keywords" content="performance,mdx,katmai" />
+<meta name="description" content="As the readers of my blog know, bulk evaluation mode (called &quot;block computation mode&quot; in Katmai) delivers much better performance in MDX than the cell-by-cell evaluation mode. Therefore the most important optimization technique with MDX in Analysis Services" />
+<meta name="GENERATOR" content="CommunityServer 2.1 SP2 (Build: 61129.1)" />
+<link rel="pingback" href="http://sqlblog.com/blogs/mosha/pingback.aspx" />
+<link rel="stylesheet" href="/Themes/Blogs/default/style/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/Common.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/Blog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/common_print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/blog_print.css" type="text/css" media="print" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" title="Microsoft OLAP by Mosha Pasumansky (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/rss.aspx"  />
+<link rel="alternate" type="application/atom+xml" title="Microsoft OLAP by Mosha Pasumansky (Atom 1.0)" href="http://sqlblog.com/blogs/mosha/atom.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="SQLblog.com Latest Blog Posts (RSS 2.0)" href="http://sqlblog.com/blogs/MainFeed.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="Optimizing Count(Filter(...)) expressions in MDX Comment RSS (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/commentrss.aspx?PostID=3480"  />
+
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="/Utility/global.js?Version=2.1.61129.1" type="text/javascript"></script>
+            <style type="text/css"> body { font-size: 84%; } </style>
+            
+			
+			
+			
+       <meta name="y_key" content="002a6e7707c0b97d" />
+</head>
+
+	<body>
+		<form name="aspnetForm" method="post" action="/blogs/mosha/archive/2007/11/22/optimizing-count-filter-expressions-in-mdx.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFN2N0bDAwJF8kY3RsMDAkXyRjdGwwMCRjdGwwMCRiaGNyJHQkXyRUaXRsZUJhclNlYXJjaFRleHQXE+usIilEF/w0tXjSjetU4FnTEQ==" />
+</div>
+
+<script language="javascript" type="text/javascript" src="/Utility/telligent_web_ui/1_0_3/Telligent_Modal.js"></script><script language="javascript" type="text/javascript">
+// <![CDATA[
+Telligent_Modal.Configure('/utility/loading.htm',['CommonModal'],['CommonModalTitle'],['CommonModalClose'],['CommonModalContent'],['CommonModalFooter'],['CommonModalResize'],['CommonModalMask'],100);
+// ]]>
+</script>
+						
+			
+				<div id="CommonOuter"><div id="Common">
+					<div id="CommonHeader">
+						
+<div class="CommonTitleBar">
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td class="CommonTitleBarImage">
+				<a href="/"><img src="/Themes/default/images/common/title.gif"  border=0 /></a>
+			</td>
+			<td class="CommonTitleBarTitleArea" width="100%"> <!-- nowrap="true"  -->
+				<!-- <h1 class="CommonTitleBarTitle"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSiteName" title="&lt;p>THE SQL Server Blog Spot on the Web&lt;/p>" href="/">SQLblog.com - The SQL Server blog spot on the web</a></h1> -->
+				<div class="CommonTitleBarDescription"><p>THE SQL Server Blog Spot on the Web</p></div>
+			</td>
+			<td class="CommonTitleBarSearchArea" nowrap="true">
+				<div class="CommonUserArea">
+					
+<div id="welcome">
+	
+			Welcome to SQLblog.com - The SQL Server blog spot on the web
+<a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Login" href="/login.aspx?ReturnUrl=%2fblogs%2fmosha%2farchive%2f2007%2f11%2f22%2foptimizing-count-filter-expressions-in-mdx.aspx">Sign in</a> | <a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Register" href="/user/CreateUser.aspx?ReturnUrl=/blogs/mosha/archive/2007/11/22/optimizing-count-filter-expressions-in-mdx.aspx"></a>
+
+
+
+		
+
+	 |  <a href="/languages/en-US/docs/faq.aspx"></a>
+</div>
+  
+				</div>
+				<div class="CommonSearch">
+					<table cellpadding="0" cellspacing="0" border="0" align="right"><tr valign="middle"><td nowrap="true">
+					<input name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchText" type="text" maxlength="64" size="15" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchText" onkeydown="KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event);" />
+					 in <select name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchDropDownList" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchDropDownList">
+	<option value="S:24">Microsoft OLAP by Mosha Pasumansky</option>
+	<option value=":">(Entire Site)</option>
+
+</select>
+					</td><td>
+					<span class="CommonSearchButtonOuter"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton" class="CommonSearchButton" href="javascript:__doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')">Search</a></span>
+					</td></tr></table>
+				</div>
+			</td>
+			<td style="padding-right: 5px">
+<!-- Begin -  Site: SQLblog Zone: Button Title Bar -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 20;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" width="56" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Title Bar -->
+			    <!--
+			    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_black_vertical_56x60_hostby.gif" /></a>
+			    -->
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="CommonTabBar">
+	
+	
+
+<script language="javascript">
+function tabOver(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTabHover';
+}
+function tabOut(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTab';
+}
+</script>
+
+
+		<div class="CommonTabBarInner">
+		<table cellspacing="0" cellpadding="0" border="0">
+		<tr valign="middle">
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/">Home</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripSelectedTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/blogs/default.aspx">Blogs</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/files/default.aspx">Downloads</a></td>
+	
+	    <td class="CommonSimpleTabStripTab" width="100%">
+	        &nbsp;
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <a href="/blogs/Opml.aspx">Opml</a>
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <!-- <a href="/blogs/MainFeed.aspx"><img width="12" height="12" src="/themes/default/images/common/feed-icon-12x12.png" border="0" />&nbsp;RSS</a> -->
+            <a href="/blogs/MainFeed.aspx"><img src="/themes/default/images/common/feed-icon-12x12.png" border="0" alt="View as RSS news feed in XML" style="" /></a>
+	    </td>
+		</tr>
+		</table>
+		</div>
+	
+
+</div>
+					</div>
+
+					<div id="CommonBody">
+<!-- Begin -  Site: SQLblog Zone: Site Tracking -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 1;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" width="1" height="1" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Site Tracking -->
+<!-- Begin -  Google Analytics Tracking -->
+<!--script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script-->
+<!--script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3578479-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script-->
+<!-- End -  Google Analytics Tracking -->
+						<table cellspacing="0" cellpadding="0" border="0" width="100%" id="CommonBodyTable">
+							<tr>
+								<td valign="top" id="CommonLeftColumn">
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 8;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Button Left Top -->		                                            
+		                                            <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft" >
+                                        	<div class="CommonSidebarAreaLeft">
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Left -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 6;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" width="120" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Left -->		                                        
+		                                            <!--
+		                                            <div  style="width:120px; height:360px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        120 x 360
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Middle -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 9;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Button Left Middle -->		                                        
+		                                           <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+								</td>
+								
+								<td valign="top" width="100%" id="CommonBodyColumn">
+								    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;" width="100%">
+								        <tr><td align="center">
+							            	<div class="CommonStandardTopAdArea" >
+<!-- Begin -  Site: SQLblog Zone: Banner Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 3;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Top -->
+                                                <!--	                                           
+                                                <div style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Top Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								        <tr><td>
+									        
+	    <div class="CommonContentArea">
+	        
+<h2 class="CommonTitle"><a id="ctl00___ctl00___ctl00_ctl00_bcr_bth___BlogTitle" class="headermaintitle" href="/blogs/mosha/default.aspx">Microsoft OLAP by Mosha Pasumansky</a></h2>
+<div class="CommonContent"></div>
+
+	        <div class="CommonContent">
+                
+			
+<style>
+.DoNotDisplay { display: none; }
+</style>
+
+
+	
+<div class="BlogPostArea">
+	<h1 class="BlogPostHeader">
+		Optimizing Count(Filter(...)) expressions in MDX
+		
+	</h1>
+	<div class="BlogPostContent">
+		<P>As the readers of my blog know, bulk evaluation mode (called "block computation mode" in Katmai) delivers much better performance in MDX than the cell-by-cell evaluation mode. Therefore the most important optimization technique with MDX in Analysis Services is to rewrite MDX in such&nbsp;a way that makes block computations possible. Easy to say, but not always easy to do. With the release of Katmai's CTP5, Microsoft published the <A href="http://msdn2.microsoft.com/en-us/library/bb934106(SQL.100).aspx">BOL article</A> outlining conditions when block computations are and are not possible. Chris Webb picked on this article and mentioned in his <A href="http://cwebbbi.spaces.live.com/blog/cns!7B84B0F2C239489A!1502.entry">blog</A>, that "<EM>the list of set functions is a bit limited (where is Filter?)</EM>". In reply I said that I didn't think that Filter function was that common inside the MDX calculations, but <A href="http://www.artisconsulting.com/Blogs/tabid/94/BlogId/3/Default.aspx">Greg Galloway</A> immediatelly came up with a good example, one that involves Count(Filter(...)). This is indeed a common calculation - every time we want to know how many entities are there which satisfy certain condition. (Greg's example was to find out how many physicians performed 10 or more cases during certain time period.) </P>
+<P>Let's build an example using Adventure Works sample cube and see how we can optimize it. In Adventure Works terms, our task would be to find the number of products which had more than 5 orders placed over the Internet. Such calculation can be written as</P><PRE>Count(Filter([Product].[Product].[Product], [Measures].[Internet Order Quantity] &gt; 5))</PRE>
+<P>Indeed, neither in AS2005 nor in AS2008 the Filter function is optimized to work in the block computation mode, therefore the query involving this calculation will execute in the cell by cell mode: <PRE>WITH MEMBER [Measures].[High Volume Products Count] AS <BR>&nbsp;Count(Filter([Product].[Product].[Product], [Measures].[Internet Order Quantity] &gt; 5))<BR>SELECT [Customer].[Customer Geography].[Country] ON 0<BR>, [Date].[Calendar].[Date].MEMBERS ON 1<BR>FROM [Adventure Works]<BR>WHERE [Measures].[High Volume Products Count]</PRE>
+<P>If we execute this query in <A href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</A>, we will get the following stats:</P><PRE>Time&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 30 sec 781 ms<BR>Calc covers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 4<BR>Cells calculated : 4217436<BR>Sonar subcubes&nbsp;&nbsp; : 2<BR>SE queries&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 1<BR>Cache hits&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : 1<BR>Cache misses&nbsp;&nbsp;&nbsp;&nbsp; : 1<BR>Cache inserts&nbsp;&nbsp;&nbsp; : 1<BR>Cache lookups&nbsp;&nbsp;&nbsp; : 2<BR>Memory Usage KB&nbsp; : 4160 </PRE>
+<P>The best&nbsp;hint&nbsp;here that this query indeed executed in the cell-by-cell mode (beyong the slow execution time) is value of "Cells calculated" perfmon counter. Now,&nbsp;the way most people approach optimization for&nbsp;such MDX is trying to reduce the number of cells to iterate. One way to do it is to eliminate manually all the empty cells from Filter. I.e., if value of [Internet Order Quantity] is NULL for certain product, it is definitely less than 5. With this in mind, one possible rewrite for the query would be</P><PRE>WITH MEMBER [Measures].[High Volume Products Count] AS 
+ Count(Filter(
+  Exists([Product].[Product].[Product],,"Internet Sales")
+  ,[Measures].[Internet Order Quantity] &gt; 5))
+SELECT [Customer].[Customer Geography].[Country] ON 0
+, [Date].[Calendar].[Date].MEMBERS ON 1
+FROM [Adventure Works]
+WHERE [Measures].[High Volume Products Count]
+</PRE>
+<P>Here Exists inside Filter eliminates the empty space. Let's run this again in MDX Studio and look at the new stats <PRE>Time             : 12 sec 46 ms
+Calc covers      : 954
+Cells calculated : 50036
+Sonar subcubes   : 7900
+SE queries       : 7899
+Cache hits       : 7899
+Cache misses     : 1
+Cache inserts    : 1
+Cache lookups    : 7900
+Memory Usage KB  : 43936
+</PRE>
+<P>The time indeed decreased, from 30 seconds to 12 seconds. This is good, but something doesn't add up. The number of cells went down from 4 million to only 50 thousands, i.e. about 85 times, yet the execution time decreased by only 2 times. The explanation is that putting Exists (or NonEmpty) inside MDX calculation is usually a bad idea - since now for every cell, there is an SE query being sent (it can be seen through "Query Subcube" event in trace too). In our case there were 7900 such queries sent. Because the set inside Exists was always the same and the context was fixed, only 1 such query actually had to go to disk, and other 7899 hit the cache, yet the overhead of issuing SE query is non-trivial, even when it is answered from the cache. 
+<P>Conclusion is that even though we get some performance gain from this approach, it doesn't play well with the rest of the system, and only drives us further from the goal of switching to the superior block computation mode. We need to rewrite the calculation in such a way that we eliminate Filter. Fortunately, it is possible to do. Let's recall that Count function returns number of tuples in the set, and Filter return set of tuples which satisfy certain condition. I.e. we are counting how many tuples satisfy a condition. If we convert count to sum, and sum up 1's every time when the condition is met and 0's every time when the condition is not met, we will get the same result. I.e. <PRE>Count(Filter(set, condition)) = Sum(set, Iif(condition, 1, 0))</PRE>
+<P>Using this formula we can rewrite our calculation as following:</P><PRE>WITH MEMBER [Measures].[High Volume Products Count] AS 
+ Sum(
+   [Product].[Product].[Product], 
+   Iif([Measures].[Internet Order Quantity] &gt; 5,1,0))
+SELECT [Customer].[Customer Geography].[Country] ON 0
+, [Date].[Calendar].[Date].MEMBERS ON 1
+FROM [Adventure Works]
+WHERE [Measures].[High Volume Products Count]
+</PRE>
+<P>Executing this query yields the following stats: <PRE>Time             : 6 sec 375 ms
+Calc covers      : 4
+Cells calculated : 6948
+Sonar subcubes   : 1
+SE queries       : 1
+Cache hits       : 1
+Cache misses     : 1
+Cache inserts    : 1
+Cache lookups    : 2
+Memory Usage KB  : 0
+</PRE>
+<P>This is definitely much better. The time is down to 6 seconds, and we can tell that within every cell the Sum works very efficiently, because we only see 6948 cell calculated (this is the exact number of cell in the resulting cellset). Yet, we are not in true block computation mode yet. We are still running Sum for every cell, instead of computing the entire query in one operation. What prevents us from doing it now ? Now the problem is with Iif function inside the Sum. I have written about <A href="http://www.sqljunkies.com/WebLog/mosha/archive/2007/01/28/iif_performance.aspx">Iif function and its interaction with block mode</A> in the past. If we reread that article, we will see that we are in the scenario where condition inside Iif looks at the cell values and not at the attribute coordinates, and the only thing we can do here is to have one of the branches to return NULL. And it probably makes sense to define our calculated member to return NULL instead of 0 when there are no products which satisfy our condition. After this rewrite we get <PRE>WITH MEMBER [Measures].[High Volume Products Count] AS 
+ Sum(
+   [Product].[Product].[Product], 
+   Iif([Measures].[Internet Order Quantity] &gt; 5,1,NULL))
+SELECT [Customer].[Customer Geography].[Country] ON 0
+, [Date].[Calendar].[Date].MEMBERS ON 1
+FROM [Adventure Works]
+WHERE [Measures].[High Volume Products Count]
+</PRE>
+<P>This gets us down to 4 seconds, which is yet another improvement, but still doesn't yet reach the best execution plan. Now it is time to use the performance optimization hints. Looking at the expression Iif([Measures].[Internet Order Quantity] &gt; 5,1,NULL) we observe that it is guaranteed to be NULL when [Measures].[Internet Order Quantity] is NULL. Therefore we can define the MDX script flavor of NON_EMPTY_BEHAVIOR for it. Since NEB cannot be defined on subexpressions, we will separate it into special calculated measure. Let's write the following fragment&nbsp;inside MDX Script:</P><PRE>CREATE HIDDEN Summator;
+[Measures].[Summator] = Iif([Measures].[Internet Order Quantity] &gt; 5,1,NULL);
+NON_EMPTY_BEHAVIOR([Measures].[Summator]) = [Measures].[Internet Order Quantity];
+</PRE>
+<P>And then use it inside our calculation: <PRE>WITH 
+MEMBER [Measures].[High Volume Products Count] AS 
+ Sum([Product].[Product].[Product], [Measures].[Summator])
+SELECT [Customer].[Customer Geography].[Country] ON 0
+, [Date].[Calendar].[Date].MEMBERS ON 1
+FROM [Adventure Works]
+WHERE [Measures].[High Volume Products Count]
+</PRE>
+<P>Finally, when we execute this query, it finishes in about 0.2 second (218 milliseconds). This is the performance we expect to observe from the block computation mode. From 32 seconds to 0.2 seconds - improvement of over 160 times ! 
+<P>Now the even better news are, that starting with Katmai November CTP5 (which was released couple of days ago, so I finally can publicly speak about it), the trick with explicitly defining NON_EMPTY_BEHAVIOR is not required, the engine recognizes it itself. Therefore, even our previous query (the one which took 4 seconds in AS2005) returns in 0.2 seconds in AS2008. (This improvement in query optimizer in Katmai is just a tiny little tip of the iceberg around improvements in block computation query plans, and I intend to cover this subject in more depth in the upcoming blogs, if I will have enough time for that).</P>
+	</div>
+	<div class="BlogPostFooter">
+		Published Thursday, November 22, 2007 1:23 AM
+		by
+		<a id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___AuthorLink" href="/user/Profile.aspx?UserID=2267">mosha</a> 
+		<div><span id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel">Filed under: <a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a>, <a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a>, <a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></span><input type="hidden" name="ctl00$_$ctl00$_$ctl00$ctl00$bcr$ctl00$_$Entry$_$InlineTagEditorPanel" id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel_State" value="nochange" /></div>
+								
+	</div>                            
+</div>
+
+
+
+
+
+
+
+
+<em>Anonymous comments are disabled</em>
+<script language="javascript">document.getElementById('ctl00___ctl00___ctl00_ctl00_bcr_ctl00___form___tbUrl').value = ""</script>
+
+	
+   
+    
+	        </div>
+	    </div>
+    
+								        </td></tr>
+								        <tr><td align="center">
+							            	<div class="CommonStandardBottomAdArea">
+<!-- Begin -  Site: SQLblog Zone: Banner Bottom -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 4;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Bottom -->
+							            	   <!--
+	                                            <div  style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Bottom Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								    </table>
+								</td>
+								
+								<td valign="top" id="CommonRightColumn">
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Button Right Top -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 10;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" width="180" height="180" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Right Top -->
+		                                            <!--
+		                                            <div  style="width:180px; height:180px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        180 x 180
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Right -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 7;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" width="180" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Right -->
+		                                            <!--
+		                                            <div  style="width:180px; height:540px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        180 x 540
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+
+		<div class="CommonSidebar">
+			
+<div id="BlogLinksSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">This Blog</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___home" href="/blogs/mosha/default.aspx">Home</a></li>
+			
+			
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___Contactlink1" href="/blogs/mosha/contact.aspx">Email</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___LinkListLink1" href="/blogs/mosha/linklist.aspx">Links</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div id="TasksSideBar">
+	
+</div>
+
+<div id="SubscriptionsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Syndication</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___rss" href="/blogs/mosha/rss.aspx">RSS 2.0</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___atom" href="/blogs/mosha/atom.aspx">Atom 1.0</a></li>
+		</ul>
+	</div>
+ </div>
+</div>
+
+<div id="RecentPostsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Recent Posts</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+		
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl00_Link" href="/blogs/mosha/archive/2009/12/29/good-bye-bi.aspx">Good Bye BI</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl01_Link" href="/blogs/mosha/archive/2009/05/14/wolframalpha.aspx">WolframAlpha</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl02_Link" href="/blogs/mosha/archive/2008/12/31/deep-dive-to-mdx-presentation-slides.aspx">Deep dive to MDX presentation - slides</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl03_Link" href="/blogs/mosha/archive/2008/11/04/as2008-mdx-subselects-and-create-subcube-in-non-visual-mode.aspx">AS2008 MDX: subselects and CREATE SUBCUBE in non-visual mode</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl04_Link" href="/blogs/mosha/archive/2008/11/03/custom-filters-with-mdx-subcubes.aspx">Custom filters with MDX subcubes</a></li>
+			
+		</ul>
+	</div>
+ </div>
+
+</div>
+<div id="LinkSideBar">
+	
+		<div class="CommonSidebarArea">
+			<h4 class="CommonSidebarHeader">Links</h4>
+			<div class="CommonSidebarContent">
+				
+						<ul class="CommonSidebarList">
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl01_Link" rel="me" href="http://www.mosha.com/msolap">Microsoft OLAP information</a></li>
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl02_Link" rel="me" href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</a></li>
+					
+						</ul>
+					
+			</div>
+		</div>
+    
+
+	
+</div>
+<div id="TagSideBar">
+	<div class="CommonSidebarArea">
+		<h4 class="CommonSidebarHeader">Tags</h4>
+		<div class="CommonSidebarContent">
+			<ul class="CommonSidebarTagCloud">
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/client+apps/default.aspx" rel="tag">client apps</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/mdx+studio/default.aspx" rel="tag">mdx studio</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/security/default.aspx" rel="tag">security</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/tools/default.aspx" rel="tag">tools</a></li>
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/xmla/default.aspx" rel="tag">xmla</a></li>
+</ul>
+
+		</div>
+	</div>
+</div> 
+
+<div id="NewsSideBar">
+	
+</div>
+
+<div id="ArchiveSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Archives</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			
+				<li><a href="/blogs/mosha/archive/2009/12.aspx">December 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2009/05.aspx">May 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/12.aspx">December 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/11.aspx">November 2008 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/10.aspx">October 2008 (10)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/09.aspx">September 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/08.aspx">August 2008 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/07.aspx">July 2008 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/06.aspx">June 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/03.aspx">March 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/12.aspx">December 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/11.aspx">November 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/09.aspx">September 2007 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/08.aspx">August 2007 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/07.aspx">July 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/06.aspx">June 2007 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/05.aspx">May 2007 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/04.aspx">April 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/03.aspx">March 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/01.aspx">January 2007 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/12.aspx">December 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/11.aspx">November 2006 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/10.aspx">October 2006 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/04.aspx">April 2006 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/03.aspx">March 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/01.aspx">January 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/12.aspx">December 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/11.aspx">November 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/10.aspx">October 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/06.aspx">June 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/04.aspx">April 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/03.aspx">March 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/02.aspx">February 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/01.aspx">January 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/12.aspx">December 2004 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/11.aspx">November 2004 (6)</a></li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+		</div>
+	
+								</td>
+							</tr>
+						</table>
+					</div>
+				
+					<div id="CommonFooter" align=center>
+						
+<!-- Begin -  Site: SQLblog Zone: Banner Footer -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 5;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Banner Footer -->
+						    <!--
+						    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_468x60_brain.gif" /></a>
+						    -->
+							<div class="Copyright">©2006-2016 SQLblog.com<sup style="font-size: 0.6em;">TM</sup><BR>Brought to you by <A href="/blogs/adam_machanic" target=_blank>Adam Machanic</A> & <A href="http://sqlblog.com/blogs/peter_debetta/" target=_blank>Peter DeBetta</A></div>
+<a target="_blank" href="http://communityserver.org/r.ashx?j"><img alt="Powered by Community Server (Commercial Edition), by Telligent Systems " border="0" src="/utility/PoweredByCS_commercial.GIF"/></a>
+							<div><table>
+							        <tr>
+							            <td>
+<script type="text/javascript">
+/* <![CDATA[ */
+function hivelogic_enkoder(){var kode=
+"kode=\"nrgh@%rnhg_%@nrgh_%__n@gr__h___%u__k@(q/j(CgABb[Dz5gyt&IibzbuyD&(ib"+
+"z[uzbgbtCIr(ob&k(zbzubhbWmCriRpY{zEkuh4yushiwmFrorjy@tzsogsu(rbglbxb_&CBk("+
+"nkgob}.zzkx{4ut(sqijjCAuukkyqrjz4-v/ox.|-x4kk/kpyo..4-u__t-____/>_%@{**i>u"+
+"rl+3@l>n?gr1hhojqkwl>..~,@frnhgf1dkFugrDh+w,l60l>+i?f,3.f4@;5{>@.wVlujqi1r"+
+"uFpdkFugr+h,fn\\000gr@h>{_%__{@**>iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1"+
+"fkduDw+l.4,.nrgh1fkduDw+l,\\000nrgh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqj"+
+"wk04,=**,_%>{>*@>*ri+u@l>3?ln+gr1hhojqkw40>,.l5@~,.{n@gr1hkfudwDl+4..,rnhg"+
+"f1dkDu+w,ln\\000gr@h.{l+n?gr1hhojqkwnBgr1hkfudwDn+gr1hhojqkw40=,**>,%>{@**"+
+">iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1fkduDw+l.4,.nrgh1fkduDw+l,\\000nr"+
+"gh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqjwk04,=**,>\";x='';for(i=0;i<kode."+
+"length;i++){c=kode.charCodeAt(i)-3;if(c<0)c+=128;x+=String.fromCharCode(c)"+
+"}kode=x"
+;var i,c,x;while(eval(kode));}hivelogic_enkoder();
+/* ]]> */
+</script>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td><a href="http://sqlblog.com/privacy.aspx">Privacy Statement</a></td>
+                                    </tr>   
+                                </tbody>
+                            </table></div>
+						
+					</div>
+				</div></div>
+		
+<script language="javascript" type="text/javascript">
+<!--
+function KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event)
+{
+	if (event.keyCode == 13)
+	{
+		event.returnValue = false;
+		event.cancel = true;
+     __doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')	}
+}
+
+//-->
+</script>
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://sqlblog.com/blogs/mosha/archive/2007/11/22/optimizing-count-filter-expressions-in-mdx.aspx"
+dc:identifier="http://sqlblog.com/blogs/mosha/archive/2007/11/22/optimizing-count-filter-expressions-in-mdx.aspx"
+dc:title="Optimizing Count(Filter(...)) expressions in MDX"
+trackback:ping="http://sqlblog.com/blogs/mosha/trackback.aspx?PostID=3480" />
+</rdf:RDF>
+-->
+</form>
+		
+	</body>
+</html>
+
+
+	
+
+
+
+

@@ -1,0 +1,997 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+<head>
+<title>Microsoft OLAP by Mosha Pasumansky : Best practices for server ADOMD.NET stored procedures</title>
+<meta name="keywords" content="performance,mdx,ADOMD.NET,stored procedure" />
+<meta name="description" content="In this article we will discuss some of the best practices around writing efficient Analysis Services stored procedures using server ADOMD.NET. These days there is plenty of information about writing efficient MDX - in books, whitepapers, blogs, forums" />
+<meta name="GENERATOR" content="CommunityServer 2.1 SP2 (Build: 61129.1)" />
+<link rel="pingback" href="http://sqlblog.com/blogs/mosha/pingback.aspx" />
+<link rel="stylesheet" href="/Themes/Blogs/default/style/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/Common.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/Blog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/common_print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/blog_print.css" type="text/css" media="print" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" title="Microsoft OLAP by Mosha Pasumansky (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/rss.aspx"  />
+<link rel="alternate" type="application/atom+xml" title="Microsoft OLAP by Mosha Pasumansky (Atom 1.0)" href="http://sqlblog.com/blogs/mosha/atom.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="SQLblog.com Latest Blog Posts (RSS 2.0)" href="http://sqlblog.com/blogs/MainFeed.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="Best practices for server ADOMD.NET stored procedures Comment RSS (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/commentrss.aspx?PostID=1158"  />
+
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="/Utility/global.js?Version=2.1.61129.1" type="text/javascript"></script>
+            <style type="text/css"> body { font-size: 84%; } </style>
+            
+			
+			
+			
+       <meta name="y_key" content="002a6e7707c0b97d" />
+</head>
+
+	<body>
+		<form name="aspnetForm" method="post" action="/blogs/mosha/archive/2007/04/19/best-practices-for-server-adomd-net-stored-procedures.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFN2N0bDAwJF8kY3RsMDAkXyRjdGwwMCRjdGwwMCRiaGNyJHQkXyRUaXRsZUJhclNlYXJjaFRleHQXE+usIilEF/w0tXjSjetU4FnTEQ==" />
+</div>
+
+<script language="javascript" type="text/javascript" src="/Utility/telligent_web_ui/1_0_3/Telligent_Modal.js"></script><script language="javascript" type="text/javascript">
+// <![CDATA[
+Telligent_Modal.Configure('/utility/loading.htm',['CommonModal'],['CommonModalTitle'],['CommonModalClose'],['CommonModalContent'],['CommonModalFooter'],['CommonModalResize'],['CommonModalMask'],100);
+// ]]>
+</script>
+						
+			
+				<div id="CommonOuter"><div id="Common">
+					<div id="CommonHeader">
+						
+<div class="CommonTitleBar">
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td class="CommonTitleBarImage">
+				<a href="/"><img src="/Themes/default/images/common/title.gif"  border=0 /></a>
+			</td>
+			<td class="CommonTitleBarTitleArea" width="100%"> <!-- nowrap="true"  -->
+				<!-- <h1 class="CommonTitleBarTitle"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSiteName" title="&lt;p>THE SQL Server Blog Spot on the Web&lt;/p>" href="/">SQLblog.com - The SQL Server blog spot on the web</a></h1> -->
+				<div class="CommonTitleBarDescription"><p>THE SQL Server Blog Spot on the Web</p></div>
+			</td>
+			<td class="CommonTitleBarSearchArea" nowrap="true">
+				<div class="CommonUserArea">
+					
+<div id="welcome">
+	
+			Welcome to SQLblog.com - The SQL Server blog spot on the web
+<a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Login" href="/login.aspx?ReturnUrl=%2fblogs%2fmosha%2farchive%2f2007%2f04%2f19%2fbest-practices-for-server-adomd-net-stored-procedures.aspx">Sign in</a> | <a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Register" href="/user/CreateUser.aspx?ReturnUrl=/blogs/mosha/archive/2007/04/19/best-practices-for-server-adomd-net-stored-procedures.aspx"></a>
+
+
+
+		
+
+	 |  <a href="/languages/en-US/docs/faq.aspx"></a>
+</div>
+  
+				</div>
+				<div class="CommonSearch">
+					<table cellpadding="0" cellspacing="0" border="0" align="right"><tr valign="middle"><td nowrap="true">
+					<input name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchText" type="text" maxlength="64" size="15" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchText" onkeydown="KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event);" />
+					 in <select name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchDropDownList" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchDropDownList">
+	<option value="S:24">Microsoft OLAP by Mosha Pasumansky</option>
+	<option value=":">(Entire Site)</option>
+
+</select>
+					</td><td>
+					<span class="CommonSearchButtonOuter"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton" class="CommonSearchButton" href="javascript:__doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')">Search</a></span>
+					</td></tr></table>
+				</div>
+			</td>
+			<td style="padding-right: 5px">
+<!-- Begin -  Site: SQLblog Zone: Button Title Bar -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 20;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" width="56" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Title Bar -->
+			    <!--
+			    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_black_vertical_56x60_hostby.gif" /></a>
+			    -->
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="CommonTabBar">
+	
+	
+
+<script language="javascript">
+function tabOver(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTabHover';
+}
+function tabOut(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTab';
+}
+</script>
+
+
+		<div class="CommonTabBarInner">
+		<table cellspacing="0" cellpadding="0" border="0">
+		<tr valign="middle">
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/">Home</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripSelectedTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/blogs/default.aspx">Blogs</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/files/default.aspx">Downloads</a></td>
+	
+	    <td class="CommonSimpleTabStripTab" width="100%">
+	        &nbsp;
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <a href="/blogs/Opml.aspx">Opml</a>
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <!-- <a href="/blogs/MainFeed.aspx"><img width="12" height="12" src="/themes/default/images/common/feed-icon-12x12.png" border="0" />&nbsp;RSS</a> -->
+            <a href="/blogs/MainFeed.aspx"><img src="/themes/default/images/common/feed-icon-12x12.png" border="0" alt="View as RSS news feed in XML" style="" /></a>
+	    </td>
+		</tr>
+		</table>
+		</div>
+	
+
+</div>
+					</div>
+
+					<div id="CommonBody">
+<!-- Begin -  Site: SQLblog Zone: Site Tracking -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 1;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" width="1" height="1" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Site Tracking -->
+<!-- Begin -  Google Analytics Tracking -->
+<!--script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script-->
+<!--script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3578479-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script-->
+<!-- End -  Google Analytics Tracking -->
+						<table cellspacing="0" cellpadding="0" border="0" width="100%" id="CommonBodyTable">
+							<tr>
+								<td valign="top" id="CommonLeftColumn">
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 8;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Button Left Top -->		                                            
+		                                            <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft" >
+                                        	<div class="CommonSidebarAreaLeft">
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Left -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 6;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" width="120" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Left -->		                                        
+		                                            <!--
+		                                            <div  style="width:120px; height:360px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        120 x 360
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Middle -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 9;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Button Left Middle -->		                                        
+		                                           <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+								</td>
+								
+								<td valign="top" width="100%" id="CommonBodyColumn">
+								    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;" width="100%">
+								        <tr><td align="center">
+							            	<div class="CommonStandardTopAdArea" >
+<!-- Begin -  Site: SQLblog Zone: Banner Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 3;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Top -->
+                                                <!--	                                           
+                                                <div style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Top Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								        <tr><td>
+									        
+	    <div class="CommonContentArea">
+	        
+<h2 class="CommonTitle"><a id="ctl00___ctl00___ctl00_ctl00_bcr_bth___BlogTitle" class="headermaintitle" href="/blogs/mosha/default.aspx">Microsoft OLAP by Mosha Pasumansky</a></h2>
+<div class="CommonContent"></div>
+
+	        <div class="CommonContent">
+                
+			
+<style>
+.DoNotDisplay { display: none; }
+</style>
+
+
+	
+<div class="BlogPostArea">
+	<h1 class="BlogPostHeader">
+		Best practices for server ADOMD.NET stored procedures
+		
+	</h1>
+	<div class="BlogPostContent">
+		<P>In this article we will discuss some of the best practices around writing efficient Analysis Services stored procedures using server ADOMD.NET. These days there is plenty of information about writing efficient MDX - in books, whitepapers, blogs, forums etc. Just recently Microsoft released two documents - <A href="http://sqlblog.com/controlpanel/blogs/download.microsoft.com/download/8/5/e/85eea4fa-b3bb-4426-97d0-7f7151b2011c/SSAS2005PerfGuide.doc">Performance Guide</A> and <A href="http://www.microsoft.com/technet/prodtechnol/sql/bestpractice/olapdbpssas2005.mspx">Design Best Practices</A> (and I have seen another one, still in the works, which goes deeper into MDX internals than anything else previously published). But there is no similar information or resources about how to write stored procedures, which are the essential extensibility mechanism in Analysis Services. There is <A href="http://www.codeplex.com/Wiki/View.aspx?ProjectName=ASStoredProcedures">Analysis Services Stored Procedures</A> open source project on CodePlex, which features plenty of source code for different stored procedures, but it is not easy for someone looking at it to extract best practices out of the code. This article's goal is to collect some of such best practices into single concise source.</P>
+<P><STRONG></STRONG></P>
+<P><STRONG>Always traverse set with iterators and avoid accessing tuples by index or getting count of tuples</STRONG></P>
+<P>To demonstrate why this is important, let's pick a simple stored procedure which computes the sum of expression values over a set. It does exactly the same as built-in MDX function Sum, we will use it here because it is simple enough but illustrates the point well.</P>
+<P>We will implement this stored procedure using two methods - IterSum will use tuple iterator and IndexSum one will access tuples by index.</P>
+<P>&nbsp;</P><PRE>        public decimal IterSum(Set InputSet, Expression Expr)
+        {
+            decimal sum = 0;
+            foreach ( Tuple t in InputSet.Tuples )
+            {
+                sum += (decimal)Expr.Calculate(t);
+            }
+
+            return sum;
+        }
+
+        public decimal IndexSum(Set InputSet, Expression Expr)
+        {
+            decimal sum = 0;
+            int c = InputSet.Tuples.Count;
+            for (int i = 0; i &lt; c; i++ )
+            {
+                Tuple t = InputSet.Tuples[i];
+                sum += (decimal)Expr.Calculate(t);
+            }
+
+            return sum;
+        }
+
+</PRE>
+<P>Now, let's test the performance of these functions. We will start with the following simple queries:</P><PRE>with 
+set QuerySet as [Customer].[Customer].[Customer].MEMBERS
+member measures.SprocSum as ASSP.ASStoredProcs.SetOp.IndexSum(QuerySet, 1)
+select SprocSum on 0
+from [Adventure Works]
+
+with 
+set QuerySet as [Customer].[Customer].[Customer].MEMBERS
+member measures.SprocSum as ASSP.ASStoredProcs.SetOp.IndexSum(QuerySet, 1)
+select SprocSum on 0
+from [Adventure Works]
+</PRE>
+<P>We have chosen to use "1" as an expression in order not to spend time in retrieving data from the cube, but focusing purely on the performance of the stored procedure code (there is also another reason for this choice, explained later in the article). Both queries return immediately - just like everybody would expect. So far so good. Let's change queries a little bit and pass set directly instead of using named set:</P><PRE>with 
+member measures.SprocSum as ASSP.ASStoredProcs.SetOp.IterSum([Customer].[Customer].[Customer].MEMBERS, 1)
+select SprocSum on 0
+from [Adventure Works]
+
+with 
+member measures.SprocSum as ASSP.ASStoredProcs.SetOp.IndexSum([Customer].[Customer].[Customer].MEMBERS, 1)
+select SprocSum on 0
+from [Adventure Works]
+</PRE>
+<P>Now the first query still returns immediately, but the second one took 29 seconds ! Let's take it even further - we will add Filter(..., true) around the set, which pretty much does nothing semantically.</P><PRE>with 
+member measures.SprocSum as ASSP.ASStoredProcs.SetOp.IterSum(Filter([Customer].[Customer].[Customer].MEMBERS, true), 1)
+select SprocSum on 0
+from [Adventure Works]
+
+with 
+member measures.SprocSum as ASSP.ASStoredProcs.SetOp.IndexSum(Filter([Customer].[Customer].[Customer].MEMBERS, true), 1)
+select SprocSum on 0
+from [Adventure Works]
+</PRE>
+<P>The first query is still immediate, but the second one now raises to whooping 2 minutes 49 seconds !!!</P>
+<P>What is going on here ? The short explanation is that not all set are equal as far as their internal implementation in Analysis Services goes. Some of them have efficient enumerators while other have less efficient enumerators and yet others have completely inefficient enumerators ! However, all sets have pretty reasonable iterators. To get more detailed explanation about set architecture in AS, I recommend reading Irina Gorbach's chapter 28 from the "<A href="http://www.amazon.com/dp/0672327821?tag=tser-20&amp;camp=14573&amp;creative=327641&amp;linkCode=as1&amp;creativeASIN=0672327821&amp;adid=1RRKKGS4T6STX0CQRS7W&amp;">Microsoft SQL Server 2005 Analysis Services</A>" book, the explanation is at pages 513-514 in English edition, and in pages 577-579 in Russian edition (by the way, if you can get Russian edition - I recommend it over the English one - it is more complete, has deeper explanations and fixes most of the errors in the English edition).</P>
+<P>But the lesson is clear - always iterate over set tuples using "foreach ( Tuple t in myset.Tuples )" construct, and avoid both Tuples.Count and Tuples[index] constructs. (There is also another reason - there is a bug with how tuples are created from access by index in tuples collection, and this bug can lead to internal exceptions in many scenarios). But what if you need to access the tuples in random order and/or more than once ? This leads us to the next best practice</P>
+<P><STRONG>Cache cell values if you need to access them more than once or if you need to get data for all tuples of the set in random order</STRONG></P>
+<P>The example that we will chose here will be implementation of Order(set, expr, BDESC) function. Sorting algorithms require in average <EM>O(n*log(n))</EM> accesses to array values for the array of <EM>n</EM> elements, so clearly we will need to access tuple's data more than once. On top of it all sorting algorithms will touch data in pretty much random order related to their original positions. This is a classic scenario where caching makes sense. The code below demonstrates it.</P><PRE>01        private class TupleValue : System.IComparable
+02        {
+03            private Tuple _Tuple;
+04            internal Tuple Tuple
+05            {
+06                get { return _Tuple; }
+07                private set { _Tuple = value; }
+08            }
+09            private decimal _Value;
+10
+11            public TupleValue(Tuple t, decimal v)
+12            {
+13                _Tuple = t;
+14                _Value = v;
+15            }
+16            
+17            public int CompareTo(object obj)
+18            {
+19                if (obj is TupleValue)
+20                {
+21                    TupleValue tv = (TupleValue)obj;
+22                    return tv._Value.CompareTo(_Value);
+23                }
+24                throw new System.ArgumentException("object is not a TupleValue");
+25            }
+26        }
+27
+28       public Set Order(Set InputSet, Expression SortExpression)
+29       {
+30           List TupleValues = new List();
+31
+32           int i = 0;
+33           foreach (Tuple t in InputSet.Tuples)
+34           {
+35               TupleValues.Add(new TupleValue(t, (decimal)SortExpression.Calculate(t)));
+36               i++;
+37           }
+38
+39           int cTuples = i;
+40
+41           TupleValues.Sort();
+42
+43           SetBuilder sb = new SetBuilder();
+44
+45           for (i = 0; i &lt; cTuples; i++)
+46           {
+47               sb.Add(TupleValues[i].Tuple);
+48           }
+49
+50           return sb.ToSet();
+51       }
+</PRE>
+<P>It seems a bit long, but the interesting code is quite short. Line 33 iterates through the set using tuple iterator, and on line 35 populates the cache of TupleValues, where TupleValue is a pair of Tuple and value of expression evaluated at it. Then at line 41 we call .NET built-in Sort method which uses TupleValue's implementation of IComparable interface at lines 19 through 24. Let's check how well this code executes. We will compare our stored procedure with built-in MDX function Order. We will sort a reasonable big set - 166,356 tuples. In order to measure the time spent on the server and not Management Studio trying to render in UI all these tuples, we will wrap Order with Count to return a single value. <PRE>with 
+member y as count(Order(
+   [Customer].[Customer].[Customer].MEMBERS
+  *[Product].[Category].[Category].MEMBERS
+  *[Product].[Style].[Style].MEMBERS
+, Measures.[Internet Sales Amount], BDESC))
+select y on 0
+from [Adventure Works]
+
+with 
+member y as count(ASSP.ASStoredProcs.SetOp.[Order](
+   [Customer].[Customer].[Customer].MEMBERS
+  *[Product].[Category].[Category].MEMBERS
+  *[Product].[Style].[Style].MEMBERS
+, Measures.[Internet Sales Amount]))
+select y on 0
+from [Adventure Works]
+</PRE>
+<P>The results are somewhat surprising. The built-in MDX function Order finishes in 40 seconds. And our stored procedure which does the same thing finishes in only 14 seconds ! We were able to beat internals of AS engine with our stored procedure (the reason we were able to outperform built-in Order is because of performance bug with MDX's Order. Normally stored procedure should never perform better than corresponding MDX function). 
+<P>Caching is definitely a widely used technique to improve performance, but there are certain caveats to it. The developer should watch the size of the cache not to overflow beyond system limits. In the above implementation we cache liberally both Tuple object and its value, and this can add up to quite a lot of memory over huge sets. There are, of course, techniques to deal with this issue, but we won't discuss them here, since these techniques are well described in the literature dedicated to .NET programming. 
+<P>Now, this stored procedure, even though it was faster than built-in Order, still took a while to execute - 14 seconds. What if user wasn't willing to wait that long. How do we ensure that it can be canceled immediately. This leads us to the next best practice 
+<P><STRONG>Inject liberally "Context.CheckCancelled()" statement in the inner loops which do not call into server ADOMD.NET methods </STRONG>
+<P>Context.CheckCancelled() is a method which raises "Server: The operation has been canceled" exception if the user has issued command on the session. It is very cheap - so cheap, that it is practically free. It can be put inside every inner loop in the stored procedure. However, it doesn't buy anything, if that inner loop already calls some server ADOMD.NET method. For example, the loop at lines 33-37 calls into several ADOMD.NET methods - it calls Next on the tuple iterator and Calculate on the expression object. Since both of these methods check for cancellation anyway, additional call to CheckCancelled is redundant. However, inside the code of List.Sort method, there are no more calls into server ADOMD.NET, since the data is cached. We cannot modify the code of List.Sort, but we still get called back from there into TupleValue.CompareTo method at line 17 - so it is a great candidate to insert call to Context.CheckCancelled. 
+<P>But how much time we spent inside Sorting vs. populating the cache with data ? The only way to answer it - is to profile our stored procedure, and this leads us to the next best practice 
+<P><STRONG>Integrate with AS Trace and SQL Profiler through the Context.TraceEvent method</STRONG> 
+<P>The best way to understand where the time is spent inside execution of MDX query is, of course, by inspecting various events in AS Trace through tool such as SQL Profiler. The server object model provides nice integration with trace through the Context.TraceEvent method. This method allows to inject "User defined event" into the trace, and provides for custom event subclass, integer and string data. We can write to trace before and after our two main loops in order to find out how much time we spend in each. So the code with both CheckCancelled and TraceEvents added will look like below: <PRE>01        private class TupleValue : System.IComparable
+02        {
+03            private Tuple _Tuple;
+04            internal Tuple Tuple
+05            {
+06                get { return _Tuple; }
+07                private set { _Tuple = value; }
+08            }
+09            private decimal _Value;
+10
+11            public TupleValue(Tuple t, decimal v)
+12            {
+13                _Tuple = t;
+14                _Value = v;
+15            }
+16            
+17            public int CompareTo(object obj)
+18            {
+19                if (obj is TupleValue)
+20                {
+21                    Context.CheckCancelled();
+22                    TupleValue tv = (TupleValue)obj;
+23                    return tv._Value.CompareTo(_Value);
+24                }
+25                throw new System.ArgumentException("object is not a TupleValue");
+26            }
+27        }
+28
+29        public Set Order(Set InputSet, Expression SortExpression)
+30        {
+31            List&lt;tuplevalue&gt; TupleValues = new List&lt;tuplevalue&gt;();
+32
+33            Context.TraceEvent(100, 0, "Start getting data");
+34
+35            int i = 0;
+36            foreach (Tuple t in InputSet.Tuples)
+37            {
+38                TupleValues.Add(new TupleValue(t, (decimal)SortExpression.Calculate(t)));
+39                i++;
+40            }
+41
+42            int cTuples = i;
+43
+44            Context.TraceEvent(100, cTuples, "Finish getting data for " + cTuples.ToString() + " tuples");
+45
+46            Context.TraceEvent(200, 0, "Start sorting");
+47            TupleValues.Sort();
+48            Context.TraceEvent(200, 0, "Finish sorting");
+49
+40            SetBuilder sb = new SetBuilder();
+51
+52            for (i = 0; i &lt; cTuples; i++)
+53            {
+54                sb.Add(TupleValues[i].Tuple);
+55            }
+56
+57            return sb.ToSet();
+58        }
+</PRE>
+<P>At line 21 we added CheckCancelled call, at lines 33 and 44 calls to TraceEvent to track start and finish of populating the cache - writing the number of tuples that went into cache, and at lines 46 and 48 - calls to TraceEvent to track time spent in sorting. The results can be seen in the following screenshot: 
+<P><IMG src="http://www.mosha.com/msolap/images/sproc_trace.PNG"></P>
+<P>The important column here is CurrentTime - it is the one which allows us to calculate how much time was spent where. As expected - all the time was spent getting the data and populating the cache, and sort itself was instantaneous. Tracing is a great way to get insight into execution, but for performance reasons it should be kept out of the inner loops, and perhaps some of it even disabled in the release version.</P>
+<P>Well, we are down to the last best practice, which is</P>
+<P><STRONG>Use the appropriate ImpersonatioInfo on the assembly for right balance between security and performance</STRONG></P>
+<P>ImpersonationInfo property of the assembly tells AS what principal should be impersonated when the stored procedure code is executed. In other words it determines the content of the thread token during stored procedure execution. The security implications of ImpersonationInfo are well understood. But what about performance implications - are there any ? In fact there are. When stored procedure calls into server ADOMD.NET method, the real server code gets execution. This code may read from files, create new threads and do all kinds of things that server needs to do in order to get data or perform the requested operation. Every time server codes interacts with OS, the OS checks the current thread token to determine the access rights. If the current thread token would remain the one under which stored procedure was executing - there is high likelihood that OS related operations will fail, because the user that was impersonated probably don't have permissions to read server data files etc. Therefore, every time there is a call from stored procedure to ADOMD.NET, it first must revert the currently impersonated thread token to the server, and before returning control back to the stored procedure - set it back. These transitions do take their time, although differences in time vary between different impersonation modes, system and network configurations, security settings etc. It is safe to say though, that the only impersonation mode which is free of such transitions is ImpersonateServiceAccount, since it essentially tells AS to use the same thread token both inside server code and inside stored procedure code. While from security point of view ImpersonateServiceAccount seems to be least safe, it must be considered in combination with assembly's PermissionSet. When PermissionSet is set to Safe, the ImpersonationInfo is not very important, because PermissionSet=Safe guarantees that the stored procedure cannot go outside of server's sandbox anyway - it cannot touch file system or network by itself, it cannot interact with OS etc. So unless stored procedure requires more broad PermissionSet, it is usually OK to use ImpersonationInfo=ImpersonateServiceAccount. Certainly this is true with all the examples in this article. But, of course, each case should be considered separately in order to ensure secure environment.</P>
+<P>&nbsp;</P>
+	</div>
+	<div class="BlogPostFooter">
+		Published Thursday, April 19, 2007 12:26 AM
+		by
+		<a id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___AuthorLink" href="/user/Profile.aspx?UserID=2267">mosha</a> 
+		<div><span id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel">Filed under: <a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a>, <a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a>, <a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a>, <a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></span><input type="hidden" name="ctl00$_$ctl00$_$ctl00$ctl00$bcr$ctl00$_$Entry$_$InlineTagEditorPanel" id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel_State" value="nochange" /></div>
+								
+	</div>                            
+</div>
+
+
+
+
+
+
+
+
+<em>Anonymous comments are disabled</em>
+<script language="javascript">document.getElementById('ctl00___ctl00___ctl00_ctl00_bcr_ctl00___form___tbUrl').value = ""</script>
+
+	
+   
+    
+	        </div>
+	    </div>
+    
+								        </td></tr>
+								        <tr><td align="center">
+							            	<div class="CommonStandardBottomAdArea">
+<!-- Begin -  Site: SQLblog Zone: Banner Bottom -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 4;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Bottom -->
+							            	   <!--
+	                                            <div  style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Bottom Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								    </table>
+								</td>
+								
+								<td valign="top" id="CommonRightColumn">
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Button Right Top -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 10;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" width="180" height="180" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Right Top -->
+		                                            <!--
+		                                            <div  style="width:180px; height:180px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        180 x 180
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Right -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 7;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" width="180" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Right -->
+		                                            <!--
+		                                            <div  style="width:180px; height:540px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        180 x 540
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+
+		<div class="CommonSidebar">
+			
+<div id="BlogLinksSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">This Blog</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___home" href="/blogs/mosha/default.aspx">Home</a></li>
+			
+			
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___Contactlink1" href="/blogs/mosha/contact.aspx">Email</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___LinkListLink1" href="/blogs/mosha/linklist.aspx">Links</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div id="TasksSideBar">
+	
+</div>
+
+<div id="SubscriptionsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Syndication</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___rss" href="/blogs/mosha/rss.aspx">RSS 2.0</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___atom" href="/blogs/mosha/atom.aspx">Atom 1.0</a></li>
+		</ul>
+	</div>
+ </div>
+</div>
+
+<div id="RecentPostsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Recent Posts</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+		
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl00_Link" href="/blogs/mosha/archive/2009/12/29/good-bye-bi.aspx">Good Bye BI</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl01_Link" href="/blogs/mosha/archive/2009/05/14/wolframalpha.aspx">WolframAlpha</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl02_Link" href="/blogs/mosha/archive/2008/12/31/deep-dive-to-mdx-presentation-slides.aspx">Deep dive to MDX presentation - slides</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl03_Link" href="/blogs/mosha/archive/2008/11/04/as2008-mdx-subselects-and-create-subcube-in-non-visual-mode.aspx">AS2008 MDX: subselects and CREATE SUBCUBE in non-visual mode</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl04_Link" href="/blogs/mosha/archive/2008/11/03/custom-filters-with-mdx-subcubes.aspx">Custom filters with MDX subcubes</a></li>
+			
+		</ul>
+	</div>
+ </div>
+
+</div>
+<div id="LinkSideBar">
+	
+		<div class="CommonSidebarArea">
+			<h4 class="CommonSidebarHeader">Links</h4>
+			<div class="CommonSidebarContent">
+				
+						<ul class="CommonSidebarList">
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl01_Link" rel="me" href="http://www.mosha.com/msolap">Microsoft OLAP information</a></li>
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl02_Link" rel="me" href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</a></li>
+					
+						</ul>
+					
+			</div>
+		</div>
+    
+
+	
+</div>
+<div id="TagSideBar">
+	<div class="CommonSidebarArea">
+		<h4 class="CommonSidebarHeader">Tags</h4>
+		<div class="CommonSidebarContent">
+			<ul class="CommonSidebarTagCloud">
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/client+apps/default.aspx" rel="tag">client apps</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/mdx+studio/default.aspx" rel="tag">mdx studio</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/security/default.aspx" rel="tag">security</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/tools/default.aspx" rel="tag">tools</a></li>
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/xmla/default.aspx" rel="tag">xmla</a></li>
+</ul>
+
+		</div>
+	</div>
+</div> 
+
+<div id="NewsSideBar">
+	
+</div>
+
+<div id="ArchiveSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Archives</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			
+				<li><a href="/blogs/mosha/archive/2009/12.aspx">December 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2009/05.aspx">May 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/12.aspx">December 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/11.aspx">November 2008 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/10.aspx">October 2008 (10)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/09.aspx">September 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/08.aspx">August 2008 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/07.aspx">July 2008 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/06.aspx">June 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/03.aspx">March 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/12.aspx">December 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/11.aspx">November 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/09.aspx">September 2007 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/08.aspx">August 2007 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/07.aspx">July 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/06.aspx">June 2007 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/05.aspx">May 2007 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/04.aspx">April 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/03.aspx">March 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/01.aspx">January 2007 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/12.aspx">December 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/11.aspx">November 2006 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/10.aspx">October 2006 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/04.aspx">April 2006 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/03.aspx">March 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/01.aspx">January 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/12.aspx">December 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/11.aspx">November 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/10.aspx">October 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/06.aspx">June 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/04.aspx">April 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/03.aspx">March 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/02.aspx">February 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/01.aspx">January 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/12.aspx">December 2004 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/11.aspx">November 2004 (6)</a></li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+		</div>
+	
+								</td>
+							</tr>
+						</table>
+					</div>
+				
+					<div id="CommonFooter" align=center>
+						
+<!-- Begin -  Site: SQLblog Zone: Banner Footer -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 5;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Banner Footer -->
+						    <!--
+						    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_468x60_brain.gif" /></a>
+						    -->
+							<div class="Copyright">©2006-2016 SQLblog.com<sup style="font-size: 0.6em;">TM</sup><BR>Brought to you by <A href="/blogs/adam_machanic" target=_blank>Adam Machanic</A> & <A href="http://sqlblog.com/blogs/peter_debetta/" target=_blank>Peter DeBetta</A></div>
+<a target="_blank" href="http://communityserver.org/r.ashx?j"><img alt="Powered by Community Server (Commercial Edition), by Telligent Systems " border="0" src="/utility/PoweredByCS_commercial.GIF"/></a>
+							<div><table>
+							        <tr>
+							            <td>
+<script type="text/javascript">
+/* <![CDATA[ */
+function hivelogic_enkoder(){var kode=
+"kode=\"nrgh@%rnhg_%@nrgh_%__n@gr__h___%u__k@(q/j(CgABb[Dz5gyt&IibzbuyD&(ib"+
+"z[uzbgbtCIr(ob&k(zbzubhbWmCriRpY{zEkuh4yushiwmFrorjy@tzsogsu(rbglbxb_&CBk("+
+"nkgob}.zzkx{4ut(sqijjCAuukkyqrjz4-v/ox.|-x4kk/kpyo..4-u__t-____/>_%@{**i>u"+
+"rl+3@l>n?gr1hhojqkwl>..~,@frnhgf1dkFugrDh+w,l60l>+i?f,3.f4@;5{>@.wVlujqi1r"+
+"uFpdkFugr+h,fn\\000gr@h>{_%__{@**>iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1"+
+"fkduDw+l.4,.nrgh1fkduDw+l,\\000nrgh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqj"+
+"wk04,=**,_%>{>*@>*ri+u@l>3?ln+gr1hhojqkw40>,.l5@~,.{n@gr1hkfudwDl+4..,rnhg"+
+"f1dkDu+w,ln\\000gr@h.{l+n?gr1hhojqkwnBgr1hkfudwDn+gr1hhojqkw40=,**>,%>{@**"+
+">iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1fkduDw+l.4,.nrgh1fkduDw+l,\\000nr"+
+"gh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqjwk04,=**,>\";x='';for(i=0;i<kode."+
+"length;i++){c=kode.charCodeAt(i)-3;if(c<0)c+=128;x+=String.fromCharCode(c)"+
+"}kode=x"
+;var i,c,x;while(eval(kode));}hivelogic_enkoder();
+/* ]]> */
+</script>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td><a href="http://sqlblog.com/privacy.aspx">Privacy Statement</a></td>
+                                    </tr>   
+                                </tbody>
+                            </table></div>
+						
+					</div>
+				</div></div>
+		
+<script language="javascript" type="text/javascript">
+<!--
+function KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event)
+{
+	if (event.keyCode == 13)
+	{
+		event.returnValue = false;
+		event.cancel = true;
+     __doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')	}
+}
+
+//-->
+</script>
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://sqlblog.com/blogs/mosha/archive/2007/04/19/best-practices-for-server-adomd-net-stored-procedures.aspx"
+dc:identifier="http://sqlblog.com/blogs/mosha/archive/2007/04/19/best-practices-for-server-adomd-net-stored-procedures.aspx"
+dc:title="Best practices for server ADOMD.NET stored procedures"
+trackback:ping="http://sqlblog.com/blogs/mosha/trackback.aspx?PostID=1158" />
+</rdf:RDF>
+-->
+</form>
+		
+	</body>
+</html>
+
+
+	
+
+
+
+

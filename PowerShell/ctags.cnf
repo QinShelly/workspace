@@ -1,0 +1,5 @@
+--langdef=Powershell
+--langmap=Powershell:.psm1
+--langmap=Powershell:.ps1
+--regex-Powershell=/function\s+(script:)?([a-zA-Z\-]+)/\2/m, method/i
+--regex-Powershell=/\$(global:)?([a-zA-Z\-]+)/\2/v, variable/i

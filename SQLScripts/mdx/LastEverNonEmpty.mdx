@@ -1,0 +1,35 @@
+--simple but slow
+with member measures.[LNE Total Sales Amount] as 
+tail(nonempty({null: calendar.standard.currentmember} * [Measures].[Total Sales Amount])
+)
+.item(0)
+select head([PRODUCT].[UPC].[UPC].members, 10)* {[Measures].[Total Sales Amount],[Measures].[LNE Total Sales Amount] } on 0,
+{[CALENDAR].[Standard].[Date].members} on 1
+from [PEPSICO_AMAZON]
+
+--complex but fast
+with 
+
+MEMBER MEASURES.DAYSTODATE AS 
+COUNT(NULL:[CALENDAR].[Standard].CURRENTMEMBER)-1
+
+MEMBER MEASURES.HADSALE AS 
+IIF([Measures].[Total Sales Amount]=0, NULL, MEASURES.DAYSTODATE)
+
+MEMBER MEASURES.MAXDATE AS 
+MAX(NULL:[CALENDAR].[Standard].CURRENTMEMBER, MEASURES.HADSALE)
+
+member MEASURES.[LNE Total Sales Amount] AS
+IIF(ISEMPTY(MEASURES.MAXDATE), NULL, 
+([Measures].[Total Sales Amount],
+[CALENDAR].[Standard].[Date].MEMBERS.ITEM(MEASURES.MAXDATE)))
+
+select [PRODUCT].[UPC].&[7329654]* 
+{[Measures].[Total Sales Amount]
+,MEASURES.DAYSTODATE
+,MEASURES.HADSALE
+, MEASURES.MAXDATE
+,[Measures].[LNE Total Sales Amount] } on 0,
+{[CALENDAR].[Standard].[Date].members} on 1
+from [PEPSICO_AMAZON]
+

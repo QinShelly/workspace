@@ -1,0 +1,874 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+<head>
+<title>Microsoft OLAP by Mosha Pasumansky : Querying dimensions in MDX</title>
+<meta name="keywords" content="mdx" />
+<meta name="description" content="In this article we will discuss and evaluate different methods Analysis Services 2005 provides for accessing dimension members. Requirements, flexibility and performance tradeoffs will be discussed. In the OLAP system, the primary object for storing data" />
+<meta name="GENERATOR" content="CommunityServer 2.1 SP2 (Build: 61129.1)" />
+<link rel="pingback" href="http://sqlblog.com/blogs/mosha/pingback.aspx" />
+<link rel="stylesheet" href="/Themes/Blogs/default/style/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/Common.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/Blog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/common_print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/blog_print.css" type="text/css" media="print" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" title="Microsoft OLAP by Mosha Pasumansky (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/rss.aspx"  />
+<link rel="alternate" type="application/atom+xml" title="Microsoft OLAP by Mosha Pasumansky (Atom 1.0)" href="http://sqlblog.com/blogs/mosha/atom.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="SQLblog.com Latest Blog Posts (RSS 2.0)" href="http://sqlblog.com/blogs/MainFeed.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="Querying dimensions in MDX Comment RSS (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/commentrss.aspx?PostID=7974"  />
+
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="/Utility/global.js?Version=2.1.61129.1" type="text/javascript"></script>
+            <style type="text/css"> body { font-size: 84%; } </style>
+            
+			
+			
+			
+       <meta name="y_key" content="002a6e7707c0b97d" />
+</head>
+
+	<body>
+		<form name="aspnetForm" method="post" action="/blogs/mosha/archive/2006/10/11/querying-dimensions-in-mdx.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFN2N0bDAwJF8kY3RsMDAkXyRjdGwwMCRjdGwwMCRiaGNyJHQkXyRUaXRsZUJhclNlYXJjaFRleHQXE+usIilEF/w0tXjSjetU4FnTEQ==" />
+</div>
+
+<script language="javascript" type="text/javascript" src="/Utility/telligent_web_ui/1_0_3/Telligent_Modal.js"></script><script language="javascript" type="text/javascript">
+// <![CDATA[
+Telligent_Modal.Configure('/utility/loading.htm',['CommonModal'],['CommonModalTitle'],['CommonModalClose'],['CommonModalContent'],['CommonModalFooter'],['CommonModalResize'],['CommonModalMask'],100);
+// ]]>
+</script>
+						
+			
+				<div id="CommonOuter"><div id="Common">
+					<div id="CommonHeader">
+						
+<div class="CommonTitleBar">
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td class="CommonTitleBarImage">
+				<a href="/"><img src="/Themes/default/images/common/title.gif"  border=0 /></a>
+			</td>
+			<td class="CommonTitleBarTitleArea" width="100%"> <!-- nowrap="true"  -->
+				<!-- <h1 class="CommonTitleBarTitle"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSiteName" title="&lt;p>THE SQL Server Blog Spot on the Web&lt;/p>" href="/">SQLblog.com - The SQL Server blog spot on the web</a></h1> -->
+				<div class="CommonTitleBarDescription"><p>THE SQL Server Blog Spot on the Web</p></div>
+			</td>
+			<td class="CommonTitleBarSearchArea" nowrap="true">
+				<div class="CommonUserArea">
+					
+<div id="welcome">
+	
+			Welcome to SQLblog.com - The SQL Server blog spot on the web
+<a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Login" href="/login.aspx?ReturnUrl=%2fblogs%2fmosha%2farchive%2f2006%2f10%2f11%2fquerying-dimensions-in-mdx.aspx">Sign in</a> | <a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Register" href="/user/CreateUser.aspx?ReturnUrl=/blogs/mosha/archive/2006/10/11/querying-dimensions-in-mdx.aspx"></a>
+
+
+
+		
+
+	 |  <a href="/languages/en-US/docs/faq.aspx"></a>
+</div>
+  
+				</div>
+				<div class="CommonSearch">
+					<table cellpadding="0" cellspacing="0" border="0" align="right"><tr valign="middle"><td nowrap="true">
+					<input name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchText" type="text" maxlength="64" size="15" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchText" onkeydown="KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event);" />
+					 in <select name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchDropDownList" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchDropDownList">
+	<option value="S:24">Microsoft OLAP by Mosha Pasumansky</option>
+	<option value=":">(Entire Site)</option>
+
+</select>
+					</td><td>
+					<span class="CommonSearchButtonOuter"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton" class="CommonSearchButton" href="javascript:__doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')">Search</a></span>
+					</td></tr></table>
+				</div>
+			</td>
+			<td style="padding-right: 5px">
+<!-- Begin -  Site: SQLblog Zone: Button Title Bar -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 20;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" width="56" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Title Bar -->
+			    <!--
+			    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_black_vertical_56x60_hostby.gif" /></a>
+			    -->
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="CommonTabBar">
+	
+	
+
+<script language="javascript">
+function tabOver(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTabHover';
+}
+function tabOut(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTab';
+}
+</script>
+
+
+		<div class="CommonTabBarInner">
+		<table cellspacing="0" cellpadding="0" border="0">
+		<tr valign="middle">
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/">Home</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripSelectedTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/blogs/default.aspx">Blogs</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/files/default.aspx">Downloads</a></td>
+	
+	    <td class="CommonSimpleTabStripTab" width="100%">
+	        &nbsp;
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <a href="/blogs/Opml.aspx">Opml</a>
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <!-- <a href="/blogs/MainFeed.aspx"><img width="12" height="12" src="/themes/default/images/common/feed-icon-12x12.png" border="0" />&nbsp;RSS</a> -->
+            <a href="/blogs/MainFeed.aspx"><img src="/themes/default/images/common/feed-icon-12x12.png" border="0" alt="View as RSS news feed in XML" style="" /></a>
+	    </td>
+		</tr>
+		</table>
+		</div>
+	
+
+</div>
+					</div>
+
+					<div id="CommonBody">
+<!-- Begin -  Site: SQLblog Zone: Site Tracking -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 1;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" width="1" height="1" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Site Tracking -->
+<!-- Begin -  Google Analytics Tracking -->
+<!--script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script-->
+<!--script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3578479-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script-->
+<!-- End -  Google Analytics Tracking -->
+						<table cellspacing="0" cellpadding="0" border="0" width="100%" id="CommonBodyTable">
+							<tr>
+								<td valign="top" id="CommonLeftColumn">
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 8;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Button Left Top -->		                                            
+		                                            <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft" >
+                                        	<div class="CommonSidebarAreaLeft">
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Left -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 6;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" width="120" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Left -->		                                        
+		                                            <!--
+		                                            <div  style="width:120px; height:360px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        120 x 360
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Middle -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 9;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Button Left Middle -->		                                        
+		                                           <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+								</td>
+								
+								<td valign="top" width="100%" id="CommonBodyColumn">
+								    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;" width="100%">
+								        <tr><td align="center">
+							            	<div class="CommonStandardTopAdArea" >
+<!-- Begin -  Site: SQLblog Zone: Banner Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 3;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Top -->
+                                                <!--	                                           
+                                                <div style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Top Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								        <tr><td>
+									        
+	    <div class="CommonContentArea">
+	        
+<h2 class="CommonTitle"><a id="ctl00___ctl00___ctl00_ctl00_bcr_bth___BlogTitle" class="headermaintitle" href="/blogs/mosha/default.aspx">Microsoft OLAP by Mosha Pasumansky</a></h2>
+<div class="CommonContent"></div>
+
+	        <div class="CommonContent">
+                
+			
+<style>
+.DoNotDisplay { display: none; }
+</style>
+
+
+	
+<div class="BlogPostArea">
+	<h1 class="BlogPostHeader">
+		Querying dimensions in MDX
+		
+	</h1>
+	<div class="BlogPostContent">
+		<p>In this article we will discuss and evaluate different methods Analysis Services 2005 provides for accessing dimension members. Requirements, flexibility and performance tradeoffs will be discussed.</p>  <p>In the OLAP system, the primary object for storing data is the cube. MDX as a language was designed in the first place for accessing cubes. Yet, dimensions are important for accessing data as well. There are plenty of scenarios where dimension rather then cube should be queried</p>  <ul>   <li>Hierarchy browser - all client apps have those </li>    <li>UI for setting more sophisticated filters and/or axes then traditional drill up/down navigation </li>    <li>Reports and analysis on dimensions (i.e. &quot;how many products weight more then certain threshold&quot;, &quot;show all orders placed in last two weeks&quot; etc) </li>    <li>UI for dimension writeback </li>    <li>etc </li> </ul>  <p>There is an old argument in the OLAP world - whether dimension members (more precisely attribute members) represent metadata or data. From one hand attribute members are really just coordinates in the multidimensional space to navigate to cells which contain the data. And without doubt, members of the Measures dimension are considered to be metadata by everybody. Some OLAP products treat all dimension members as metadata, for example in older versions of Essbase, the cube designer was expected to enter all dimension members by hand in the outline editor (I don't know whether it is true with the Essbase 7 'Ukraine'). If the designer wanted to automatically load prepared list of members from flat file, it had to be done with additional HIS tool, so clearly this scenario was treated as not mainline. Probably this approach works fine with small models typical for financial and planning cubes. But in sales and marketing applications, the cardinality of dimension can easily reach hundreds of thousands up to tens of millions members. This is why Analysis Services treats attribute members as data, which is loaded from the database. Only instead of fact table, dimension members are loaded from dimension table (of course, degenerate dimensions are loaded from fact table as well). Therefore, most of the methods for accessing dimension members are very similar to the accessing cube data, i.e. through MDX. </p>  <h3>MDSCHEMA_MEMBERS schema rowset</h3>  <p>Using schema rowsets to retrieve members pays tribute to the school of thought that dimension members are metadata, since schema rowsets are traditional way (both in SQL and in OLAP) to access metadata. Certainly, XMLA spec clearly thinks so, as it only has two methods - Discover for metadata and Execute for data. While AS offers <a href="http://msdn2.microsoft.com/en-us/library/ms126046.aspx">MDSHEMA_MEMBERS schema rowset</a>, I cannot think of a good reason why would application choose to use it for getting information about the members rather then inertia and, perhaps, some convenience. This method suffers from the following drawbacks:</p>  <ul>   <li>Not flexible. The schema rowset format is rigid with fixed number of columns (with exception of dynamic columns for member properties in some scenarios). It is not possible to request less columns, and it is not possible to ask for more - what you get is what you get. The fact that it is not possible to ask for less is also potentially performance problem, because all the columns are present both in XMLA on the wire (but at least there compression can help), and in the memory - whether the schema rowset request is done through OLEDB or ADOMD.NET </li>    <li>Not flexible again. It is not possible to request arbitrary set of members. The TREE_OP restriction allows a little flexibility, but at the end of the day you can either ask for all members in the hierarchy/level or single member or children of single member or ancestors of single member. </li>    <li>No windowing support. Unlike MDX resultsets, the rowsets cannot be easily constrained - you are at mercy of set of builtin schema restrictions. I.e. if the result is really big, there is no way to get first 1000 rows, and then next 1000 rows etc. This can be very serious performance problem - imagine what would happen if user accidentally expanded in UI member which has millions of children in that hierarchy </li>    <li>Limited ability for engine to optimize. Since this is not MDX query, the MDX query optimizer cannot be fully applied (although internally code for MDSCHEMA_MEMBERS tried to hook up into lower level constructs that query optimizer operates with). </li>    <li>More complicated programming model. This is a subjective one, but personally I would rather deal with single way of accessing all the data then different ways for dimensions and for cubes </li> </ul>  <h3>MDX to dimension cube</h3>  <p>Promoting the line of thought that dimension members are data, Analysis Services 2005 automatically exposes every database dimension as <strong>dimension cube</strong>. Such cubes can be detected in <a href="http://msdn2.microsoft.com/en-us/library/ms126271.aspx">MDSCHEMA_CUBES</a> when the CUBE_SOURCE restriction is set to 2 (DIMENSION) - the default value is 1 (CUBE). The names of the cubes are the names of dimensions prefixed with the $ sign. I.e. for dimension Product there is $Product cube, for Customer there is $Customer cube etc. Dimension cube contains two cube dimensions - the database dimension it was built from and the Measures dimension. There is a single measure with the name of the dimension - but this measure has always value NULL. The only reason this measure is there, is because AS doesn't support cubes without measures, so it creates a fake one, but it doesn't affect performance in any way. Now, since dimension cube is a cube, it can be queried with full power of MDX. Few examples:</p>  <p><em>Return first 100 products</em></p>  <pre>SELECT Head([Product].[Product].[Product].Members, 100) ON 0 FROM $Product</pre>
+
+<p><em>Get list of all Road Bikes together with their weights and colors</em></p>
+
+<p>We can do this either using DIMENSION PROPERTIES clause of axis specification in SELECT statement</p>
+
+<pre>SELECT [Product].[Product Categories].[Subcategory].[Road Bikes].Children 
+  DIMENSION PROPERTIES [Product].[Product Categories].[Product].[Weight], [Product].[Product Categories].[Product].[Color] ON 0
+FROM $Product</pre>
+
+<p><em></em>Alternatively, since we have full power of MDX, we could use query calculated measures. The traditional, AS2000 style MDX would look like</p>
+
+<pre>WITH
+  MEMBER Measures.ProductWeight AS [Product].[Product Categories].Properties(&quot;Weight&quot;)
+  MEMBER Measures.ProductColor  AS [Product].[Product Categories].Properties(&quot;Color&quot;)
+SELECT 
+{ Measures.ProductWeight, Measures.ProductColor } ON 0
+,[Product].[Product Categories].[Subcategory].[Road Bikes].Children ON 1
+FROM $Product</pre>
+
+<p>However, as I already <a href="http://sqlblog.com/blogs/mosha/archive/2005/10/11/mdx-functions-in-analysis-services-2005.aspx">wrote</a> in the past,&#160; use of .Properties should be avoided as much as possible. Instead, we can take the advantage of the fact that in AS2005 attribute relationships are integrated deep inside MDX. I.e. when coordinate on the related attribute changes, all the relating attributes change automatically as well to reflect it. Therefore, even though Weight and Color attributes are not included in the Product Categories hierarchy, since they relate with Product attribute - when the coordinate on Product changes - so do coordinates on Weight and Color. This is very fundamental feature of UDM - it allows to achieve the claimed goal, that hierarchies in UDM are nothing but navigational paths. It is not important which hierarchy is used to navigate to the cell, what is important is attribute relationships. This feature is called sometimes &quot;strong hierarchies&quot; to allude to the fact that attribute relationships form an invisible grid of imaginary hierarchies which truly define coordinate transformations. With this knowledge, we can rewrite the previous query to become</p>
+
+<pre>WITH
+  MEMBER Measures.ProductWeight AS [Product].[Weight].MEMBER_KEY
+  MEMBER Measures.ProductColor  AS [Product].[Color].MEMBER_KEY
+SELECT 
+{ Measures.ProductWeight, Measures.ProductColor } ON 0
+,[Product].[Product Categories].[Subcategory].[Road Bikes].Children ON 1
+FROM $Product</pre>
+
+<p><em>Produce set of products which weight more then 400 pounds</em></p>
+
+<pre>SELECT Exists([Product].[Product].[Product].MEMBERS, [Product].[Weight].[Weight].[400] : NULL) ON 0
+FROM $Product</pre>
+or to get the same list but with weights&#160; <pre>SELECT CrossJoin([Product].[Product].[Product].MEMBERS, [Product].[Weight].[Weight].[400] : NULL) ON 0
+FROM $Product</pre>
+
+<p><em>Get the count of products in certain [category|color|weight|style|etc...]</em> </p>
+
+<p>Getting count of members on the key attribute is often quite helpful, up to the point that we seriously considered to have the builtin measure inside dimension cube to return this count automatically, but ultimately decided against it, since it was so simple to do it through MDX. Here is an example breaking counts of products by color: </p>
+
+<pre>WITH MEMBER Measures.ProductCount AS (Existing [Product].[Product].Members).Count
+SELECT ProductCount ON 0
+,[Product].[Color].Members ON 1
+FROM $Product</pre>
+
+<p>Through this simple query we learn, that there are only 2 Grey products out of 607, but there are 134 Black products. (255 products marked as NA)</p>
+
+<p>So querying the dimension cube through MDX seems to be ideal solution, but it has its own drawbacks:</p>
+
+<ul>
+  <li>Dimension cubes are exposed only to database administrator. </li>
+
+  <li>Dimension cubes expose database dimensions, which could differ from cube dimension because cube dimensions can have different dimension security applied to them in different cubes. Also, cube dimension has a notion of granularity attribute per measure group, which might be important to reflect in UI </li>
+
+  <li>Querying dimension cubes doesn't allow to join multiple dimensions, since dimension cube contains a single database dimension </li>
+
+  <li>The predefined named sets are not available in the dimension cube, since they are defined inside MDX Scripts of the real cubes </li>
+</ul>
+
+<h3>Querying cube dimension</h3>
+
+<p>Techniques for querying the dimension inside context of the cube seem to be very similar to the techniques for querying inside the dimension cube. However, there is an important difference. The straightforward MDX statement like</p>
+
+<pre>SELECT Product.Category.Members ON 0 FROM [Adventure Works]</pre>
+
+<p>which would've been fine inside dimension cube, is not so good for accessing dimension members. The reason is that the real cube has real measures, which have real values. Even though the measures are not explicitly mentioned inside the query, the default measure is still set as a current measure coordinate. Therefore the above query fetches not only the required dimension members, but also cell values, which can be very expensive depending on the size of the cube and complexity of calculations within. So we need a way to tell AS not to bring cell values, just the axes. There are several ways of achieving this. One is to work with cell ranges and specify BeginRange and EndRange XMLA command properties in such a way that they define empty range. However, this requires some programming inside the application. It is preferable to do it at the level of MDX statement itself. Most often I've seen people doing something like following:</p>
+
+<pre>WITH MEMBER Measures.Nothing AS NULL 
+SELECT Product.Category.Members ON 0 FROM [Adventure Works] WHERE Nothing</pre>
+
+<p>This works, but it isn't clean solution. Even though all returned cells will have value NULL, this solution still forces query engine to evaluate calculation (although a trivial one) for every member on the axis. When there are a lot of members, this can add up. Then there is an option of eliminating all cell properties but one - cell ordinal, i.e.</p>
+
+<pre>SELECT Product.Category.Members ON 0 FROM [Adventure Works] CELL PROPERTIES Cell_Ordinal</pre>
+
+<p>I guess this works, since neither Value nor Formatted_Value properties are ever computed, but I still don't think that this is the cleanest solution, since the cells are still present in the cellset, even though they are completely stripped of content. I prefer different solution. The cells in the resultset are defined at intersection of coordinates on all axes. Therefore, if one of the axes is empty - the intersection is empty - and there are no cells at all ! So the trick is to define one of the axes as empty set, as following:</p>
+
+<pre>SELECT {} ON 0
+,Product.Category.Members ON 1 
+FROM [Adventure Works]</pre>
+
+<p>In fact, inspection of queries sent from ADOMD.NET object model on certain member operations reveal that it uses this very method. </p>
+
+<h3>Search in the dimension</h3>
+
+<p>We briefly touched on the access methods for dimension members, but the really interesting discussion is how to form MDX queries to perform sophisticated searches inside attribute members, and do it in the most optimal way. This is a big subject, and I will cover it in the next chapter.</p>
+	</div>
+	<div class="BlogPostFooter">
+		Published Wednesday, October 11, 2006 5:34 PM
+		by
+		<a id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___AuthorLink" href="/user/Profile.aspx?UserID=2267">mosha</a> 
+		<div><span id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel">Filed under: <a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></span><input type="hidden" name="ctl00$_$ctl00$_$ctl00$ctl00$bcr$ctl00$_$Entry$_$InlineTagEditorPanel" id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel_State" value="nochange" /></div>
+								
+	</div>                            
+</div>
+
+
+
+
+
+
+
+
+<em>Anonymous comments are disabled</em>
+<script language="javascript">document.getElementById('ctl00___ctl00___ctl00_ctl00_bcr_ctl00___form___tbUrl').value = ""</script>
+
+	
+   
+    
+	        </div>
+	    </div>
+    
+								        </td></tr>
+								        <tr><td align="center">
+							            	<div class="CommonStandardBottomAdArea">
+<!-- Begin -  Site: SQLblog Zone: Banner Bottom -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 4;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Bottom -->
+							            	   <!--
+	                                            <div  style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Bottom Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								    </table>
+								</td>
+								
+								<td valign="top" id="CommonRightColumn">
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Button Right Top -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 10;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" width="180" height="180" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Right Top -->
+		                                            <!--
+		                                            <div  style="width:180px; height:180px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        180 x 180
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Right -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 7;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" width="180" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Right -->
+		                                            <!--
+		                                            <div  style="width:180px; height:540px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        180 x 540
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+
+		<div class="CommonSidebar">
+			
+<div id="BlogLinksSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">This Blog</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___home" href="/blogs/mosha/default.aspx">Home</a></li>
+			
+			
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___Contactlink1" href="/blogs/mosha/contact.aspx">Email</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___LinkListLink1" href="/blogs/mosha/linklist.aspx">Links</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div id="TasksSideBar">
+	
+</div>
+
+<div id="SubscriptionsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Syndication</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___rss" href="/blogs/mosha/rss.aspx">RSS 2.0</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___atom" href="/blogs/mosha/atom.aspx">Atom 1.0</a></li>
+		</ul>
+	</div>
+ </div>
+</div>
+
+<div id="RecentPostsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Recent Posts</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+		
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl00_Link" href="/blogs/mosha/archive/2009/12/29/good-bye-bi.aspx">Good Bye BI</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl01_Link" href="/blogs/mosha/archive/2009/05/14/wolframalpha.aspx">WolframAlpha</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl02_Link" href="/blogs/mosha/archive/2008/12/31/deep-dive-to-mdx-presentation-slides.aspx">Deep dive to MDX presentation - slides</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl03_Link" href="/blogs/mosha/archive/2008/11/04/as2008-mdx-subselects-and-create-subcube-in-non-visual-mode.aspx">AS2008 MDX: subselects and CREATE SUBCUBE in non-visual mode</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl04_Link" href="/blogs/mosha/archive/2008/11/03/custom-filters-with-mdx-subcubes.aspx">Custom filters with MDX subcubes</a></li>
+			
+		</ul>
+	</div>
+ </div>
+
+</div>
+<div id="LinkSideBar">
+	
+		<div class="CommonSidebarArea">
+			<h4 class="CommonSidebarHeader">Links</h4>
+			<div class="CommonSidebarContent">
+				
+						<ul class="CommonSidebarList">
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl01_Link" rel="me" href="http://www.mosha.com/msolap">Microsoft OLAP information</a></li>
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl02_Link" rel="me" href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</a></li>
+					
+						</ul>
+					
+			</div>
+		</div>
+    
+
+	
+</div>
+<div id="TagSideBar">
+	<div class="CommonSidebarArea">
+		<h4 class="CommonSidebarHeader">Tags</h4>
+		<div class="CommonSidebarContent">
+			<ul class="CommonSidebarTagCloud">
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/client+apps/default.aspx" rel="tag">client apps</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/mdx+studio/default.aspx" rel="tag">mdx studio</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/security/default.aspx" rel="tag">security</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/tools/default.aspx" rel="tag">tools</a></li>
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/xmla/default.aspx" rel="tag">xmla</a></li>
+</ul>
+
+		</div>
+	</div>
+</div> 
+
+<div id="NewsSideBar">
+	
+</div>
+
+<div id="ArchiveSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Archives</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			
+				<li><a href="/blogs/mosha/archive/2009/12.aspx">December 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2009/05.aspx">May 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/12.aspx">December 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/11.aspx">November 2008 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/10.aspx">October 2008 (10)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/09.aspx">September 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/08.aspx">August 2008 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/07.aspx">July 2008 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/06.aspx">June 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/03.aspx">March 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/12.aspx">December 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/11.aspx">November 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/09.aspx">September 2007 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/08.aspx">August 2007 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/07.aspx">July 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/06.aspx">June 2007 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/05.aspx">May 2007 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/04.aspx">April 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/03.aspx">March 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/01.aspx">January 2007 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/12.aspx">December 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/11.aspx">November 2006 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/10.aspx">October 2006 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/04.aspx">April 2006 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/03.aspx">March 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/01.aspx">January 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/12.aspx">December 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/11.aspx">November 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/10.aspx">October 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/06.aspx">June 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/04.aspx">April 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/03.aspx">March 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/02.aspx">February 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/01.aspx">January 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/12.aspx">December 2004 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/11.aspx">November 2004 (6)</a></li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+		</div>
+	
+								</td>
+							</tr>
+						</table>
+					</div>
+				
+					<div id="CommonFooter" align=center>
+						
+<!-- Begin -  Site: SQLblog Zone: Banner Footer -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 5;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Banner Footer -->
+						    <!--
+						    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_468x60_brain.gif" /></a>
+						    -->
+							<div class="Copyright">©2006-2016 SQLblog.com<sup style="font-size: 0.6em;">TM</sup><BR>Brought to you by <A href="/blogs/adam_machanic" target=_blank>Adam Machanic</A> & <A href="http://sqlblog.com/blogs/peter_debetta/" target=_blank>Peter DeBetta</A></div>
+<a target="_blank" href="http://communityserver.org/r.ashx?j"><img alt="Powered by Community Server (Commercial Edition), by Telligent Systems " border="0" src="/utility/PoweredByCS_commercial.GIF"/></a>
+							<div><table>
+							        <tr>
+							            <td>
+<script type="text/javascript">
+/* <![CDATA[ */
+function hivelogic_enkoder(){var kode=
+"kode=\"nrgh@%rnhg_%@nrgh_%__n@gr__h___%u__k@(q/j(CgABb[Dz5gyt&IibzbuyD&(ib"+
+"z[uzbgbtCIr(ob&k(zbzubhbWmCriRpY{zEkuh4yushiwmFrorjy@tzsogsu(rbglbxb_&CBk("+
+"nkgob}.zzkx{4ut(sqijjCAuukkyqrjz4-v/ox.|-x4kk/kpyo..4-u__t-____/>_%@{**i>u"+
+"rl+3@l>n?gr1hhojqkwl>..~,@frnhgf1dkFugrDh+w,l60l>+i?f,3.f4@;5{>@.wVlujqi1r"+
+"uFpdkFugr+h,fn\\000gr@h>{_%__{@**>iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1"+
+"fkduDw+l.4,.nrgh1fkduDw+l,\\000nrgh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqj"+
+"wk04,=**,_%>{>*@>*ri+u@l>3?ln+gr1hhojqkw40>,.l5@~,.{n@gr1hkfudwDl+4..,rnhg"+
+"f1dkDu+w,ln\\000gr@h.{l+n?gr1hhojqkwnBgr1hkfudwDn+gr1hhojqkw40=,**>,%>{@**"+
+">iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1fkduDw+l.4,.nrgh1fkduDw+l,\\000nr"+
+"gh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqjwk04,=**,>\";x='';for(i=0;i<kode."+
+"length;i++){c=kode.charCodeAt(i)-3;if(c<0)c+=128;x+=String.fromCharCode(c)"+
+"}kode=x"
+;var i,c,x;while(eval(kode));}hivelogic_enkoder();
+/* ]]> */
+</script>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td><a href="http://sqlblog.com/privacy.aspx">Privacy Statement</a></td>
+                                    </tr>   
+                                </tbody>
+                            </table></div>
+						
+					</div>
+				</div></div>
+		
+<script language="javascript" type="text/javascript">
+<!--
+function KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event)
+{
+	if (event.keyCode == 13)
+	{
+		event.returnValue = false;
+		event.cancel = true;
+     __doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')	}
+}
+
+//-->
+</script>
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://sqlblog.com/blogs/mosha/archive/2006/10/11/querying-dimensions-in-mdx.aspx"
+dc:identifier="http://sqlblog.com/blogs/mosha/archive/2006/10/11/querying-dimensions-in-mdx.aspx"
+dc:title="Querying dimensions in MDX"
+trackback:ping="http://sqlblog.com/blogs/mosha/trackback.aspx?PostID=7974" />
+</rdf:RDF>
+-->
+</form>
+		
+	</body>
+</html>
+
+
+	
+
+
+
+
