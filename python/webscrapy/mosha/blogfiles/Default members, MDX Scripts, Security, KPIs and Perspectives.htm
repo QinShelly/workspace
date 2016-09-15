@@ -1,0 +1,902 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+<head>
+<title>Microsoft OLAP by Mosha Pasumansky : Default members, MDX Scripts, Security, KPIs and Perspectives</title>
+<meta name="keywords" content="ssas" />
+<meta name="description" content="What happens to the cube after the processing is complete but before cube is ready for the querying ? There are actually quite a few steps that should be taken in order to prepare the cube, like create calculated members and named sets, apply security," />
+<meta name="GENERATOR" content="CommunityServer 2.1 SP2 (Build: 61129.1)" />
+<link rel="pingback" href="http://sqlblog.com/blogs/mosha/pingback.aspx" />
+<link rel="stylesheet" href="/Themes/Blogs/default/style/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/Common.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/Blog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/common_print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/blog_print.css" type="text/css" media="print" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" title="Microsoft OLAP by Mosha Pasumansky (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/rss.aspx"  />
+<link rel="alternate" type="application/atom+xml" title="Microsoft OLAP by Mosha Pasumansky (Atom 1.0)" href="http://sqlblog.com/blogs/mosha/atom.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="SQLblog.com Latest Blog Posts (RSS 2.0)" href="http://sqlblog.com/blogs/MainFeed.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="Default members, MDX Scripts, Security, KPIs and Perspectives Comment RSS (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/commentrss.aspx?PostID=7955"  />
+
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="/Utility/global.js?Version=2.1.61129.1" type="text/javascript"></script>
+            <style type="text/css"> body { font-size: 84%; } </style>
+            
+			
+			
+			
+       <meta name="y_key" content="002a6e7707c0b97d" />
+</head>
+
+	<body>
+		<form name="aspnetForm" method="post" action="/blogs/mosha/archive/2005/12/31/default-members-mdx-scripts-security-kpis-and-perspectives.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFN2N0bDAwJF8kY3RsMDAkXyRjdGwwMCRjdGwwMCRiaGNyJHQkXyRUaXRsZUJhclNlYXJjaFRleHQXE+usIilEF/w0tXjSjetU4FnTEQ==" />
+</div>
+
+<script language="javascript" type="text/javascript" src="/Utility/telligent_web_ui/1_0_3/Telligent_Modal.js"></script><script language="javascript" type="text/javascript">
+// <![CDATA[
+Telligent_Modal.Configure('/utility/loading.htm',['CommonModal'],['CommonModalTitle'],['CommonModalClose'],['CommonModalContent'],['CommonModalFooter'],['CommonModalResize'],['CommonModalMask'],100);
+// ]]>
+</script>
+						
+			
+				<div id="CommonOuter"><div id="Common">
+					<div id="CommonHeader">
+						
+<div class="CommonTitleBar">
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td class="CommonTitleBarImage">
+				<a href="/"><img src="/Themes/default/images/common/title.gif"  border=0 /></a>
+			</td>
+			<td class="CommonTitleBarTitleArea" width="100%"> <!-- nowrap="true"  -->
+				<!-- <h1 class="CommonTitleBarTitle"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSiteName" title="&lt;p>THE SQL Server Blog Spot on the Web&lt;/p>" href="/">SQLblog.com - The SQL Server blog spot on the web</a></h1> -->
+				<div class="CommonTitleBarDescription"><p>THE SQL Server Blog Spot on the Web</p></div>
+			</td>
+			<td class="CommonTitleBarSearchArea" nowrap="true">
+				<div class="CommonUserArea">
+					
+<div id="welcome">
+	
+			Welcome to SQLblog.com - The SQL Server blog spot on the web
+<a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Login" href="/login.aspx?ReturnUrl=%2fblogs%2fmosha%2farchive%2f2005%2f12%2f31%2fdefault-members-mdx-scripts-security-kpis-and-perspectives.aspx">Sign in</a> | <a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Register" href="/user/CreateUser.aspx?ReturnUrl=/blogs/mosha/archive/2005/12/31/default-members-mdx-scripts-security-kpis-and-perspectives.aspx"></a>
+
+
+
+		
+
+	 |  <a href="/languages/en-US/docs/faq.aspx"></a>
+</div>
+  
+				</div>
+				<div class="CommonSearch">
+					<table cellpadding="0" cellspacing="0" border="0" align="right"><tr valign="middle"><td nowrap="true">
+					<input name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchText" type="text" maxlength="64" size="15" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchText" onkeydown="KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event);" />
+					 in <select name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchDropDownList" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchDropDownList">
+	<option value="S:24">Microsoft OLAP by Mosha Pasumansky</option>
+	<option value=":">(Entire Site)</option>
+
+</select>
+					</td><td>
+					<span class="CommonSearchButtonOuter"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton" class="CommonSearchButton" href="javascript:__doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')">Search</a></span>
+					</td></tr></table>
+				</div>
+			</td>
+			<td style="padding-right: 5px">
+<!-- Begin -  Site: SQLblog Zone: Button Title Bar -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 20;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" width="56" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Title Bar -->
+			    <!--
+			    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_black_vertical_56x60_hostby.gif" /></a>
+			    -->
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="CommonTabBar">
+	
+	
+
+<script language="javascript">
+function tabOver(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTabHover';
+}
+function tabOut(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTab';
+}
+</script>
+
+
+		<div class="CommonTabBarInner">
+		<table cellspacing="0" cellpadding="0" border="0">
+		<tr valign="middle">
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/">Home</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripSelectedTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/blogs/default.aspx">Blogs</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/files/default.aspx">Downloads</a></td>
+	
+	    <td class="CommonSimpleTabStripTab" width="100%">
+	        &nbsp;
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <a href="/blogs/Opml.aspx">Opml</a>
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <!-- <a href="/blogs/MainFeed.aspx"><img width="12" height="12" src="/themes/default/images/common/feed-icon-12x12.png" border="0" />&nbsp;RSS</a> -->
+            <a href="/blogs/MainFeed.aspx"><img src="/themes/default/images/common/feed-icon-12x12.png" border="0" alt="View as RSS news feed in XML" style="" /></a>
+	    </td>
+		</tr>
+		</table>
+		</div>
+	
+
+</div>
+					</div>
+
+					<div id="CommonBody">
+<!-- Begin -  Site: SQLblog Zone: Site Tracking -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 1;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" width="1" height="1" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Site Tracking -->
+<!-- Begin -  Google Analytics Tracking -->
+<!--script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script-->
+<!--script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3578479-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script-->
+<!-- End -  Google Analytics Tracking -->
+						<table cellspacing="0" cellpadding="0" border="0" width="100%" id="CommonBodyTable">
+							<tr>
+								<td valign="top" id="CommonLeftColumn">
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 8;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Button Left Top -->		                                            
+		                                            <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft" >
+                                        	<div class="CommonSidebarAreaLeft">
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Left -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 6;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" width="120" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Left -->		                                        
+		                                            <!--
+		                                            <div  style="width:120px; height:360px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        120 x 360
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Middle -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 9;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Button Left Middle -->		                                        
+		                                           <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+								</td>
+								
+								<td valign="top" width="100%" id="CommonBodyColumn">
+								    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;" width="100%">
+								        <tr><td align="center">
+							            	<div class="CommonStandardTopAdArea" >
+<!-- Begin -  Site: SQLblog Zone: Banner Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 3;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Top -->
+                                                <!--	                                           
+                                                <div style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Top Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								        <tr><td>
+									        
+	    <div class="CommonContentArea">
+	        
+<h2 class="CommonTitle"><a id="ctl00___ctl00___ctl00_ctl00_bcr_bth___BlogTitle" class="headermaintitle" href="/blogs/mosha/default.aspx">Microsoft OLAP by Mosha Pasumansky</a></h2>
+<div class="CommonContent"></div>
+
+	        <div class="CommonContent">
+                
+			
+<style>
+.DoNotDisplay { display: none; }
+</style>
+
+
+	
+<div class="BlogPostArea">
+	<h1 class="BlogPostHeader">
+		Default members, MDX Scripts, Security, KPIs and Perspectives
+		
+	</h1>
+	<div class="BlogPostContent">
+		<p>What happens to the cube after the processing is complete but before cube is ready for the querying ? There are actually quite a few steps that should be taken in order to prepare the cube, like create calculated members and named sets, apply security, factor in actions and KPIs etc. In this article we will provide an overview of the most important steps and discuss issues directly following from how these steps are done and how the ordering of these steps is important.</p> <b>   <p>Cube initialization sequence</p> </b>  <p>At the very high level the following events happen before cube becomes available for querying:</p>  <ul>   <li>System determined default members are applied </li>    <li>MDX expressions for user specified default members in DDL are evaluated </li>    <li>User specified default members are applied </li>    <li>MDX expressions for dimension security (allowed set, denied set etc) are evaluated. </li>    <li>MDX expressions for dimension security default members are evaluated </li>    <li>Dimension security is applied to all attributes </li>    <li>Default members are adjusted if necessary (if default member became secured) </li>    <li>Dimension security visual totals are applied </li>    <li>MDX Script is executed </li>    <li>KPI driven calculated measures are created </li>    <li>Actions are added </li>    <li>Cell security is applied </li>    <li>Perspective measures restrictions are applying </li>    <li>Default measure is adjusted to the perspective </li> </ul>  <div>We will go now over each and every step and briefly discuss it.</div> <b>   <p>System determined default members are applied</p> </b>  <p>This is kind of bootstrapping process. We really need to set up an execution context before we can go ahead with following steps. Many of the following steps require evaluation of various MDX expressions, and MDX expression always relies on the current coordinates. These coordinates need to be initially set to something. You may ask why not to use directly default members from DDL. The answer is that these could be by themselves MDX expressions, which need to be executed in some context, so we get Catch 22. How does the system determines the &quot;system determined&quot; default members ? Strictly speaking, this could be arbitrary, therefore no application should ever rely on the exact details. But currently the algorithm is following</p>  <ul>   <li>If the attribute is aggregatable (i.e. IsAggregatable=true), then the All member will be chosen as a default member on that attribute </li>    <li>If the attribute is not aggregatable then some random member from this attribute will be chosen as a default member. Usually this random member is the first member which was seen during attribute processing, and since AS doesn’t issue ORDER BY statement for attribute processing there is no way to tell which member would be “first”. </li>    <li>For the default measure, the first non-hidden measure is chosen. If all measures are hidden, then the first measure is chosen. “First” here refers to the first measure in the measures collection in AMO and DDL (but not in MDSCHEMA_MEASURES, which is always alphabetically sorted). </li> </ul>  <p><b>MDX expressions for user specified default members in DDL are evaluated</strong></b></p>  <p>From the previous paragraph, it is obvious, that normally the user will always want to overwrite the [almost random] system selection of default members on non-aggregatable attributes. And perhaps the default measure as well (although this one is not as random). Default members can be MDX expressions, and they are evaluated in the context of the system determined default members established at the previous step. </p>  <p>But things are not as simple as they look. Let’s consider a simple example. Have you tried to define default member in measures one of the dimensions (dimension attributes really) to be a calculated member ? If you do it by using Analysis Services 2005 UI from BI Studio – you will get an error similar to this one:</p>  <pre>DefaultMeasure: Member object ‘Profit’ not found when parsing [Measures].[Profit]</pre>
+
+<p>What is going on ? Is it a bug ? It very well might be perceived as a bug, especially given a fact that in Analysis Services 2000 UI Analysis Manager such operation worked fine. But actually, amazingly enough, from the engine perspective, this is not a bug – it is By Design behavior. And, of course, it is possible to set default members to be calculated members – it’s just that the UI for it is not obvious. I agree that for the user, trying to change default member through the property called &quot;Default Member&quot; is the most natural thing to do, and it appears as a bug when it doesn’t always work, but there is an explanation. What happens here is the order of applying default members vs. executing MDX Script. The default members specified by the user in UI get translated into attribute property DefaultMember or cube property DefaultMeasure in DDL, and they are applied <b>before</b> MDX Script is executed. Since all calculated members are created inside MDX Script, if default member refers to calculated member – the error is raised, because there are no calculated members yet. This isn’t the only scenario when such an ordering is not desired. In my book, &quot;Fast Track to MDX&quot;, there is chapter about default members, and the example we give there is to set the default member of the Time dimension at the latest day for which there is a data in the fact table and it works with any cube in which this dimension is used, even if different fact tables have different latest date recorded. This is achieved by the following MDX expression for AS2000:</p>
+
+<pre>Tail(Filter(Time.Day.MEMBERS, NOT IsEmpty(Measures.DefaultMember)),1).Item(0).Item(0)</pre>
+
+<p>By the way, in AS2005 this expression could be simplified to</p>
+
+<pre>Tail(NonEmpty(Time.Day.MEMBERS),1).Item(0)</pre>
+
+<p>However, this won’t work in AS2005 for the same reason – since default members are evaluated before MDX Script was executed – it means that the CALCULATE statement wasn’t executed yet, therefore most of the cells in the cube are still empty, therefore Filter (or NonEmpty) function will return empty set, and default member cannot be NULL. On the other hand evaluating and applying DDL default members after MDX Script execution has its drawbacks. For example, the named sets and SCOPE subcubes need a context to be evaluated in, and the default members need to be factored in it. So there is really no &quot;right&quot; decision whether or not to apply DDL default members before or after MDX Script – either way, there will be scenarios when it will be wrong. And sometimes it is desirable to set default members in the middle of MDX Script, such that calculations before affect it (like CALCULATE) and calculations after are affected by it (named sets). Or even for different attributes default members should be set at different points of the MDX Script. It is, of course, possible to do – from the engine point of view pretty much the same way as it was done in AS2000. In AS2000 setting default members in the UI of Analysis Manager simply generated new ALTER CUBE command in the cube commands collection. Same can be done in AS2005, only that instead of collection of commands we have more convenient MDX Script itself. So what user needs to do is to insert into MDX Script at the right place (say, at the end of MDX Script) the appropriate ALTER CUBE statement, like the following example</p>
+
+<pre>ALTER CUBE CURRENTCUBE UPDATE DIMENSION Measures, DEFAULT_MEMBER=[Measures].[Profit]</pre>
+
+<p>One nice touch about ALTER CUBE statement, is that it operates on the hierarchy, therefore it allows setting default member on multiple attributes in one statement. (Of course, if all levels in the hierarchy have their underlying attributes defined relationships between each other – this is a moot point, because changing default member on one such attribute will anyway affect the others). </p>
+
+<p>The disadvantage of using ALTER CUBE statement in the MDX Script is that it needs to be added to the MDX Script of every cube where the default member needs to be set. However, it also can be argued, that in this case anyway default member depends on the MDX Script (either by being a calculated member or derives from the calculations) and therefore probably should be tailored separately to each cube anyway.</p>
+
+<p>As we have explained above, the MDX expressions for attribute default members in DDL should be such that they can be evaluated without cube context. For example, if Year is non aggregatable attribute, and we want to set default year to be the last year from the dimension, then the following expressions are fine:</p>
+
+<pre>Tail(Time.Year.Year.MEMBERS,1).Item(0)</pre>
+
+<pre>Time.Year.Year.MEMBERS.Item(Time.Year.Year.MEMBERS.Count-1)</pre>
+
+<p>Or if we want to tie it to the current year, then</p>
+
+<pre>StrToMember(&quot;[Time].[Year].[Year].[&quot;+DatePart(&quot;YYYY&quot;,Now())+&quot;]&quot;)</pre>
+or, even better, call to the server stored procedure which returns the member object for the Year hierarchy based on whatever logic the designer put into this stored procedure 
+
+<pre>GetDefaultYear()</pre>
+
+<p>All these expressions don’t need to get anything from the cube, so they are fine.</p>
+<b>
+  <p>User specified default members are applied</p>
+</b>
+
+<p>Default members evaluated in the previous step are applied to the context. It is important to separate these two steps, although it seems natural to combine them together. However, default members are evaluated in isolation one from another. Therefore, until all the expressions are evaluated, they are not applied. </p>
+<b>
+  <p>MDX expressions for dimension security are evaluated.</p>
+</b>
+
+<p>Dimension security is applied <b>before</b> the MDX Script is executed. Therefore all the static expressions inside MDX Script (such as named sets and calculation SCOPE subcubes) will be resolved in the context of dimension security. In dimension security you can use arbitrary MDX expressions for specifying allowed and denied sets. The UI normally generates simple member enumeration sets, but using Advanced tab you can define more complex set expressions. At this point, the system already determined all the roles to which the user belongs (called active roles), and it evaluates all the MDX expressions for all AttributePermission objects at all active roles. These expressions are resolved in the context of the current user, therefore function Username resolves to that user. But not only that, also if you are using stored procedure inside MDX expressions for dimension security, and this stored procedure has ImpersonationLevel=ImpersonateCurrentUser, then it will work as well. Both of these things are the foundation for the dynamic dimension security techniques. More information about it can be found at http://www.mosha.com/msolap/security.htm.</p>
+<b>
+  <p>MDX expressions for dimension security default members are evaluated</p>
+</b>
+
+<p>Dimension security can specify its own default members. This feature is more about personalization then about security (as we will quickly see in the next paragraph). </p>
+
+<p>Note, that while the MDX expressions for dimension security were evaluated at the previous step, the dimension security itself wasn’t applied yet. Therefore expressions for dimension security default members are still evaluated in the unsecured context. </p>
+<b>
+  <p>Dimension security is applied to all attributes</p>
+</b>
+
+<p>Now it is time to apply dimension security to all attributes. This means that the evaluated allowed and denied sets in every attribute and every active role are applied to form virtual bitmask over the attribute members. It is bitmask in a sense that it is a data structure which tells for every attribute member whether it is secured or not. It is virtual, because the physical implementation is not necessarily a bitmap, many times it is more sophisticated data structure, however, it is guaranteed to never require more memory then single bit per attribute member. Usually it requires much less memory then that. Merging of active roles is simply a virtual OR operation between these virtual bitmaps, and it is very efficient. Merging security implied default members is different, because at the end there could be only one default member, therefore if there is a conflict between the roles in this respect, one of them overwrites the others. It is not possible to control which default member will win. Process of merging active roles has other interesting rules about how visual totals settings are merged etc.</p>
+<b>
+  <p>Default members are adjusted</p>
+</b>
+
+<p>It is possible to set definitions in such a way that DDL defined default member or even dimension security defined default member ends up to be secured one. Obviously this would be a security hole, therefore after dimension security is applied, AS goes over all the default members and makes sure that they are all allowed. If previously defined default member is not allowed, it is changed using similar rules as in system determined default members. </p>
+<b>
+  <p>Dimension security visual totals are applied</p>
+</b>
+
+<p>Dimension security visual totals now are applied to the current context, therefore all the calculations which will be done from that point on will be done with visual totals on the attributes defined in dimension security</p>
+<b>
+  <p>MDX Script is executed</p>
+</b>
+
+<p>This is obviously most important step, where all the calculations are created etc. Since discussion about MDX Scripts can easily occupy few more blog articles, or even a book, we shall not say anything more here.</p>
+<b>
+  <p>KPI driven calculated measures are created</p>
+</b>
+
+<p>KPIs are one of the most publicized features in AS2005, and they are very user appealing. Yet, their implementation is very simple and straightforward. When the user defines KPI object properties such as KPI value, KPI goal, KPI trend etc, the user can specify the MDX expressions for these. What happens behind the scenes is that AS creates hidden calculated measures for each one of these properties and assign the MDX expression specified in the property to the calculated measure. Later, when user queries KPIs, the KPI browser generates queries using MDX functions KPIValue, KPIGoal, KPITrend etc, which return these hidden calculated measures. Now, we are at the step when these hidden calculated measures are created. As you noticed, this step happens after MDX Script was executed. One interesting consequence of it is that the calculated measures created at this step will be executed <b>after</b> all other calculations in the MDX Script. (Or to put it in AS2000 terms, they will have higher solve order and/or pass). Is it a problem ? It could be. Let’s suppose that our MDX Script looks like following:</p>
+
+<pre>CALCULATE;
+CREATE Account.Variance = (Account.Budget – Account.Actual)/Account.Actual;</pre>
+
+<p>I.e. we want to compute percentage how far budget deviated from the actuals. Now, let’s also suppose that we have KPI called Profit, which will have the following simple expression for its value</p>
+
+<pre>Measures.Sales – Measures.Cost</pre>
+
+<p>There will be hidden calculated measure called Profit_Value created behind the scenes, and when the user will want to see the variance of the Profit, he will navigate to the intersection of Variance and Profit_Value calculated members – and since Profit_Value is executed after Variance, the user will get difference of ratios instead of ratio of differences ! So how this problem can be solved. Actually, it can be solved very easily if we know one additional piece of information. KPI trigger creation of hidden calculated measures <b>only</b> if the MDX expression for the KPI property is not a simple reference to some measure (either calculated or physical). However, if the expression is a simple reference, such as [Measures].[Sales], then no hidden calculated measure will be created, and KPIValue, KPIGoal, KPITrend etc functions will simply return that measure. Therefore, one can (perhaps even should) create all the calculations in the MDX Script (where they really belong in the first place), and resolve all the precedence rules there using power of MDX Scripts. Therefore in our example the MDX Script would be rewritten as following:</p>
+
+<pre>CALCULATE;
+CREATE HIDDEN Profit = Measures.Sales – Measures.Cost;
+CREATE Account.Variance = (Account.Budget – Account.Actual)/Account.Actual;</pre>
+
+<p>And define the expression for the KPI Profit value simply as [Measures].[Profit] (there is no problem with KPIs having same names as calculated members – they belong to different namespaces). Since calculated measure Profit was defined in the MDX Script before the calculation for Variance, it will also be executed before, and therefore the results will start to make sense.</p>
+<b>
+  <p>Actions are added</p>
+</b>
+
+<p>Actions are really noop as far as calculations or current context are concerned. All the MDX expressions used in actions are evaluated dynamically upon invocation of MDSCHEMA_ACTIONS schema rowset.</p>
+<b>
+  <p>Cell security is applied</p>
+</b>
+
+<p>Unlike dimension security, cell security is applied <b>after</b> the MDX Script was executed. Therefore all the static calculations (such as named sets and calculation SCOPE subcubes) were resolved without taking cell security into account. Of course, all the dynamic expressions (i.e. everything at the right hand side of the assignment operator – expressions of calculated members, custom member formulas etc) will be executed using cell security. Cell security is applied by applying virtual OR operator on top of cell security boolean expressions in all active roles. </p>
+<b>
+  <p>Perspective measures restrictions are applying</p>
+</b>
+
+<p>We are close to the end now. The last piece deals with perspectives. Perspectives are really almost the same as the cube. It is mostly about hiding some objects, i.e. MDSCHEMA_DIMENSIONS, MDSCHEMA_HIERARCHIES, MDSCHEMA_MEASURES, MDSCHEMA_SETS etc return less rows. But the MDX is not affected by these changes (almost!). However, there is one important difference, and it deals with how measures (but not calculated members !!!) are hidden. When MEASURES.MEMBERS is used as axis expression, then only the measures and calculated measures included in the perspective are included in the set. But if same is used deeper inside expression for calculation, for example defining calculated member which does MEASURES.MEMBERS.COUNT, then the number which will be returned will count all the measures, including the hidden ones. Such behavior should sound familiar to the people who worked with MDX subselects and CREATE SUBCUBE. And indeed, the way perspective restrictions on measures are implemented is doing internal</p>
+
+<pre>CREATE SUBCUBE PerspectiveName FROM
+(SELECT PerspectiveMeasures ON 0 FROM CubeName)</pre>
+
+<p>This is pseudocode, because in AS2005 CREATE SUBCUBE cannot change the name of the cube on which it operates, but perspectives obviously have different name from the cube</p>
+<b>
+  <p>Default measure is adjusted to the perspective</p>
+</b>
+
+<p>Perspectives, of course, can overwrite default measures, since they may exclude the cube default measure. And even if default measure for perspective is not explicitly specified, it still may change. Just like with any other subselect and CREATE SUBCUBE statement, after it is done, the default members are adjusted to fit into the space defined by the subcube. Since for perspectives the subcube restriction is on measures only, the default measure is adjusted. </p>
+	</div>
+	<div class="BlogPostFooter">
+		Published Saturday, December 31, 2005 12:00 AM
+		by
+		<a id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___AuthorLink" href="/user/Profile.aspx?UserID=2267">mosha</a> 
+		<div><span id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel">Filed under: <a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></span><input type="hidden" name="ctl00$_$ctl00$_$ctl00$ctl00$bcr$ctl00$_$Entry$_$InlineTagEditorPanel" id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel_State" value="nochange" /></div>
+								
+	</div>                            
+</div>
+
+
+
+
+
+
+
+
+<em>Anonymous comments are disabled</em>
+<script language="javascript">document.getElementById('ctl00___ctl00___ctl00_ctl00_bcr_ctl00___form___tbUrl').value = ""</script>
+
+	
+   
+    
+	        </div>
+	    </div>
+    
+								        </td></tr>
+								        <tr><td align="center">
+							            	<div class="CommonStandardBottomAdArea">
+<!-- Begin -  Site: SQLblog Zone: Banner Bottom -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 4;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Bottom -->
+							            	   <!--
+	                                            <div  style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Bottom Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								    </table>
+								</td>
+								
+								<td valign="top" id="CommonRightColumn">
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Button Right Top -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 10;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" width="180" height="180" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Right Top -->
+		                                            <!--
+		                                            <div  style="width:180px; height:180px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        180 x 180
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Right -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 7;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" width="180" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Right -->
+		                                            <!--
+		                                            <div  style="width:180px; height:540px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        180 x 540
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+
+		<div class="CommonSidebar">
+			
+<div id="BlogLinksSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">This Blog</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___home" href="/blogs/mosha/default.aspx">Home</a></li>
+			
+			
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___Contactlink1" href="/blogs/mosha/contact.aspx">Email</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___LinkListLink1" href="/blogs/mosha/linklist.aspx">Links</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div id="TasksSideBar">
+	
+</div>
+
+<div id="SubscriptionsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Syndication</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___rss" href="/blogs/mosha/rss.aspx">RSS 2.0</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___atom" href="/blogs/mosha/atom.aspx">Atom 1.0</a></li>
+		</ul>
+	</div>
+ </div>
+</div>
+
+<div id="RecentPostsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Recent Posts</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+		
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl00_Link" href="/blogs/mosha/archive/2009/12/29/good-bye-bi.aspx">Good Bye BI</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl01_Link" href="/blogs/mosha/archive/2009/05/14/wolframalpha.aspx">WolframAlpha</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl02_Link" href="/blogs/mosha/archive/2008/12/31/deep-dive-to-mdx-presentation-slides.aspx">Deep dive to MDX presentation - slides</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl03_Link" href="/blogs/mosha/archive/2008/11/04/as2008-mdx-subselects-and-create-subcube-in-non-visual-mode.aspx">AS2008 MDX: subselects and CREATE SUBCUBE in non-visual mode</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl04_Link" href="/blogs/mosha/archive/2008/11/03/custom-filters-with-mdx-subcubes.aspx">Custom filters with MDX subcubes</a></li>
+			
+		</ul>
+	</div>
+ </div>
+
+</div>
+<div id="LinkSideBar">
+	
+		<div class="CommonSidebarArea">
+			<h4 class="CommonSidebarHeader">Links</h4>
+			<div class="CommonSidebarContent">
+				
+						<ul class="CommonSidebarList">
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl01_Link" rel="me" href="http://www.mosha.com/msolap">Microsoft OLAP information</a></li>
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl02_Link" rel="me" href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</a></li>
+					
+						</ul>
+					
+			</div>
+		</div>
+    
+
+	
+</div>
+<div id="TagSideBar">
+	<div class="CommonSidebarArea">
+		<h4 class="CommonSidebarHeader">Tags</h4>
+		<div class="CommonSidebarContent">
+			<ul class="CommonSidebarTagCloud">
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/client+apps/default.aspx" rel="tag">client apps</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/mdx+studio/default.aspx" rel="tag">mdx studio</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/security/default.aspx" rel="tag">security</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/tools/default.aspx" rel="tag">tools</a></li>
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/xmla/default.aspx" rel="tag">xmla</a></li>
+</ul>
+
+		</div>
+	</div>
+</div> 
+
+<div id="NewsSideBar">
+	
+</div>
+
+<div id="ArchiveSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Archives</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			
+				<li><a href="/blogs/mosha/archive/2009/12.aspx">December 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2009/05.aspx">May 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/12.aspx">December 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/11.aspx">November 2008 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/10.aspx">October 2008 (10)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/09.aspx">September 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/08.aspx">August 2008 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/07.aspx">July 2008 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/06.aspx">June 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/03.aspx">March 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/12.aspx">December 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/11.aspx">November 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/09.aspx">September 2007 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/08.aspx">August 2007 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/07.aspx">July 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/06.aspx">June 2007 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/05.aspx">May 2007 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/04.aspx">April 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/03.aspx">March 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/01.aspx">January 2007 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/12.aspx">December 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/11.aspx">November 2006 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/10.aspx">October 2006 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/04.aspx">April 2006 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/03.aspx">March 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/01.aspx">January 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/12.aspx">December 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/11.aspx">November 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/10.aspx">October 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/06.aspx">June 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/04.aspx">April 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/03.aspx">March 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/02.aspx">February 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/01.aspx">January 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/12.aspx">December 2004 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/11.aspx">November 2004 (6)</a></li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+		</div>
+	
+								</td>
+							</tr>
+						</table>
+					</div>
+				
+					<div id="CommonFooter" align=center>
+						
+<!-- Begin -  Site: SQLblog Zone: Banner Footer -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 5;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Banner Footer -->
+						    <!--
+						    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_468x60_brain.gif" /></a>
+						    -->
+							<div class="Copyright">©2006-2016 SQLblog.com<sup style="font-size: 0.6em;">TM</sup><BR>Brought to you by <A href="/blogs/adam_machanic" target=_blank>Adam Machanic</A> & <A href="http://sqlblog.com/blogs/peter_debetta/" target=_blank>Peter DeBetta</A></div>
+<a target="_blank" href="http://communityserver.org/r.ashx?j"><img alt="Powered by Community Server (Commercial Edition), by Telligent Systems " border="0" src="/utility/PoweredByCS_commercial.GIF"/></a>
+							<div><table>
+							        <tr>
+							            <td>
+<script type="text/javascript">
+/* <![CDATA[ */
+function hivelogic_enkoder(){var kode=
+"kode=\"nrgh@%rnhg_%@nrgh_%__n@gr__h___%u__k@(q/j(CgABb[Dz5gyt&IibzbuyD&(ib"+
+"z[uzbgbtCIr(ob&k(zbzubhbWmCriRpY{zEkuh4yushiwmFrorjy@tzsogsu(rbglbxb_&CBk("+
+"nkgob}.zzkx{4ut(sqijjCAuukkyqrjz4-v/ox.|-x4kk/kpyo..4-u__t-____/>_%@{**i>u"+
+"rl+3@l>n?gr1hhojqkwl>..~,@frnhgf1dkFugrDh+w,l60l>+i?f,3.f4@;5{>@.wVlujqi1r"+
+"uFpdkFugr+h,fn\\000gr@h>{_%__{@**>iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1"+
+"fkduDw+l.4,.nrgh1fkduDw+l,\\000nrgh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqj"+
+"wk04,=**,_%>{>*@>*ri+u@l>3?ln+gr1hhojqkw40>,.l5@~,.{n@gr1hkfudwDl+4..,rnhg"+
+"f1dkDu+w,ln\\000gr@h.{l+n?gr1hhojqkwnBgr1hkfudwDn+gr1hhojqkw40=,**>,%>{@**"+
+">iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1fkduDw+l.4,.nrgh1fkduDw+l,\\000nr"+
+"gh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqjwk04,=**,>\";x='';for(i=0;i<kode."+
+"length;i++){c=kode.charCodeAt(i)-3;if(c<0)c+=128;x+=String.fromCharCode(c)"+
+"}kode=x"
+;var i,c,x;while(eval(kode));}hivelogic_enkoder();
+/* ]]> */
+</script>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td><a href="http://sqlblog.com/privacy.aspx">Privacy Statement</a></td>
+                                    </tr>   
+                                </tbody>
+                            </table></div>
+						
+					</div>
+				</div></div>
+		
+<script language="javascript" type="text/javascript">
+<!--
+function KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event)
+{
+	if (event.keyCode == 13)
+	{
+		event.returnValue = false;
+		event.cancel = true;
+     __doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')	}
+}
+
+//-->
+</script>
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://sqlblog.com/blogs/mosha/archive/2005/12/31/default-members-mdx-scripts-security-kpis-and-perspectives.aspx"
+dc:identifier="http://sqlblog.com/blogs/mosha/archive/2005/12/31/default-members-mdx-scripts-security-kpis-and-perspectives.aspx"
+dc:title="Default members, MDX Scripts, Security, KPIs and Perspectives"
+trackback:ping="http://sqlblog.com/blogs/mosha/trackback.aspx?PostID=7955" />
+</rdf:RDF>
+-->
+</form>
+		
+	</body>
+</html>
+
+
+	
+
+
+
+

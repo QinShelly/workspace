@@ -1,0 +1,14 @@
+
+
+with 
+ MEMBER [Measures].[Owner Type] AS '[Metadata].[Metadata].Properties("Owner Type")'   
+MEMBER [Measures].[Owner Key] AS '[Metadata].[Metadata].Properties("Owner Key")'   
+MEMBER [Measures].[Alias] AS '[Metadata].[Metadata].Properties("Alias")'   
+MEMBER [Measures].[Description] AS '[Metadata].[Metadata].Properties("Description 1")'   
+MEMBER [Measures].[Path] AS '[Metadata].[Metadata].Properties("Path")'  
+MEMBER [Measures].[Datatype] AS '[Metadata].[Metadata].Properties("Datatype")'   
+select [METADATA].[METADATA].&[Measure]&[[Measures]].[ranged indicator]]] on rows  , 
+ {[Measures].[Owner Type], [Measures].[Owner Key], [Measures].[Alias], [Measures].[Description], [Measures].[Path], [Measures].[Datatype]} on columns 
+  from [loreal_raia]  
+  
+

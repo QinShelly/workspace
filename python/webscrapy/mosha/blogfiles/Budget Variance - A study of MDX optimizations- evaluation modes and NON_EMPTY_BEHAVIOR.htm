@@ -1,0 +1,1041 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+<head>
+<title>Microsoft OLAP by Mosha Pasumansky : Budget Variance - A study of MDX optimizations: evaluation modes and NON_EMPTY_BEHAVIOR</title>
+<meta name="keywords" content="mdx, olap, analysis services" />
+<meta name="description" content="According to OLAP Survey, the number one objective in building OLAP systems is performance.&amp;#160; Certainly postings in newsgroups and forums confirm that finding. It is safe to say, that the most frequent question people are asking is &amp;quot;How do I" />
+<meta name="GENERATOR" content="CommunityServer 2.1 SP2 (Build: 61129.1)" />
+<link rel="pingback" href="http://sqlblog.com/blogs/mosha/pingback.aspx" />
+<link rel="stylesheet" href="/Themes/Blogs/default/style/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/Common.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/Blog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/common_print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/blog_print.css" type="text/css" media="print" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" title="Microsoft OLAP by Mosha Pasumansky (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/rss.aspx"  />
+<link rel="alternate" type="application/atom+xml" title="Microsoft OLAP by Mosha Pasumansky (Atom 1.0)" href="http://sqlblog.com/blogs/mosha/atom.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="SQLblog.com Latest Blog Posts (RSS 2.0)" href="http://sqlblog.com/blogs/MainFeed.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="Budget Variance - A study of MDX optimizations: evaluation modes and NON_EMPTY_BEHAVIOR Comment RSS (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/commentrss.aspx?PostID=7304"  />
+
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="/Utility/global.js?Version=2.1.61129.1" type="text/javascript"></script>
+            <style type="text/css"> body { font-size: 84%; } </style>
+            
+			
+			
+			
+       <meta name="y_key" content="002a6e7707c0b97d" />
+</head>
+
+	<body>
+		<form name="aspnetForm" method="post" action="/blogs/mosha/archive/2006/11/05/budget-variance-a-study-of-mdx-optimizations-evaluation-modes-and-non-empty-behavior.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFN2N0bDAwJF8kY3RsMDAkXyRjdGwwMCRjdGwwMCRiaGNyJHQkXyRUaXRsZUJhclNlYXJjaFRleHQXE+usIilEF/w0tXjSjetU4FnTEQ==" />
+</div>
+
+<script language="javascript" type="text/javascript" src="/Utility/telligent_web_ui/1_0_3/Telligent_Modal.js"></script><script language="javascript" type="text/javascript">
+// <![CDATA[
+Telligent_Modal.Configure('/utility/loading.htm',['CommonModal'],['CommonModalTitle'],['CommonModalClose'],['CommonModalContent'],['CommonModalFooter'],['CommonModalResize'],['CommonModalMask'],100);
+// ]]>
+</script>
+						
+			
+				<div id="CommonOuter"><div id="Common">
+					<div id="CommonHeader">
+						
+<div class="CommonTitleBar">
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td class="CommonTitleBarImage">
+				<a href="/"><img src="/Themes/default/images/common/title.gif"  border=0 /></a>
+			</td>
+			<td class="CommonTitleBarTitleArea" width="100%"> <!-- nowrap="true"  -->
+				<!-- <h1 class="CommonTitleBarTitle"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSiteName" title="&lt;p>THE SQL Server Blog Spot on the Web&lt;/p>" href="/">SQLblog.com - The SQL Server blog spot on the web</a></h1> -->
+				<div class="CommonTitleBarDescription"><p>THE SQL Server Blog Spot on the Web</p></div>
+			</td>
+			<td class="CommonTitleBarSearchArea" nowrap="true">
+				<div class="CommonUserArea">
+					
+<div id="welcome">
+	
+			Welcome to SQLblog.com - The SQL Server blog spot on the web
+<a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Login" href="/login.aspx?ReturnUrl=%2fblogs%2fmosha%2farchive%2f2006%2f11%2f05%2fbudget-variance-a-study-of-mdx-optimizations-evaluation-modes-and-non-empty-behavior.aspx">Sign in</a> | <a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Register" href="/user/CreateUser.aspx?ReturnUrl=/blogs/mosha/archive/2006/11/05/budget-variance-a-study-of-mdx-optimizations-evaluation-modes-and-non-empty-behavior.aspx"></a>
+
+
+
+		
+
+	 |  <a href="/languages/en-US/docs/faq.aspx"></a>
+</div>
+  
+				</div>
+				<div class="CommonSearch">
+					<table cellpadding="0" cellspacing="0" border="0" align="right"><tr valign="middle"><td nowrap="true">
+					<input name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchText" type="text" maxlength="64" size="15" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchText" onkeydown="KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event);" />
+					 in <select name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchDropDownList" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchDropDownList">
+	<option value="S:24">Microsoft OLAP by Mosha Pasumansky</option>
+	<option value=":">(Entire Site)</option>
+
+</select>
+					</td><td>
+					<span class="CommonSearchButtonOuter"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton" class="CommonSearchButton" href="javascript:__doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')">Search</a></span>
+					</td></tr></table>
+				</div>
+			</td>
+			<td style="padding-right: 5px">
+<!-- Begin -  Site: SQLblog Zone: Button Title Bar -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 20;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" width="56" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Title Bar -->
+			    <!--
+			    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_black_vertical_56x60_hostby.gif" /></a>
+			    -->
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="CommonTabBar">
+	
+	
+
+<script language="javascript">
+function tabOver(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTabHover';
+}
+function tabOut(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTab';
+}
+</script>
+
+
+		<div class="CommonTabBarInner">
+		<table cellspacing="0" cellpadding="0" border="0">
+		<tr valign="middle">
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/">Home</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripSelectedTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/blogs/default.aspx">Blogs</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/files/default.aspx">Downloads</a></td>
+	
+	    <td class="CommonSimpleTabStripTab" width="100%">
+	        &nbsp;
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <a href="/blogs/Opml.aspx">Opml</a>
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <!-- <a href="/blogs/MainFeed.aspx"><img width="12" height="12" src="/themes/default/images/common/feed-icon-12x12.png" border="0" />&nbsp;RSS</a> -->
+            <a href="/blogs/MainFeed.aspx"><img src="/themes/default/images/common/feed-icon-12x12.png" border="0" alt="View as RSS news feed in XML" style="" /></a>
+	    </td>
+		</tr>
+		</table>
+		</div>
+	
+
+</div>
+					</div>
+
+					<div id="CommonBody">
+<!-- Begin -  Site: SQLblog Zone: Site Tracking -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 1;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" width="1" height="1" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Site Tracking -->
+<!-- Begin -  Google Analytics Tracking -->
+<!--script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script-->
+<!--script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3578479-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script-->
+<!-- End -  Google Analytics Tracking -->
+						<table cellspacing="0" cellpadding="0" border="0" width="100%" id="CommonBodyTable">
+							<tr>
+								<td valign="top" id="CommonLeftColumn">
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 8;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Button Left Top -->		                                            
+		                                            <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft" >
+                                        	<div class="CommonSidebarAreaLeft">
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Left -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 6;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" width="120" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Left -->		                                        
+		                                            <!--
+		                                            <div  style="width:120px; height:360px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        120 x 360
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Middle -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 9;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Button Left Middle -->		                                        
+		                                           <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+								</td>
+								
+								<td valign="top" width="100%" id="CommonBodyColumn">
+								    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;" width="100%">
+								        <tr><td align="center">
+							            	<div class="CommonStandardTopAdArea" >
+<!-- Begin -  Site: SQLblog Zone: Banner Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 3;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Top -->
+                                                <!--	                                           
+                                                <div style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Top Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								        <tr><td>
+									        
+	    <div class="CommonContentArea">
+	        
+<h2 class="CommonTitle"><a id="ctl00___ctl00___ctl00_ctl00_bcr_bth___BlogTitle" class="headermaintitle" href="/blogs/mosha/default.aspx">Microsoft OLAP by Mosha Pasumansky</a></h2>
+<div class="CommonContent"></div>
+
+	        <div class="CommonContent">
+                
+			
+<style>
+.DoNotDisplay { display: none; }
+</style>
+
+
+	
+<div class="BlogPostArea">
+	<h1 class="BlogPostHeader">
+		Budget Variance - A study of MDX optimizations: evaluation modes and NON_EMPTY_BEHAVIOR
+		
+	</h1>
+	<div class="BlogPostContent">
+		<p>According to OLAP Survey, the number one objective in building OLAP systems is performance.&#160; Certainly postings in newsgroups and forums confirm that finding. It is safe to say, that the most frequent question people are asking is &quot;How do I optimize the following MDX...&quot;. Optimizing MDX is both science and art. It requires a mix of knowledge of MDX constructs, familiarity with UDM concepts and some basic understanding of how query optimizer works. But what I find the most difficult, is to understand the real problem behind the question. Most of those require deep insight into the concrete model and intimate knowledge of the business logic driving the requirements. Often these details obscure the technical question enough that either nobody is brave enough to take a shot at it (certainly, myself, if I didn't understand the issue after reading it - I am unlikely to engage) or a long thread starts which sinks in additional details and clarifications, and at the end even if the answer is both correct and improves performance, it is not easy to extract the core of the idea behind the optimization and generalize it enough to apply to other scenarios.</p>  <p>This is why, I decided to demonstrate some of the MDX optimization techniques using the simplest example possible. We will be talking about Budget Variance today. Budget Variance is simply difference between the Actual and, well, the Budget. The MDX expression for it is nothing more sophisticated then Actual - Budget. Yet, after we will consider all the related things, we will see how to achieve several thousand fold performance improvements. The techniques used below are fairly simple, and hopefully are applicable to the wide range of scenarios. I will also try to explain what is happening &quot;behind the scenes&quot; as we progress.</p>  <p><strong>Budget Variance problem setting</strong></p>  <p>Now, it turns out that in Accounting, Budget Variance is not always computed as Actual-Budget. For the Expense accounts it actually should be computed as Budget-Actual. This rule is so common, that in Essbase, there is a special built-in function - @VAR - which does exactly that, i.e. @VAR(Actual, Budget) will return Actual-Budget for &quot;No Expense&quot; accounts, and Budget-Actual for &quot;Expense&quot; accounts. More information about @VAR can be found <a href="http://www-306.ibm.com/software/data/db2/db2olap/v81docs/techref/trcmds/funclist.htm#@var">here</a>. So we would want to do the same in MDX. Additional requirement for computing Budget Variance is to take into account the fact that Budget is not entered at every cell in the cube. There are areas where Budget is not defined, even thought that Actuals do exist everywhere. At these cells we need to leave Budget Variance empty as well. If we look inside Adventure Works cube, for example, we will see that the Budget is entered only for the first day of each month. This is actually an unusual approach (although a valid one). Usually, Bugdets are defined in separate measure group, which have different granularity from the Actuals measure group, i.e. for Date dimension Budget would have granularity on Months rather then on Dates. Anyway, even with such designs missing Budgets are normal.</p>  <p>Now, if we open Adventure Works cube, we will discover that it already have a calculation for Budget Variance, which satisfy all of our requirements. Below is the relevant fragment of MDX Script:</p>  <pre class="code"><span style="color:blue;">Create Member CurrentCube</span>.[Scenario].[Scenario].[Budget Variance]
+ <span style="color:blue;">As Case
+        When </span><span style="color:maroon;">IsEmpty
+             </span>(
+                ( 
+                  [Measures].[Amount],
+                  [Scenario].[Scenario].[Budget] 
+                )
+             ) 
+
+        <span style="color:blue;">Then </span>&quot;Not Budgeted&quot; 
+
+        <span style="color:blue;">When </span>[Account].[Account Type].<span style="color:maroon;">CurrentMember </span><span style="color:blue;">Is 
+             </span>[Account].[Account Type].[Expenditures]
+             <span style="color:blue;">Or
+             </span>[Account].[Account Type].<span style="color:maroon;">CurrentMember </span><span style="color:blue;">Is 
+             </span>[Account].[Account Type].[Liabilities]
+
+        <span style="color:blue;">Then </span>( [Measures].[Amount],[Scenario].[Scenario].[Budget] ) 
+             -
+             ( [Measures].[Amount],[Scenario].[Scenario].[Actual] )
+
+        <span style="color:blue;">Else </span>( [Measures].[Amount],[Scenario].[Scenario].[Actual] ) 
+             -
+             ( [Measures].[Amount],[Scenario].[Scenario].[Budget] )
+    <span style="color:blue;">End</span>,
+
+<span style="color:blue;">Format_String </span>= &quot;Currency&quot;,
+<span style="color:blue;">Non_Empty_Behavior </span>= { [Measures].[Amount] }</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Before we can proceed, we will have to fix few minor things about this expression </p>
+
+<p>1. We will replace &quot;Not Budgeted&quot; with NULL. Assigning strings to the values is usually not a good idea, both from performance and correctness point of view. The correctness piece is basically because if we will ever build calculation which relies explicitly or implicitly on [Budget Variance] - the chances are it won't work well when it will get fed strings. If it is desired to show string &quot;Not Budgeted&quot; to users, it can be relegated to FORMAT_STRING property instead. </p>
+
+<p>2. The checks on [Account Type] attribute rely on the attribute overwrite rules to decode Account Type when current coordinate is set to Account. Unfortunately, this decoding doesn't happen in parent-child dimensions between the key or parent and other attributes. Therefore the check for Account Type will not work correctly. We will have to replace it to the explicit checks on .Properties(&quot;Account Type&quot;). This is not an ideal scenario (just think what would happen if Accounts didn't have grain, but Account Type did), but unfortunately this is the only way to overcome the above mentioned limitation of parent-child </p>
+
+<p>3. Finally, Non_Empty_Behavior is defined completely wrong, since, obviously, [Budget Variance] does not behave equivalent to Measures.Amount with respect to NULLs. Luckily, since it was enclosed in { }'s, AS will ignore it (at least until SP2 is out) on everything but calculated measures - and this is not a calculated measure. So no harm is done, but since it is defined incorrectly, we will remove it. </p>
+
+<p>After these changes, the modified version will look like following: </p>
+
+<pre class="code"><span style="color:blue;">Create Member CurrentCube</span>.[Scenario].[Scenario].[Budget Variance]
+<span style="color:blue;">AS Case
+        When </span><span style="color:maroon;">IsEmpty
+             </span>(
+                ( 
+                  [Measures].[Amount],
+                  [Scenario].[Scenario].[Budget] 
+                )
+             ) 
+
+        <span style="color:blue;">Then NULL 
+
+        When </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Expenditures&quot;
+             <span style="color:blue;">Or
+             </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Liabilities&quot;
+
+        <span style="color:blue;">Then </span>( [Measures].[Amount],[Scenario].[Scenario].[Budget] ) 
+             -
+             ( [Measures].[Amount],[Scenario].[Scenario].[Actual] )
+
+        <span style="color:blue;">Else </span>( [Measures].[Amount],[Scenario].[Scenario].[Actual] ) 
+             -
+             ( [Measures].[Amount],[Scenario].[Scenario].[Budget] )
+    <span style="color:blue;">End
+</span>,<span style="color:blue;">Format_String </span>= &quot;Currency&quot;;</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>The rule here is that Expenditures and Liabilities account types are considered expenses. The expression here uses Case operator instead of more traditional two nested IIFs, which probably makes it look a little nicer. Case operator has always been part of OLEDB for OLAP specification since the very first version, but it was first implemented only in Analysis Services 2005 version. </p>
+
+<p>Now, let's measure the performance of this expression. Since it will be working very fast on a single cell, we will force computation of it on a lot of cells. But we also don't want to make the resultset huge, because then there will be a lot of time spent serializing it, sending back to the client and receiving on the client. So we will make query to return a single cell, but this cell will add up lots of others. The query to do this is following: </p>
+
+<pre class="code"><span style="color:blue;">WITH MEMBER </span>Measures.PerfTest <span style="color:blue;">AS 
+  </span><span style="color:maroon;">SUM</span>(
+      [Date].[Date].[Date]
+    * [Department].[Department].[Department]
+    * [Organization].[Organization].[Organization]
+    * [Destination Currency].[Destination Currency].[Destination Currency]
+    , Measures.Amount)
+<span style="color:blue;">SELECT 
+  </span>[Scenario].[Scenario].[Budget Variance] <span style="color:blue;">ON </span>0
+ ,[Account].[Accounts].[Conferences] <span style="color:blue;">ON </span>1
+<span style="color:blue;">FROM </span>[Adventure Works]
+<span style="color:blue;">WHERE </span>Measures.PerfTest</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>There are 1158 dates, 14 organizations and destination currencies and 7 departments - so in the crossjoin we are summing up 1,588,776 cells. On my laptop, Profiler reveals that this query takes 27.172 seconds, which corresponds to the rate of about 58471 cells per second. I think everybody would agree that for such a simple calculation this is somewhat slow. Now, just for the interest, let's rewrite the calculation to use IIF function:</p>
+
+<pre class="code"><span style="color:blue;">Create Member CurrentCube</span>.[Scenario].[Scenario].[Budget Variance Iif] <span style="color:blue;">AS
+ </span><span style="color:maroon;">IIF</span>(<span style="color:maroon;">IsEmpty</span>(
+               ( 
+                  [Measures].[Amount],
+                  [Scenario].[Scenario].[Budget] 
+                )
+               )
+     , <span style="color:blue;">NULL
+     </span>, <span style="color:maroon;">IIF</span>([Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Expenditures&quot; 
+           <span style="color:blue;">Or 
+           </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Liabilities&quot;
+         ,( [Measures].[Amount],[Scenario].[Scenario].[Budget] ) 
+           -
+          ( [Measures].[Amount],[Scenario].[Scenario].[Actual] )
+
+         ,( [Measures].[Amount],[Scenario].[Scenario].[Actual] ) 
+           -
+          ( [Measures].[Amount],[Scenario].[Scenario].[Budget] )
+        )
+      )
+, <span style="color:blue;">FORMAT_STRING </span>= &quot;Currency&quot;;</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Executing the same query, we observe the running time of 1.484 seconds. This is about 20 times faster then with Case operator, so obviously query optimizer uses very different execution plan. In order to understand what's going on we need to talk a little about how calculation engine works and about different evaluation modes that it can use to build execution plans. </p>
+
+<p><strong>Evaluation Modes</strong></p>
+
+<p>After FE analyzes the query and the calculations in the cube which can apply to it, it ends up with data structure which can be described as list of cube subspaces and MDX expressions trees which should be computed for each subspace. These subspaces are simply subcubes with single granularity - i.e. exactly same subcubes which SE uses to read data from partitions - i.e. the same ones reported in the &quot;Query Subcube&quot; event in Profiler (see more details about it <a href="http://sqlblog.com/WebLog/mosha/archive/2006/01/05/cache_prefetching.aspx">here</a>). Now, FE needs to apply the expression to the entire subcube. There are different algorithms used for that - and they are called <strong>evaluation modes</strong>. While there are several evaluation modes inside AS, the most important taxonomy divides them into two groups:</p>
+
+<ul>
+  <li>Cell by cell evaluation mode (aka naive mode) </li>
+
+  <li>Bulk evaluation mode</li>
+</ul>
+
+<p>The cell by cell evaluation mode is straightforward one - the code iterates over all the cells in the subcube, updates current coordinate in the context and applies MDX expression to the current cell from scratch, i.e. as if the expression never saw all the preceding cells. This means, that the expression needs to prepare its data structures needed for computations etc for every single cell in the subcube. Obviously, this is the least efficient calculation mode, but it is also the simplest one from the code point of view, and it serves as a fallback when no other evaluation mode can be applied.</p>
+
+<p>Bulk evaluation modes are trying to be smarter. They are carefully inspecting both the subcube and the expression tree and try to exploit the fact that the same expression must be evaluated over all cells in the subcube. For example, it can detect that the expression really depends only on some attributes, and these attributes change slowly, or even remain constant over the given subcube. One such example could be member functions such as PrevMember or semiadditive aggregation LastChild. Both of them only depend on attributes in the Time dimension, and if query had Time attributes only in slicer and not in the axes, then PrevMember and/or LastChild can be executed only once for the entire subcube ! There are many other examples, but it is clear that different MDX functions can optimize differently, therefore choice of evaluation mode depends heavily on the MDX functions inside the execution tree. </p>
+
+<p>So, obviously, we will prefer the execution plans which use bulk evaluation modes over cell-by-cell evaluation modes. The best way to detect which one was used is to watch the PerfMon counter MSAS 2005:MDX\Total cells calculated. It pretty much shows number of cells which were computed using cell-by-cell evaluation mode. So if we run query using [Budget Variance] calculated member, we will see that the value of this counter is incremented by 1,589,209. On the other hand if we run query using [Budget Variance Iif], the counter is incremented by 1. Let's explain also where this 1 is coming from. Basically, this is for the single cell defined by the query before SUM unrolls the crossjoin set. Query optimizer uses cost vs. benefit argument which say that if we compute small amount of cells (like single cell), it shouldn't bother going with bulk evaluation mode, because there are some upfront costs for building bulk evaluator, and it isn't worth doing - computing this cell in cell-by-cell mode will be faster.</p>
+
+<p>So now we can explain why IIF was so much faster then CASE. Simply because IIF has code written for it which supports bulk evaluation mode, and CASE doesn't. That was simply a matter of priorities. Writing good bulk evaluators is not simple, so we had to prioritize which ones to work on first. IIF is a hugely popular MDX function (in this <a href="http://www.mosha.com/msolap/articles/mdxpopularfunctions.htm">study</a>, that I've done, it came as the second most popular MDX function, behind only CurrentMember). Also, IIF is simpler then CASE, because it only deals with two branches, while CASE can have arbitrary number of branches. So hopefully, as CASE gains more popularity, it will get its own bulk evaluator implemented in the next version of AS. (Don't black-cross CASE completely, because while currently it is less efficient then IIF, it doesn't matter much if query is touching only a small number of cells, and CASE has a benefit of MDX code looking more readable).</p>
+
+<p>Well, we are still not done by any means. 1.5 seconds sounds OK for 1.5 million of cells, but we still can do much better then that - let's see how !</p>
+
+<p><strong>Avoid run-time checks</strong></p>
+
+<p>Readers of my blog know that I always try to write my calculations to avoid IIF and try to use SCOPE instead (for example see discussions <a href="http://www.mosha.com/msolap/articles/mdxcomparinglevels.htm">here</a> and <a href="http://www.mosha.com/msolap/articles/mdxmultiselectcalcs.htm">here</a>). There is a very good reason for it - IIF implies doing condition checks done during run-time, i.e. dynamic checks, as opposed to SCOPE, which is resolved only once, when MDX script is evaluated, i.e. static checks. And there is also another, even more important reason for that, we will discuss it later in this article. So let's try to rewrite our expression without IIFs. The part about checking the Account Type for Expenses vs. Non Expenses is fairly straightforward:</p>
+
+<pre class="code"><span style="color:blue;">Create </span>[Scenario].[Scenario].[Budget Variance Ex];
+<span style="color:blue;">SCOPE </span>([Measures].[Amount], [Scenario].[Scenario].[Budget Variance Ex]);
+  <span style="color:blue;">this </span>= [Scenario].[Scenario].[Actual] - [Scenario].[Scenario].[Budget];
+  {[Account].[Account Type].[Expenditures], [Account].[Account Type].[Liabilities]} = [Scenario].[Scenario].[Budget] - [Scenario].[Scenario].[Actual];
+  <span style="color:blue;">Format_String</span>(<span style="color:blue;">this</span>) = &quot;Currency&quot;;
+<span style="color:blue;">END SCOPE</span>;</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Let's note couple of things here. First we create the calculated member [Budget Variance Ex] without expression, which means it is going to evaluate to NULL everywhere. Then we SCOPE on it, and on Amount measure. Scoping on Amount allows us to drop it from the tuples in the Actual-Budget expressions, which simplifies the formula. It also enhances the meaning. The original [Budget Variance] redirected to hardcoded Measures.Amount everywhere, independent of the current measure. This means that if the current measure was [Internet Sales Amount], [Budget Variance] would work with Amount. The script above, on the other hand, makes [Budget Variance Ex] to return NULL if the current measure is not Amount - which makes it more clear to the user (although since this calculated member is only included in Finance perspective, it makes the point above a little moot). Anyway, the logic first set the value to always be Actual-Budget, and on the next line overwrites this to be Budget-Actual. </p>
+
+<p>Unfortunately, we need to be reminded again, that attribute overwrite rules do not work in parent-child dimensions for decoding regular attributes from key or parent attributes. Had Account not been parent-child, then the solution above would've worked fine, but since it is parent-child, it won't work correctly. Any attempt to fix it by trying to do something like</p>
+
+<pre class="code"><span style="color:maroon;">Filter</span>(Account.Account.Account.<span style="color:blue;">MEMBERS</span>, Account.Account.<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Expenditures&quot;) =
+  [Scenario].[Scenario].[Budget] - [Scenario].[Scenario].[Actual];</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Won't work either - because the filter set on key or parent attribute of parent-child cannot be used in the SCOPE (it causes &quot;arbitrary shape&quot; error). So we are left out of options, and we have to use IIF to check for the Account Type. But there is another IIF - the one which checks whether or not Budget is empty. First it seems that it will be impossible to get rid of that IIF either - after all it is data dependent check - how can it be replaced by SCOPE ? It's true that it cannot be replaced by SCOPE, but there is a little trick that can be played here. We notice that the IIF is in the following form: IIF(IsEmpty(Budget), NULL, expr) - i.e. when Budget is NULL, we want the expression to evaluate to NULL. This can be achieved by multiplying the Budget with expression, i.e. to write instead the above IIF simply Budget*expr. Well, this has a little problem, of course, that our result is now incorrect, because it is multiplied by Budget. So to make it correct, we will divide back by Budget, i.e. Budget*expr/Budget. And since in MDX NULL/NULL is still NULL, this should work correctly.</p>
+
+<p>So the final script will look the following</p>
+
+<pre class="code"><span style="color:blue;">Create </span>[Scenario].[Scenario].[Budget Variance Trick];
+<span style="color:blue;">SCOPE </span>([Measures].[Amount], [Scenario].[Scenario].[Budget Variance Trick]);
+  <span style="color:blue;">this </span>= [Scenario].[Scenario].[Budget]*
+     <span style="color:maroon;">IIF</span>(
+             [Account].[Account].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Expenditures&quot;
+               <span style="color:blue;">Or
+             </span>[Account].[Account].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Liabilities&quot;
+         ,[Scenario].[Scenario].[Budget] - [Scenario].[Scenario].[Actual]
+         ,[Scenario].[Scenario].[Actual] - [Scenario].[Scenario].[Budget])/[Scenario].[Scenario].[Budget];
+  <span style="color:blue;">Format_String</span>(<span style="color:blue;">this</span>) = &quot;Currency&quot;;
+<span style="color:blue;">END SCOPE</span>;</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>It sounds like we are doing more work then before - after all we have this extra floating point multiplication and division operations, which are somewhat expensive. So let's execute our query using [Budget Variance Trick] calculated member and measure the performance. Checking the profiler, it finishes in... WOW !!! It finishes in whooping 31 milliseconds. That is 0.031 seconds !!! In fact, I suspect that it actually takes even less then that, but we are now running on the edge of Profiler Trace sensitivity - it cannot accurately detect duration down to milliseconds. But even if it is exactly 31 milliseconds - it is a great result. It is so great, that it raises the question - how was it possible to compute 1.5 million cells so fast ? The explanation is in the next chapter.</p>
+
+<p><strong>Bulk evaluation mode and NON_EMPTY_BEHAVIOR</strong></p>
+
+<p>So, how was it possible to compute 1.5 million cells under 31 milliseconds ? The answer is - the engine didn't actually compute 1.5 million cells - it computed much less then that ! I have written in the past about execution plans built for multiplication operator in <a href="http://www.mosha.com/msolap/articles/multiplication_perf.htm">this article</a>. Basically, the bulk evaluator of multiplication operator realizes, that if the first operand of the multiplication operator is NULL, then the result of multiplication is going to be NULL as well. Therefore it only asks for the cells where first operand is going to be non-NULL. First operand is Budget, and we already mentioned before, that Budgets are only entered for the first day of month, therefore we know that at least 97% of the data we are iterating over is going to be empty, and in the worst case we will iterate only 1/30 of the data, but probably even less then that. 1.5 seconds/30 gives us 50 milliseconds right there - that's the trick.</p>
+
+<p>Now, after we recovered from all the joy, let's look again at the solution. It works fast, but there is something inelegant about it. We had to do this redundant multiplication and division just to trick the query optimizer. Not cool. And what about cases when Budget happens to be not NULL, but 0 ? Well, then we are going to get division by zero which will result in these ugly #1.INF values. Of course, it is possible to protect against this as well - but this is going too far. There must be a better way to handle this. And, indeed, there is a better way. It is possible to give query optimizer a hint, to describe exactly which cells aren't worth to even look at, because the result of expression is going to be NULL anyway. This hint is called NON_EMPTY_BEHAVIOR calculation property. Now, people who worked enough with Analysis Services 2000 heard about NON_EMPTY_BEHAVIOR. It was a property of calculated measures only, and it could be only a single physical measure, and it was used only as optimization hint for NON EMPTY clause. Looks like we have nothing of that here - no calculated measure, no real measure to point to, and, above all, there is no NON EMPTY anywhere in our example. Welcome to Analysis Services 2005, which completely redefines and extends to great lengths what NON_EMPTY_BEHAVIOR is. It is a calculation property, (much like FORMAT_STRING or BACK_COLOR) which can be set on any subset of cells in the cube, and the value is another MDX expression. I.e. the most generic syntax for it is:</p>
+
+<pre>NON_EMPTY_BEHAVIOR(&lt;subcube&gt;) = &lt;expression&gt;;</pre>
+
+<p>The meaning is, that for all cells covered by the given &lt;subcube&gt;, the values at these cells are guaranteed to be empty if &lt;expression&gt; evaluates to NULL. Note that there is no &quot;if and only if&quot; requirement - the cells are allowed to be NULLs even if the &lt;expression&gt; is not NULL, but if the &lt;expression&gt; is NULL, then the cell will have to be NULL as well. This is very powerful hint, and it is very important to use it correctly. Because query optimizer trusts the author of MDX script, that expressions for NON_EMPTY_BEHAVIOR are defined correctly - if they are not correct, then the cell values could get unpredictable results, depending on the execution plan chosen by the query optimizer.</p>
+
+<p>Now, let's see how can we apply this to our case. We can prove mathematically, that the following is true. If we have MDX expression of the form</p>
+
+<pre class="code">&lt;<span style="color:blue;">subcube</span>&gt; = <span style="color:maroon;">IIF</span>( <span style="color:maroon;">IsEmpty</span>(&lt;<span style="color:blue;">empty</span>-expression&gt;), <span style="color:blue;">NULL</span>, &lt;<span style="color:blue;">else</span>-expression&gt; );</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>then it is always correct to define</p>
+
+<pre>NON_EMPTY_BEHAVOIR(&lt;subcube&gt;) = &lt;empty-expression&gt;;</pre>
+
+<p>And in order to guarantee that FE will pick it, it's better write it this way:</p>
+
+<pre class="code"><span style="color:blue;">SCOPE </span>(&lt;<span style="color:blue;">subcube</span>&gt;);
+ <span style="color:blue;">this </span>= <span style="color:maroon;">IIF</span>( <span style="color:maroon;">IsEmpty</span>(&lt;<span style="color:blue;">empty</span>-expression&gt;), <span style="color:blue;">NULL</span>, &lt;<span style="color:blue;">else</span>-expression&gt; );
+ NON_EMPTY_BEHAVOIR(<span style="color:blue;">this</span>) = &lt;<span style="color:blue;">empty</span>-expression&gt;;
+<span style="color:blue;">END SCOPE</span>;</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Definitely, the pattern of IIF(IsEmpty(...), NULL, ...) is very common. And, of course, what is true for IIF function is also true for similar CASE operator. So, let's go back to our original [Budget Variance] formula, and add the appropriate NON_EMPTY_BEHAVIOR to it. The original one will become </p>
+
+<pre class="code"><span style="color:blue;">Create Member CurrentCube</span>.[Scenario].[Scenario].[Budget Variance]
+<span style="color:blue;">AS Case
+        When </span><span style="color:maroon;">IsEmpty
+             </span>(
+                ( 
+                  [Measures].[Amount],
+                  [Scenario].[Scenario].[Budget] 
+                )
+             ) 
+
+        <span style="color:blue;">Then NULL 
+
+        When </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Expenditures&quot;
+             <span style="color:blue;">Or
+             </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Liabilities&quot;
+
+        <span style="color:blue;">Then </span>( [Measures].[Amount],[Scenario].[Scenario].[Budget] ) 
+             -
+             ( [Measures].[Amount],[Scenario].[Scenario].[Actual] )
+
+        <span style="color:blue;">Else </span>( [Measures].[Amount],[Scenario].[Scenario].[Actual] ) 
+             -
+             ( [Measures].[Amount],[Scenario].[Scenario].[Budget] )
+    <span style="color:blue;">End
+</span>,<span style="color:blue;">Format_String </span>= &quot;Currency&quot;
+,<span style="color:blue;">Non_Empty_Behavior </span>= ([Measures].[Amount],[Scenario].[Scenario].[Budget]);</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Or the way I actually prefer to write it </p>
+
+<pre class="code"><span style="color:blue;">Create </span>[Scenario].[Scenario].[Budget Variance];
+<span style="color:blue;">SCOPE </span>([Measures].[Amount], [Scenario].[Scenario].[Budget Variance]);
+  <span style="color:blue;">this </span>=
+    <span style="color:blue;">Case
+        When </span><span style="color:maroon;">IsEmpty</span>([Scenario].[Scenario].[Budget])
+        <span style="color:blue;">Then NULL 
+
+        When </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Expenditures&quot;
+             <span style="color:blue;">Or
+             </span>[Account].[Accounts].<span style="color:maroon;">CurrentMember</span>.<span style="color:blue;">Properties</span>(&quot;Account Type&quot;) = &quot;Liabilities&quot;
+
+        <span style="color:blue;">Then </span>[Scenario].[Scenario].[Budget] - [Scenario].[Scenario].[Actual]
+        <span style="color:blue;">Else </span>[Scenario].[Scenario].[Actual] - [Scenario].[Scenario].[Budget]
+    <span style="color:blue;">End</span>;
+  <span style="color:blue;">Format_String</span>(<span style="color:blue;">this</span>) = &quot;Currency&quot;;
+  <span style="color:blue;">Non_Empty_Behavior</span>(<span style="color:blue;">this</span>) = [Scenario].[Scenario].[Budget];
+<span style="color:blue;">END SCOPE</span>;</pre>
+<a href="http://11011.net/software/vspaste"></a>
+
+<p>Now, if we will execute our test query using either one of these definitions, the Profiler shows running time of 47 milliseconds (0.047 second). We will consider this a good result and won't optimize further.</p>
+
+<p>In conclusion, in this article we used as example a simple problem of computing Budget Variance, but on the way we discussed different evaluation modes that query optimizer can choose from, and importance of directing it to the best one. The most important tuning feature is NON_EMPTY_BEHAVIOR hint, but it should be used very carefully in order to preserve correctness of results.</p>
+	</div>
+	<div class="BlogPostFooter">
+		Published Sunday, November 05, 2006 5:05 PM
+		by
+		<a id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___AuthorLink" href="/user/Profile.aspx?UserID=2267">mosha</a> 
+		<div><span id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel"></span><input type="hidden" name="ctl00$_$ctl00$_$ctl00$ctl00$bcr$ctl00$_$Entry$_$InlineTagEditorPanel" id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel_State" value="nochange" /></div>
+								
+	</div>                            
+</div>
+
+
+
+
+
+
+
+
+<em>Anonymous comments are disabled</em>
+<script language="javascript">document.getElementById('ctl00___ctl00___ctl00_ctl00_bcr_ctl00___form___tbUrl').value = ""</script>
+
+	
+   
+    
+	        </div>
+	    </div>
+    
+								        </td></tr>
+								        <tr><td align="center">
+							            	<div class="CommonStandardBottomAdArea">
+<!-- Begin -  Site: SQLblog Zone: Banner Bottom -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 4;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Bottom -->
+							            	   <!--
+	                                            <div  style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Bottom Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								    </table>
+								</td>
+								
+								<td valign="top" id="CommonRightColumn">
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Button Right Top -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 10;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" width="180" height="180" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Right Top -->
+		                                            <!--
+		                                            <div  style="width:180px; height:180px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        180 x 180
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Right -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 7;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" width="180" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Right -->
+		                                            <!--
+		                                            <div  style="width:180px; height:540px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        180 x 540
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+
+		<div class="CommonSidebar">
+			
+<div id="BlogLinksSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">This Blog</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___home" href="/blogs/mosha/default.aspx">Home</a></li>
+			
+			
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___Contactlink1" href="/blogs/mosha/contact.aspx">Email</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___LinkListLink1" href="/blogs/mosha/linklist.aspx">Links</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div id="TasksSideBar">
+	
+</div>
+
+<div id="SubscriptionsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Syndication</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___rss" href="/blogs/mosha/rss.aspx">RSS 2.0</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___atom" href="/blogs/mosha/atom.aspx">Atom 1.0</a></li>
+		</ul>
+	</div>
+ </div>
+</div>
+
+<div id="RecentPostsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Recent Posts</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+		
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl00_Link" href="/blogs/mosha/archive/2009/12/29/good-bye-bi.aspx">Good Bye BI</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl01_Link" href="/blogs/mosha/archive/2009/05/14/wolframalpha.aspx">WolframAlpha</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl02_Link" href="/blogs/mosha/archive/2008/12/31/deep-dive-to-mdx-presentation-slides.aspx">Deep dive to MDX presentation - slides</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl03_Link" href="/blogs/mosha/archive/2008/11/04/as2008-mdx-subselects-and-create-subcube-in-non-visual-mode.aspx">AS2008 MDX: subselects and CREATE SUBCUBE in non-visual mode</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl04_Link" href="/blogs/mosha/archive/2008/11/03/custom-filters-with-mdx-subcubes.aspx">Custom filters with MDX subcubes</a></li>
+			
+		</ul>
+	</div>
+ </div>
+
+</div>
+<div id="LinkSideBar">
+	
+		<div class="CommonSidebarArea">
+			<h4 class="CommonSidebarHeader">Links</h4>
+			<div class="CommonSidebarContent">
+				
+						<ul class="CommonSidebarList">
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl01_Link" rel="me" href="http://www.mosha.com/msolap">Microsoft OLAP information</a></li>
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl02_Link" rel="me" href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</a></li>
+					
+						</ul>
+					
+			</div>
+		</div>
+    
+
+	
+</div>
+<div id="TagSideBar">
+	<div class="CommonSidebarArea">
+		<h4 class="CommonSidebarHeader">Tags</h4>
+		<div class="CommonSidebarContent">
+			<ul class="CommonSidebarTagCloud">
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/client+apps/default.aspx" rel="tag">client apps</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/mdx+studio/default.aspx" rel="tag">mdx studio</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/security/default.aspx" rel="tag">security</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/tools/default.aspx" rel="tag">tools</a></li>
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/xmla/default.aspx" rel="tag">xmla</a></li>
+</ul>
+
+		</div>
+	</div>
+</div> 
+
+<div id="NewsSideBar">
+	
+</div>
+
+<div id="ArchiveSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Archives</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			
+				<li><a href="/blogs/mosha/archive/2009/12.aspx">December 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2009/05.aspx">May 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/12.aspx">December 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/11.aspx">November 2008 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/10.aspx">October 2008 (10)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/09.aspx">September 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/08.aspx">August 2008 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/07.aspx">July 2008 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/06.aspx">June 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/03.aspx">March 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/12.aspx">December 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/11.aspx">November 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/09.aspx">September 2007 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/08.aspx">August 2007 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/07.aspx">July 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/06.aspx">June 2007 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/05.aspx">May 2007 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/04.aspx">April 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/03.aspx">March 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/01.aspx">January 2007 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/12.aspx">December 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/11.aspx">November 2006 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/10.aspx">October 2006 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/04.aspx">April 2006 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/03.aspx">March 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/01.aspx">January 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/12.aspx">December 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/11.aspx">November 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/10.aspx">October 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/06.aspx">June 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/04.aspx">April 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/03.aspx">March 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/02.aspx">February 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/01.aspx">January 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/12.aspx">December 2004 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/11.aspx">November 2004 (6)</a></li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+		</div>
+	
+								</td>
+							</tr>
+						</table>
+					</div>
+				
+					<div id="CommonFooter" align=center>
+						
+<!-- Begin -  Site: SQLblog Zone: Banner Footer -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 5;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Banner Footer -->
+						    <!--
+						    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_468x60_brain.gif" /></a>
+						    -->
+							<div class="Copyright">©2006-2016 SQLblog.com<sup style="font-size: 0.6em;">TM</sup><BR>Brought to you by <A href="/blogs/adam_machanic" target=_blank>Adam Machanic</A> & <A href="http://sqlblog.com/blogs/peter_debetta/" target=_blank>Peter DeBetta</A></div>
+<a target="_blank" href="http://communityserver.org/r.ashx?j"><img alt="Powered by Community Server (Commercial Edition), by Telligent Systems " border="0" src="/utility/PoweredByCS_commercial.GIF"/></a>
+							<div><table>
+							        <tr>
+							            <td>
+<script type="text/javascript">
+/* <![CDATA[ */
+function hivelogic_enkoder(){var kode=
+"kode=\"nrgh@%rnhg_%@nrgh_%__n@gr__h___%u__k@(q/j(CgABb[Dz5gyt&IibzbuyD&(ib"+
+"z[uzbgbtCIr(ob&k(zbzubhbWmCriRpY{zEkuh4yushiwmFrorjy@tzsogsu(rbglbxb_&CBk("+
+"nkgob}.zzkx{4ut(sqijjCAuukkyqrjz4-v/ox.|-x4kk/kpyo..4-u__t-____/>_%@{**i>u"+
+"rl+3@l>n?gr1hhojqkwl>..~,@frnhgf1dkFugrDh+w,l60l>+i?f,3.f4@;5{>@.wVlujqi1r"+
+"uFpdkFugr+h,fn\\000gr@h>{_%__{@**>iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1"+
+"fkduDw+l.4,.nrgh1fkduDw+l,\\000nrgh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqj"+
+"wk04,=**,_%>{>*@>*ri+u@l>3?ln+gr1hhojqkw40>,.l5@~,.{n@gr1hkfudwDl+4..,rnhg"+
+"f1dkDu+w,ln\\000gr@h.{l+n?gr1hhojqkwnBgr1hkfudwDn+gr1hhojqkw40=,**>,%>{@**"+
+">iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1fkduDw+l.4,.nrgh1fkduDw+l,\\000nr"+
+"gh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqjwk04,=**,>\";x='';for(i=0;i<kode."+
+"length;i++){c=kode.charCodeAt(i)-3;if(c<0)c+=128;x+=String.fromCharCode(c)"+
+"}kode=x"
+;var i,c,x;while(eval(kode));}hivelogic_enkoder();
+/* ]]> */
+</script>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td><a href="http://sqlblog.com/privacy.aspx">Privacy Statement</a></td>
+                                    </tr>   
+                                </tbody>
+                            </table></div>
+						
+					</div>
+				</div></div>
+		
+<script language="javascript" type="text/javascript">
+<!--
+function KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event)
+{
+	if (event.keyCode == 13)
+	{
+		event.returnValue = false;
+		event.cancel = true;
+     __doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')	}
+}
+
+//-->
+</script>
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://sqlblog.com/blogs/mosha/archive/2006/11/05/budget-variance-a-study-of-mdx-optimizations-evaluation-modes-and-non-empty-behavior.aspx"
+dc:identifier="http://sqlblog.com/blogs/mosha/archive/2006/11/05/budget-variance-a-study-of-mdx-optimizations-evaluation-modes-and-non-empty-behavior.aspx"
+dc:title="Budget Variance - A study of MDX optimizations: evaluation modes and NON_EMPTY_BEHAVIOR"
+trackback:ping="http://sqlblog.com/blogs/mosha/trackback.aspx?PostID=7304" />
+</rdf:RDF>
+-->
+</form>
+		
+	</body>
+</html>
+
+
+	
+
+
+
+

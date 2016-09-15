@@ -1,0 +1,61 @@
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[olap].[STORE_SALES_X]') AND TYPE in (N'V'))
+DROP VIEW [olap].[STORE_SALES_X]
+GO
+
+DECLARE @sql VARCHAR(MAX)
+
+SELECT  @sql = smv.definition FROM sys.all_views AS v JOIN sys.sql_modules AS smv ON smv.object_id = v.object_id and name = 'STORE_SALES'
+
+SET @sql = replace(@sql, 'view [olap].[STORE_SALES]', 'view [olap].[STORE_SALES_X]') 
+
+EXEC(@sql)
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[olap].[STORE_SALES]') AND TYPE in (N'V'))
+DROP VIEW [olap].[STORE_SALES]
+GO
+
+DECLARE @sql VARCHAR(MAX)=''
+
+SELECT @sql=@sql+CASE WHEN name ='Total Sales Amount' THEN '
+CASE WHEN [Total Sales Volume Units] IS NULL THEN NULL
+	 WHEN ISNULL([WTD Total Sales Volume Units],0)=0 THEN 0 
+	 ELSE [WTD Total Sales Amount]*[Total Sales Volume Units]/[WTD Total Sales Volume Units]
+END AS [Total Sales Amount]' ELSE '['+name+']' END +','
+FROM SYSCOLUMNS WHERE id=OBJECT_ID('olap.STORE_SALES_X','V')
+
+SET @sql=@sql+'
+CASE WHEN [Store On Hand Volume Units] IS NULL THEN NULL
+	 WHEN ISNULL([Store WTD Daily On Hand Units],0)=0 THEN 0 
+	 ELSE [Store On Hand Volume Units]*[Store WTD Daily On Hand Amount]/[Store WTD Daily On Hand Units]
+END AS [Store On Hand Amount]'
+
+SET @sql='CREATE VIEW olap.STORE_SALES AS SELECT '+@sql+' FROM olap.STORE_SALES_X' 
+
+EXEC(@sql)
+
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[olap].[DC_SHIPMENT_X]') AND type in (N'V'))
+DROP VIEW [olap].[DC_SHIPMENT_X]
+GO
+
+declare @sql varchar(max)
+SELECT @sql = smv.definition FROM sys.all_views AS v JOIN sys.sql_modules AS smv ON smv.object_id = v.object_id and name = 'DC_SHIPMENT'
+SET @sql = replace(@sql, 'view [olap].[DC_SHIPMENT]', 'view [olap].[DC_SHIPMENT_X]')
+execute(@sql)
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[olap].[DC_SHIPMENT]') AND type in (N'V'))
+DROP VIEW [olap].[DC_SHIPMENT]
+GO
+
+CREATE VIEW olap.DC_SHIPMENT AS
+SELECT fact.*,
+CASE WHEN [DC On Hand Volume Units] IS NULL THEN NULL
+	 WHEN ISNULL([DC WTD Daily On Hand Units],0)=0 THEN 0 
+	 ELSE [DC On Hand Volume Units]*[DC WTD Daily On Hand Amount]/[DC WTD Daily On Hand Units]
+END AS [DC On Hand Amount]
+
+FROM  olap.DC_SHIPMENT_X fact 
+GO

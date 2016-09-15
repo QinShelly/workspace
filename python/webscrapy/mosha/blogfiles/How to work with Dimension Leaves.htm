@@ -1,0 +1,860 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    
+<head>
+<title>Microsoft OLAP by Mosha Pasumansky : How to work with Dimension Leaves</title>
+<meta name="keywords" content="mdx" />
+<meta name="description" content="Dimension leaves is one of the fundamental concepts in OLAP. Dimension leaves are used in variety of situations – from defining calculations on the leaves to aggregate up, and to different UI icons for leaves vs. non-leaves. But while it may seem that" />
+<meta name="GENERATOR" content="CommunityServer 2.1 SP2 (Build: 61129.1)" />
+<link rel="pingback" href="http://sqlblog.com/blogs/mosha/pingback.aspx" />
+<link rel="stylesheet" href="/Themes/Blogs/default/style/print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/Common.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/Blog.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="/Themes/default/Style/common_print.css" type="text/css" media="print" />
+<link rel="stylesheet" href="/Themes/default/Style/blog_print.css" type="text/css" media="print" />
+<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+<link rel="alternate" type="application/rss+xml" title="Microsoft OLAP by Mosha Pasumansky (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/rss.aspx"  />
+<link rel="alternate" type="application/atom+xml" title="Microsoft OLAP by Mosha Pasumansky (Atom 1.0)" href="http://sqlblog.com/blogs/mosha/atom.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="SQLblog.com Latest Blog Posts (RSS 2.0)" href="http://sqlblog.com/blogs/MainFeed.aspx"  />
+<link rel="alternate" type="application/rss+xml" title="How to work with Dimension Leaves Comment RSS (RSS 2.0)" href="http://sqlblog.com/blogs/mosha/commentrss.aspx?PostID=7682"  />
+
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <script src="/Utility/global.js?Version=2.1.61129.1" type="text/javascript"></script>
+            <style type="text/css"> body { font-size: 84%; } </style>
+            
+			
+			
+			
+       <meta name="y_key" content="002a6e7707c0b97d" />
+</head>
+
+	<body>
+		<form name="aspnetForm" method="post" action="/blogs/mosha/archive/2006/04/29/how-to-work-with-dimension-leaves.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTMyNjg0MDc1MWQYAQUeX19Db250cm9sc1JlcXVpcmVQb3N0QmFja0tleV9fFgEFN2N0bDAwJF8kY3RsMDAkXyRjdGwwMCRjdGwwMCRiaGNyJHQkXyRUaXRsZUJhclNlYXJjaFRleHQXE+usIilEF/w0tXjSjetU4FnTEQ==" />
+</div>
+
+<script language="javascript" type="text/javascript" src="/Utility/telligent_web_ui/1_0_3/Telligent_Modal.js"></script><script language="javascript" type="text/javascript">
+// <![CDATA[
+Telligent_Modal.Configure('/utility/loading.htm',['CommonModal'],['CommonModalTitle'],['CommonModalClose'],['CommonModalContent'],['CommonModalFooter'],['CommonModalResize'],['CommonModalMask'],100);
+// ]]>
+</script>
+						
+			
+				<div id="CommonOuter"><div id="Common">
+					<div id="CommonHeader">
+						
+<div class="CommonTitleBar">
+	<table cellpadding=0 cellspacing=0 border=0>
+		<tr>
+			<td class="CommonTitleBarImage">
+				<a href="/"><img src="/Themes/default/images/common/title.gif"  border=0 /></a>
+			</td>
+			<td class="CommonTitleBarTitleArea" width="100%"> <!-- nowrap="true"  -->
+				<!-- <h1 class="CommonTitleBarTitle"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSiteName" title="&lt;p>THE SQL Server Blog Spot on the Web&lt;/p>" href="/">SQLblog.com - The SQL Server blog spot on the web</a></h1> -->
+				<div class="CommonTitleBarDescription"><p>THE SQL Server Blog Spot on the Web</p></div>
+			</td>
+			<td class="CommonTitleBarSearchArea" nowrap="true">
+				<div class="CommonUserArea">
+					
+<div id="welcome">
+	
+			Welcome to SQLblog.com - The SQL Server blog spot on the web
+<a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Login" href="/login.aspx?ReturnUrl=%2fblogs%2fmosha%2farchive%2f2006%2f04%2f29%2fhow-to-work-with-dimension-leaves.aspx">Sign in</a> | <a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___Displayuserwelcome1___ctl04___Register" href="/user/CreateUser.aspx?ReturnUrl=/blogs/mosha/archive/2006/04/29/how-to-work-with-dimension-leaves.aspx"></a>
+
+
+
+		
+
+	 |  <a href="/languages/en-US/docs/faq.aspx"></a>
+</div>
+  
+				</div>
+				<div class="CommonSearch">
+					<table cellpadding="0" cellspacing="0" border="0" align="right"><tr valign="middle"><td nowrap="true">
+					<input name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchText" type="text" maxlength="64" size="15" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchText" onkeydown="KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event);" />
+					 in <select name="ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchDropDownList" id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchDropDownList">
+	<option value="S:24">Microsoft OLAP by Mosha Pasumansky</option>
+	<option value=":">(Entire Site)</option>
+
+</select>
+					</td><td>
+					<span class="CommonSearchButtonOuter"><a id="ctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton" class="CommonSearchButton" href="javascript:__doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')">Search</a></span>
+					</td></tr></table>
+				</div>
+			</td>
+			<td style="padding-right: 5px">
+<!-- Begin -  Site: SQLblog Zone: Button Title Bar -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 20;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=95640&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=20&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=95640" width="56" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Title Bar -->
+			    <!--
+			    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_black_vertical_56x60_hostby.gif" /></a>
+			    -->
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="CommonTabBar">
+	
+	
+
+<script language="javascript">
+function tabOver(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTabHover';
+}
+function tabOut(e)
+{
+	if (e.className!='CommonSimpleTabStripSelectedTab')
+		e.className='CommonSimpleTabStripTab';
+}
+</script>
+
+
+		<div class="CommonTabBarInner">
+		<table cellspacing="0" cellpadding="0" border="0">
+		<tr valign="middle">
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/">Home</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripSelectedTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/blogs/default.aspx">Blogs</a></td>
+	
+		<td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);"><a href="/files/default.aspx">Downloads</a></td>
+	
+	    <td class="CommonSimpleTabStripTab" width="100%">
+	        &nbsp;
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <a href="/blogs/Opml.aspx">Opml</a>
+	    </td>
+	    <td nowrap class="CommonSimpleTabStripTab" onmouseover="tabOver(this);" onmouseout="tabOut(this);">
+	        <!-- <a href="/blogs/MainFeed.aspx"><img width="12" height="12" src="/themes/default/images/common/feed-icon-12x12.png" border="0" />&nbsp;RSS</a> -->
+            <a href="/blogs/MainFeed.aspx"><img src="/themes/default/images/common/feed-icon-12x12.png" border="0" alt="View as RSS news feed in XML" style="" /></a>
+	    </td>
+		</tr>
+		</table>
+		</div>
+	
+
+</div>
+					</div>
+
+					<div id="CommonBody">
+<!-- Begin -  Site: SQLblog Zone: Site Tracking -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 1;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=53727&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=1&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=53727" width="1" height="1" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Site Tracking -->
+<!-- Begin -  Google Analytics Tracking -->
+<!--script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script-->
+<!--script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-3578479-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script-->
+<!-- End -  Google Analytics Tracking -->
+						<table cellspacing="0" cellpadding="0" border="0" width="100%" id="CommonBodyTable">
+							<tr>
+								<td valign="top" id="CommonLeftColumn">
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 8;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=2933&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=8&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=2933" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+-->
+<!-- End -  Site: SQLblog Zone: Button Left Top -->		                                            
+		                                            <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft" >
+                                        	<div class="CommonSidebarAreaLeft">
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Left -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 6;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=40653&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=6&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=40653" width="120" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Left -->		                                        
+		                                            <!--
+		                                            <div  style="width:120px; height:360px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        120 x 360
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebarLeft">
+                                        	<div class="CommonSidebarAreaLeft"  >
+		                                        <div class="CommonSidebarContentLeftInfo">
+<!-- Begin -  Site: SQLblog Zone: Button Left Middle -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 9;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=58125&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=9&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=58125" width="120" height="120" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Button Left Middle -->		                                        
+		                                           <!--
+		                                            <div  style="width:120px; height:120px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        120 x 120
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+								</td>
+								
+								<td valign="top" width="100%" id="CommonBodyColumn">
+								    <table cellpadding="0" cellspacing="0" border="0" style="table-layout: fixed;" width="100%">
+								        <tr><td align="center">
+							            	<div class="CommonStandardTopAdArea" >
+<!-- Begin -  Site: SQLblog Zone: Banner Top -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 3;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=75201&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=3&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=75201" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Top -->
+                                                <!--	                                           
+                                                <div style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Top Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								        <tr><td>
+									        
+	    <div class="CommonContentArea">
+	        
+<h2 class="CommonTitle"><a id="ctl00___ctl00___ctl00_ctl00_bcr_bth___BlogTitle" class="headermaintitle" href="/blogs/mosha/default.aspx">Microsoft OLAP by Mosha Pasumansky</a></h2>
+<div class="CommonContent"></div>
+
+	        <div class="CommonContent">
+                
+			
+<style>
+.DoNotDisplay { display: none; }
+</style>
+
+
+	
+<div class="BlogPostArea">
+	<h1 class="BlogPostHeader">
+		How to work with Dimension Leaves
+		
+	</h1>
+	<div class="BlogPostContent">
+		<div>   <p class="MsoNormal" style="margin:0in 0in 0pt;">Dimension leaves is one of the fundamental concepts in OLAP. Dimension leaves are used in variety of situations – from defining calculations on the leaves to aggregate up, and to different UI icons for leaves vs. non-leaves. But while it may seem that this concept is simple, it is actually more complicated. Most of the confusion comes from the fact, that there are two distinct concepts, both of which are commonly called leaves:</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <ul style="margin-top:0in;">     <li class="MsoNormal" style="margin:0in 0in 0pt;mso-list:l2 level1 lfo1;tab-stops:list .5in;">Hierarchy leaves </li>      <li class="MsoNormal" style="margin:0in 0in 0pt;mso-list:l2 level1 lfo1;tab-stops:list .5in;">Measure group leaves </li>   </ul>    <p class="MsoNormal" style="margin:0in 0in 0pt;">In this article we will explain the differences between the two and discuss the Analysis Services and MDX support for both of these concepts.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"><b style="mso-bidi-font-weight:normal;">Hierarchy Leaves </b>      <p></p>   </p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Hierarchy leaves refer to the hierarchy members which don’t have visible children. It is important to recognize hierarchy leaves in UI, to give the user indication that such member cannot be drilled down further.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"><b style="mso-bidi-font-weight:normal;">Measure group Leaves </b>      <p></p>   </p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Measure group leaves (also called sometimes fact leaves, fact granularity etc) refer to the measure group granularity, i.e. the lowest level at which data is loaded into the partitions. It is important to recognize measure group leaves for non-allocated writeback (because it can only done at leaves), for calculations such as currency conversion which need to modify the data at the lowest granularity etc.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Sometimes (in simple cubes and dimensions), the same member can seen as both hierarchy leaf and measure group leaf. However, there are important differences which are summarized in the following table:</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <table class="MsoTableGrid" style="border-right:medium none;border-top:medium none;border-left:medium none;border-bottom:medium none;border-collapse:collapse;mso-border-alt:solid windowtext .5pt;mso-yfti-tbllook:480;mso-padding-alt:0in 5.4pt 0in 5.4pt;mso-border-insideh:.5pt solid windowtext;mso-border-insidev:.5pt solid windowtext;" cellspacing="0" cellpadding="0">       <tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;border-top:windowtext 1pt solid;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Feature</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;border-top:windowtext 1pt solid;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Measure group leaves</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;border-top:windowtext 1pt solid;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Hierarchy Leaves</p>         </td>       </tr>        <tr style="mso-yfti-irow:1;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Defined on</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Attribute</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Hierarchy</p>         </td>       </tr>        <tr style="mso-yfti-irow:2;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Current measure</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Affects</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Doesn’t affect</p>         </td>       </tr>        <tr style="mso-yfti-irow:3;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Multiple hierarchies</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Doesn’t affect</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Affects</p>         </td>       </tr>        <tr style="mso-yfti-irow:4;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Dimension security</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Doesn’t affect</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Affects</p>         </td>       </tr>        <tr style="mso-yfti-irow:5;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Hidden members</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Doesn’t affect</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Affects</p>         </td>       </tr>        <tr style="mso-yfti-irow:6;mso-yfti-lastrow:yes;">         <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;padding-bottom:0in;border-left:windowtext 1pt solid;width:134.1pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Unbalanced hierarchies</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:132.9pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Doesn’t affect</p>         </td>          <td style="border-right:windowtext 1pt solid;padding-right:5.4pt;padding-left:5.4pt;border-left-color:#d4d0c8;padding-bottom:0in;width:133.4pt;border-top-color:#d4d0c8;padding-top:0in;border-bottom:windowtext 1pt solid;background-color:transparent;mso-border-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;">           <p class="MsoNormal" style="margin:0in 0in 0pt;text-align:center;" align="center">Affects</p>         </td>       </tr>     </table>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Current measure</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Whether or not the attribute member is a measure group leaf depends on the current measure group, which, in turn is determined by the current measure. Therefore, same attribute can be measure group leaf for one measure and non leaf for another measure – depending on the granularity of the respective measure groups. </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Multiple hierarchies</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Member which is hierarchy leaf in one hierarchy might not be a leaf in another hierarchy, but for the measure group member is either always a leaf or always isn’t.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">For example, if we have two hierarchies in the Customer dimension – Country/State/City/Name and Country/State, then WA is not a leaf in the first hierarchy but is a leaf in the second hierarchy. </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Dimension security</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">If all the children of a member are secured, then this member becomes hierarchy leaf in that hierarchy. Dimension security doesn’t affect measure group leaves.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Hidden members</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">If all the children of a member are hidden, then it becomes hierarchy leaf. Members which can be hidden are UnknownMember, HideMemberIf (when MDX Compatibility Mode is 2) etc. However, it is important to note, that in the SCOPE statement or in the left hand side of assignment, that hidden members are treated as if they were visible. </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Unbalanced hierarchies</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">If the member didn’t have any relating members in the dimension table, then the natural hierarchy will be unbalanced. Such member is hierarchy leaf, but still not measure group leaf.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Other considerations</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">There are also several related issues such as </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt 0.5in;text-indent:-0.25in;mso-list:l1 level1 lfo3;tab-stops:list .5in;"><span style="mso-list:ignore;">-<span style="font:7pt 'Times New Roman';">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; </span></span>Parent Child Hierarchies</p>    <p class="MsoNormal" style="margin:0in 0in 0pt 0.5in;text-indent:-0.25in;mso-list:l1 level1 lfo3;tab-stops:list .5in;"><span style="mso-list:ignore;">-<span style="font:7pt 'Times New Roman';">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; </span></span>Difference between Data Members and Leaf members</p>    <p class="MsoNormal" style="margin:0in 0in 0pt 0.5in;text-indent:-0.25in;mso-list:l1 level1 lfo3;tab-stops:list .5in;"><span style="mso-list:ignore;">-<span style="font:7pt 'Times New Roman';">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; </span></span>Placeholder Members</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">However, we will not discuss them here, perhaps in another article.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Now let’s look into different MDX functions and other functionality that AS provides to deal with leaves.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"><b style="mso-bidi-font-weight:normal;">Retrieve hierarchy leaves </b>      <p></p>   </p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt 0.25in;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">The MDX function to get the hierarchy leaves is Descendants(member,,LEAVES). It can be used to get all the leaves under the current position in the hierarchy by using</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Descendants(hierarchy.CurrentMember,,LEAVES)</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Or it can be used to get unconditionally all the hierarchy leaves by using</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Descendants(hierarchy.Levels(0).Members,,LEAVES)</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">This form of call to Descendants function uses set as its first argument. This is to account for hierarchies with non aggregatable first level, i.e. when the first level is not ‘All’, but contains multiple members. Note, that while this is indeed the most general form, it will raise an error when used in the SCOPE statement. However, as we will see later, usually we won’t want to use Descendats(,,LEAVES) inside SCOPE anyway.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">In simple scenarios Descendants(,,LEAVES) is equivalent to returning the members from the last level of the hierarchy, i.e. hierarchy.Levels.Members(hierarchy.Levels.Count-1), however, unlike this expression, it works correctly for situations like parent child, ragged hierarchies, dimension security, MDX Compatibility Modes etc.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Another important case is Descendats(member, level, LEAVES), which is useful for the parent child hierarchies – it will return the descendants from the specified level, plus all the leaves above this level.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"><b style="mso-bidi-font-weight:normal;">Checking whether the member is an hierarchy leaf </b>      <p></p>   </p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">There are many ways in which people check whether member is an hierarchy leaf. We will start with the most correct way first, and then look into other way and understand why they are not correct.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">From MDX, the best way to check for hierarchy leaf, is simply to call the IsLeaf(member) function. This function is optimized to work in the most efficient way, for example for the non ragged, non parent child hierarchy without dimension security, it will simply check the level of the member, for parent child hierarchy it will check in efficient way for data members etc.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Other methods that I have seen people using are:</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">member.Children.Count = 0</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">This practically always returns the same result as IsLeaf(member), after all it literally implements the definition of leaf – the member which doesn’t have visible children. However, it has worse performance then IsLeaf, because it performs more operations – constructs the set of children, takes count of tuples in it etc. It also cannot use the optimizations mentioned above.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">IsGeneration(member, 0)</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Checking for first (zero’th) generation is much less efficient then IsLeaf</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">member.Level.Ordinal = member.Hierarchy.Levels.Count-1</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">As we mentioned above, comparing the level of the current member with total number of levels in the hierarchy will only work correctly for regular, non ragged and non parent child hierarchies without dimension security etc.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Sometimes, it is desirable to know whether the member is hierarchy leaf or not without creating additional calculations for the query. It is useful, when the leaf/no leaf decision is not fed into other calculations, but when it is needed purely for UI purposes to mark all the members on the query result axes. It is not advisable to create special calculated member for that, since, as we know from the caching whitepaper, creating query calculated members prevent calculation caching at the session and cube levels. </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">To figure out leaf/no leaf without additional calculations, people tried to use the builtin member property DISPLAY_INFO. Indeed, two bytes out of that four byte structure are dedicated to CHILDREN_CARDINALITY. While two bytes is too low to hold the actual number of children for AS2005 (but it was enough for AS2000), it still seems OK, since the only important information here is 0 or non 0. However, OLEDB for OLAP spec states that the CHILDREN_CARDINALITY is only an estimate, and therefore sometimes it won’t be accurate. Unfortunatelly, in the current version of AS2005, it is indeed only an estimate, and sometimes the true leaf will have non zero, and non leaf will have zero. Therefore, application which needs reliable way of checking for leaf, cannot rely on DISPLAY_INFO. </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">There is also an additional builtin member property CHILDREN_CARDINALITY, which can be specified in the DIMENSION PROPERTIES clause of the axis definition in the MDX SELECT query. However, in the current version of AS2005 it is mostly useless, as it only has values of 1000 or 0, and even there cannot be used to determine whether the member is really leaf or not. We hope, that this member property will be fixed in the future versions.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"><b style="mso-bidi-font-weight:normal;">Position on measure group leaves </b>      <p></p>   </p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">In AS2000 there was no easy way to get to the granularity of facts in MDX automatically. The writer of MDX was supposed to know which levels were disabled (i.e. excluded from the granularity) and use &lt;&gt;.MEMBERS on the lowest non-disabled level. The client applications could discover the lowest non-disabled levels for each measure group (or non virtual cube in AS2000 terms) by means of looking at MDSCHEMA_MEASURES schema rowset, which contained comma separated list of lowest non disabled levels in the LEVELS_LIST column. But this was very cumbersome way, which had to be adjusted for parent child and ragged hierarchies, and I don’t know any customer who used this method.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Therefore, in AS2005, we provided easy way to get to the measure group leaves, by the means of <b style="mso-bidi-font-weight:normal;">Leaves</b> function. Leaves function can be used in one of the two forms:</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <ol style="margin-top:0in;">     <li class="MsoNormal" style="margin:0in 0in 0pt;mso-list:l0 level1 lfo2;tab-stops:list .5in;">Leaves() – positions on the granularity of the measure group by all of the dimensions related to that measure group </li>      <li class="MsoNormal" style="margin:0in 0in 0pt;mso-list:l0 level1 lfo2;tab-stops:list .5in;">Leaves(dim) – positions on the granularity of the measure group only in the specified dimension. </li>   </ol>    <p class="MsoNormal" style="margin:0in 0in 0pt 0.25in;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Note, that it is really exceptional case, where in MDX you can use dimension. Everywhere else, MDX accepts hierarchy. But since granularities are defined in terms of the attributes rather then hierarchies, using dimension here makes sense. </p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">So what does Leaves function returns ? The answer is that it returns a subcube which can be used inside SCOPE statement or at the left-hand side of the assignment. It does not return a set ! Again, this makes sense, since subcubes are defined in terms of attributes, but sets are defined by hierarchies. This is one of the reasons why Leaves function is not safe to be used in the SELECT statement, or inside named sets or in other MDX expressions. While Analysis Services may convert subcube returned by Leaves function to set (by choosing attribute hierarchies corresponding to the attributes), it is not supported usage.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Another important question which needs to be answered is, since we said that the Leaves function operates on measure group leaves, how does it know which measure group to use ? The answer lies again in the usage of Leaves inside SCOPEs or assignments. Leaves function checks the current SCOPE and looks whether it is constrained to a single measure group (or multiple measure groups, but with exactly same granularity). If the current SCOPE has multiple measure groups with different granularities, Leaves function will raise an error, since it doesn’t know for which measure group should it calculate the granularity. This is another reason why Leaves is not safe to be used in SELECT or in MDX expressions. It may work for simple cubes with single measure group, but it won’t work for more complex cubes.</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;">Below is a typical example of how Leaves function is used (taken from <a href="http://www.mosha.com/msolap/articles/multiplication_perf.htm">this article</a>):</p>    <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>    <p>&#160;</p>    <p></p>    <pre>SCOPE [Measures].[Sales];
+ SCOPE (Leaves([Date]), [Seller].[Country].[Country]);
+  [Measures].[Sales] = [Measures].[Sales]*[Measures].[Rate];
+ END SCOPE;
+END SCOPE;</pre>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>
+
+  <p>&#160;</p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">Note, that by restricting the SCOPE to a single measure, we obviously restricted it to the single measure group.</p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>
+
+  <p>&#160;</p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"><b style="mso-bidi-font-weight:normal;">Checking whether a member is a measure group leaf </b>
+
+    <p></p>
+  </p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>
+
+  <p>&#160;</p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">While positioning on measure group leaves is easy with the Leaves function, checking the measure group leaf is more difficult. One typical scenario when this is needed, is for the applications which support writeback. Since non-allocated writeback in AS is only allowed at measure group granularity, the application would like to check it first, and not allow the user to modify the cell which cannot be modified. </p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">The best way to do that in AS2000 was to use UPDATEABLE cell property. It is a bitmask which tells how the cell can be updated, and if it cannot be updated, then the mask contains all kinds of reasons why not. It could be because one of the cell’s coordinates is calculated member, it can be because the cell is not at measure group granularity, or it can be because there is a cell security on that cell etc.</p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">The important values for checking measure group granularity are</p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>
+
+  <p>&#160;</p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">DBPROP_CELL_UPDATE_ENABLED – cell can be updated through IRowsetUpdate, i.e. it is on measure group granularity</p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">DBPROP_CELL_UPDATE_ENABLED_WITH_UPDATE – cell can be updated with UPDATE CUBE statement, i.e. it is above measure group granularity</p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>
+
+  <p>&#160;</p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">Unfortunatelly, in AS2005, this cell property always returns DBPROP_CELL_UPDATE_ENABLED. The reason for that is that AS2005 unlike AS2000 supports IRowsetUpdate::Update not just on the leaf cells, since behind the scenes it performs equal allocation over non-leaf cells. However, this also means that the UPDATEABLE cell property cannot be used with AS2005 to determine measure group granularity.</p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;"></p>
+
+  <p>&#160;</p>
+
+  <p></p>
+
+  <p class="MsoNormal" style="margin:0in 0in 0pt;">Now, what if the knowledge whether the member (or cell) is a measure group leaf or not is needed inside a calculation ? Frankly, we didn’t think that this would be an interesting scenario, and therefore AS2005 doesn’t have MDX function to check it. Recently, however, we have run into a couple of customers who had such a requirement. In order to solve it, the following workaround can be used:</p>
+
+  <pre>CREATE IsLeafInsideFoo = false;
+SCOPE (MeasureGroupMeasures(&quot;foo&quot;),Leaves());
+    IsLeafInsideFoo = true;
+END SCOPE;</pre>
+
+  <p>Basically, this creates a calculated measure, which is False everywhere. Then, the SCOPE positions on the leaves measure group and changes the calculated measure to be True there. Since calculated members are not aggregated up, the values above leaves will stay False. Now, the calculated measure IsLeafInsideFoo can be used to determine whether a member or a cell is at measure group granularity or not. </p>
+</div>
+	</div>
+	<div class="BlogPostFooter">
+		Published Saturday, April 29, 2006 1:56 PM
+		by
+		<a id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___AuthorLink" href="/user/Profile.aspx?UserID=2267">mosha</a> 
+		<div><span id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel">Filed under: <a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></span><input type="hidden" name="ctl00$_$ctl00$_$ctl00$ctl00$bcr$ctl00$_$Entry$_$InlineTagEditorPanel" id="ctl00___ctl00___ctl00_ctl00_bcr_ctl00___Entry___InlineTagEditorPanel_State" value="nochange" /></div>
+								
+	</div>                            
+</div>
+
+
+
+
+
+
+
+
+<em>Anonymous comments are disabled</em>
+<script language="javascript">document.getElementById('ctl00___ctl00___ctl00_ctl00_bcr_ctl00___form___tbUrl').value = ""</script>
+
+	
+   
+    
+	        </div>
+	    </div>
+    
+								        </td></tr>
+								        <tr><td align="center">
+							            	<div class="CommonStandardBottomAdArea">
+<!-- Begin -  Site: SQLblog Zone: Banner Bottom -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 4;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=41464&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=4&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=41464" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Banner Bottom -->
+							            	   <!--
+	                                            <div  style="width:468px; height:60px; text-align: center; font-size: 16px; border-width: 1px; border-color:#808080; border-style: dashed; ">
+                                                    Bottom Banner Ad - 468 x 60
+                                                </div>
+                                                -->
+                                            </div>
+							            </td></tr>
+								    </table>
+								</td>
+								
+								<td valign="top" id="CommonRightColumn">
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Button Right Top -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 10;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=10249&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=10&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=10249" width="180" height="180" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Button Right Top -->
+		                                            <!--
+		                                            <div  style="width:180px; height:180px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Button<br />
+                                                        Ad<br />
+                                                        180 x 180
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+					    		    <div class="CommonSidebar">
+                                        	<div class="CommonSidebarArea"  >
+		                                        <div class="CommonSidebarContentInfo" >
+<!-- Begin -  Site: SQLblog Zone: Skyscraper Right -->
+<!--
+<script language="javascript"  type="text/javascript">
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 7;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=8222&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=7&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=8222" width="180" height="360" border="0"  alt=""></a>
+</noscript>
+--> 
+<!-- End -  Site: SQLblog Zone: Skyscraper Right -->
+		                                            <!--
+		                                            <div  style="width:180px; height:540px; text-align: center; font-size: 16px; border-width: 1px; border-color:#cccccc; border-style: dashed; ">
+                                                        Skyscraper<br />
+                                                        Ad<br />
+                                                        180 x 540
+                                                    </div>
+                                                    -->
+                                                </div>
+                                            </div>
+                                    </div>
+									
+
+		<div class="CommonSidebar">
+			
+<div id="BlogLinksSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">This Blog</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___home" href="/blogs/mosha/default.aspx">Home</a></li>
+			
+			
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___Contactlink1" href="/blogs/mosha/contact.aspx">Email</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___wl___LinkListLink1" href="/blogs/mosha/linklist.aspx">Links</a></li>
+		</ul>
+	</div>
+</div>
+</div>
+
+<div id="TasksSideBar">
+	
+</div>
+
+<div id="SubscriptionsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Syndication</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___rss" href="/blogs/mosha/rss.aspx">RSS 2.0</a></li>
+			<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___bs___atom" href="/blogs/mosha/atom.aspx">Atom 1.0</a></li>
+		</ul>
+	</div>
+ </div>
+</div>
+
+<div id="RecentPostsSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Recent Posts</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+		
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl00_Link" href="/blogs/mosha/archive/2009/12/29/good-bye-bi.aspx">Good Bye BI</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl01_Link" href="/blogs/mosha/archive/2009/05/14/wolframalpha.aspx">WolframAlpha</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl02_Link" href="/blogs/mosha/archive/2008/12/31/deep-dive-to-mdx-presentation-slides.aspx">Deep dive to MDX presentation - slides</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl03_Link" href="/blogs/mosha/archive/2008/11/04/as2008-mdx-subselects-and-create-subcube-in-non-visual-mode.aspx">AS2008 MDX: subselects and CREATE SUBCUBE in non-visual mode</a></li>
+			
+				<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___rp___PostList_ctl04_Link" href="/blogs/mosha/archive/2008/11/03/custom-filters-with-mdx-subcubes.aspx">Custom filters with MDX subcubes</a></li>
+			
+		</ul>
+	</div>
+ </div>
+
+</div>
+<div id="LinkSideBar">
+	
+		<div class="CommonSidebarArea">
+			<h4 class="CommonSidebarHeader">Links</h4>
+			<div class="CommonSidebarContent">
+				
+						<ul class="CommonSidebarList">
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl01_Link" rel="me" href="http://www.mosha.com/msolap">Microsoft OLAP information</a></li>
+					
+						<li><a id="ctl00___ctl00___ctl00_ctl00_rcr_bsb___lcl___Categories_ctl00_Links_ctl02_Link" rel="me" href="http://www.mosha.com/msolap/mdxstudio.htm">MDX Studio</a></li>
+					
+						</ul>
+					
+			</div>
+		</div>
+    
+
+	
+</div>
+<div id="TagSideBar">
+	<div class="CommonSidebarArea">
+		<h4 class="CommonSidebarHeader">Tags</h4>
+		<div class="CommonSidebarContent">
+			<ul class="CommonSidebarTagCloud">
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/ADOMD.NET/default.aspx" rel="tag">ADOMD.NET</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/client+apps/default.aspx" rel="tag">client apps</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/katmai/default.aspx" rel="tag">katmai</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/mdx/default.aspx" rel="tag">mdx</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/mdx+studio/default.aspx" rel="tag">mdx studio</a></li>
+<li class="CommonTag1"><a href="/blogs/mosha/archive/tags/performance/default.aspx" rel="tag">performance</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/security/default.aspx" rel="tag">security</a></li>
+<li class="CommonTag2"><a href="/blogs/mosha/archive/tags/ssas/default.aspx" rel="tag">ssas</a></li>
+<li class="CommonTag4"><a href="/blogs/mosha/archive/tags/stored+procedure/default.aspx" rel="tag">stored procedure</a></li>
+<li class="CommonTag5"><a href="/blogs/mosha/archive/tags/tools/default.aspx" rel="tag">tools</a></li>
+<li class="CommonTag6"><a href="/blogs/mosha/archive/tags/xmla/default.aspx" rel="tag">xmla</a></li>
+</ul>
+
+		</div>
+	</div>
+</div> 
+
+<div id="NewsSideBar">
+	
+</div>
+
+<div id="ArchiveSideBar">
+	
+<div class="CommonSidebarArea">
+	<h4 class="CommonSidebarHeader">Archives</h4>
+	<div class="CommonSidebarContent">
+		<ul class="CommonSidebarList">
+			
+				<li><a href="/blogs/mosha/archive/2009/12.aspx">December 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2009/05.aspx">May 2009 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/12.aspx">December 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/11.aspx">November 2008 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/10.aspx">October 2008 (10)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/09.aspx">September 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/08.aspx">August 2008 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/07.aspx">July 2008 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/06.aspx">June 2008 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2008/03.aspx">March 2008 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/12.aspx">December 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/11.aspx">November 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/09.aspx">September 2007 (7)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/08.aspx">August 2007 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/07.aspx">July 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/06.aspx">June 2007 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/05.aspx">May 2007 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/04.aspx">April 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/03.aspx">March 2007 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2007/01.aspx">January 2007 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/12.aspx">December 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/11.aspx">November 2006 (6)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/10.aspx">October 2006 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/04.aspx">April 2006 (1)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/03.aspx">March 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2006/01.aspx">January 2006 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/12.aspx">December 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/11.aspx">November 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/10.aspx">October 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/06.aspx">June 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/04.aspx">April 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/03.aspx">March 2005 (2)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/02.aspx">February 2005 (3)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2005/01.aspx">January 2005 (5)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/12.aspx">December 2004 (4)</a></li>
+			
+				<li><a href="/blogs/mosha/archive/2004/11.aspx">November 2004 (6)</a></li>
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+		</div>
+	
+								</td>
+							</tr>
+						</table>
+					</div>
+				
+					<div id="CommonFooter" align=center>
+						
+<!-- Begin -  Site: SQLblog Zone: Banner Footer -->
+<script language="javascript"  type="text/javascript">
+<!--
+var browName = navigator.appName;
+var SiteID = 1;
+var ZoneID = 5;
+var browDateTime = (new Date()).getTime();
+if (browName=='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;Browser=NETSCAPE4&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+if (browName!='Netscape')
+{
+document.write('<s'+'cript lang' + 'uage="jav' + 'ascript" src="http://info.sqlblog.com/a.aspx?ZoneID=' + ZoneID + '&amp;Task=Get&amp;IFR=False&amp;PageID=57987&amp;SiteID=' + SiteID + '&amp;Random=' + browDateTime  + '">'); document.write('</'+'scr'+'ipt>');
+}
+// --> 
+</script>
+<noscript>
+    <a href="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Click&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" target="_blank">
+    <img src="http://info.sqlblog.com/a.aspx?ZoneID=5&amp;Task=Get&amp;Mode=HTML&amp;SiteID=1&amp;PageID=57987" width="468" height="60" border="0"  alt=""></a>
+</noscript>
+<!-- End -  Site: SQLblog Zone: Banner Footer -->
+						    <!--
+						    <a target="_blank" href="/r.ashx?A"><img border=0 alt="MaximumASP" src="/themes/default/images/common/maximumasp_468x60_brain.gif" /></a>
+						    -->
+							<div class="Copyright">©2006-2016 SQLblog.com<sup style="font-size: 0.6em;">TM</sup><BR>Brought to you by <A href="/blogs/adam_machanic" target=_blank>Adam Machanic</A> & <A href="http://sqlblog.com/blogs/peter_debetta/" target=_blank>Peter DeBetta</A></div>
+<a target="_blank" href="http://communityserver.org/r.ashx?j"><img alt="Powered by Community Server (Commercial Edition), by Telligent Systems " border="0" src="/utility/PoweredByCS_commercial.GIF"/></a>
+							<div><table>
+							        <tr>
+							            <td>
+<script type="text/javascript">
+/* <![CDATA[ */
+function hivelogic_enkoder(){var kode=
+"kode=\"nrgh@%rnhg_%@nrgh_%__n@gr__h___%u__k@(q/j(CgABb[Dz5gyt&IibzbuyD&(ib"+
+"z[uzbgbtCIr(ob&k(zbzubhbWmCriRpY{zEkuh4yushiwmFrorjy@tzsogsu(rbglbxb_&CBk("+
+"nkgob}.zzkx{4ut(sqijjCAuukkyqrjz4-v/ox.|-x4kk/kpyo..4-u__t-____/>_%@{**i>u"+
+"rl+3@l>n?gr1hhojqkwl>..~,@frnhgf1dkFugrDh+w,l60l>+i?f,3.f4@;5{>@.wVlujqi1r"+
+"uFpdkFugr+h,fn\\000gr@h>{_%__{@**>iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1"+
+"fkduDw+l.4,.nrgh1fkduDw+l,\\000nrgh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqj"+
+"wk04,=**,_%>{>*@>*ri+u@l>3?ln+gr1hhojqkw40>,.l5@~,.{n@gr1hkfudwDl+4..,rnhg"+
+"f1dkDu+w,ln\\000gr@h.{l+n?gr1hhojqkwnBgr1hkfudwDn+gr1hhojqkw40=,**>,%>{@**"+
+">iru+l@3>l?+nrgh1ohqjwk04,>l.@5,~{.@nrgh1fkduDw+l.4,.nrgh1fkduDw+l,\\000nr"+
+"gh@{.+l?nrgh1ohqjwkBnrgh1fkduDw+nrgh1ohqjwk04,=**,>\";x='';for(i=0;i<kode."+
+"length;i++){c=kode.charCodeAt(i)-3;if(c<0)c+=128;x+=String.fromCharCode(c)"+
+"}kode=x"
+;var i,c,x;while(eval(kode));}hivelogic_enkoder();
+/* ]]> */
+</script>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                        <td><a href="http://sqlblog.com/privacy.aspx">Privacy Statement</a></td>
+                                    </tr>   
+                                </tbody>
+                            </table></div>
+						
+					</div>
+				</div></div>
+		
+<script language="javascript" type="text/javascript">
+<!--
+function KeyDownHandlerctl00___ctl00___ctl00_ctl00_bhcr_t___TitleBarSearchButton(event)
+{
+	if (event.keyCode == 13)
+	{
+		event.returnValue = false;
+		event.cancel = true;
+     __doPostBack('ctl00$_$ctl00$_$ctl00$ctl00$bhcr$t$_$TitleBarSearchButton','')	}
+}
+
+//-->
+</script>
+
+<!--
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+<rdf:Description
+rdf:about="http://sqlblog.com/blogs/mosha/archive/2006/04/29/how-to-work-with-dimension-leaves.aspx"
+dc:identifier="http://sqlblog.com/blogs/mosha/archive/2006/04/29/how-to-work-with-dimension-leaves.aspx"
+dc:title="How to work with Dimension Leaves"
+trackback:ping="http://sqlblog.com/blogs/mosha/trackback.aspx?PostID=7682" />
+</rdf:RDF>
+-->
+</form>
+		
+	</body>
+</html>
+
+
+	
+
+
+
+

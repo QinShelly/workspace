@@ -1,0 +1,1 @@
+﻿select getdate(),db_name()

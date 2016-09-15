@@ -1,0 +1,35 @@
+---Schema
+create table testklup
+(
+clskey int not null,
+nlskey int not null,
+cont1  int not null,
+cont2  char(3000)
+)
+ 
+create unique clustered index inx_cls on testklup(clskey)
+ 
+create unique nonclustered index inx_nlcs  on testklup(nlskey) include(cont1)
+ 
+insert into testklup select 1,1,100,'aaa'
+insert into testklup select 2,2,200,'bbb'
+insert into testklup select 3,3,300,'ccc'
+
+---Query 1
+----模拟高频update操作
+ declare @i int
+set @i=100
+while 1=1
+ begin
+  update testklup set cont1=@i 
+  where clskey=1
+  set @i=@i+1
+ end
+
+----Query 2
+----模拟高频select操作
+declare @cont2 char(3000)
+while 1=1
+begin
+    select @cont2=cont2 from testklup where nlskey=1
+end
