@@ -15,7 +15,7 @@ pb_condition = 1.5
 # for each category, we pick rn <= rn_condition stocks
 rn_condition = 3	
 
-refresh_tushare = False
+refresh_tushare = True
 #refresh_tushare = True
 # stock basics -- pe (0) pb (5)
 # pe pb daily refresh
