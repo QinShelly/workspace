@@ -17,13 +17,14 @@ from [ENERGIZER_WALGREENS]" -Server "wal1wnfs73s.colo.retailsolutions.com" -Data
 function GetMdxTo-DataTable {
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory=$true)] [string]$connectionString       
+        [Parameter(Mandatory=$true)] [string]$CubeServerName       
+        ,[Parameter(Mandatory=$true)] [string]$CubeDBName       
         ,[Parameter(Mandatory=$true)] [string]$MDX
     )
     Process
     {  
         [System.Reflection.Assembly]::LoadWithPartialName("Microsoft.AnalysisServices.AdomdClient") | Out-Null;
-        
+        $connectionString = "Data Source=" + $CubeServerName + ";Catalog=" + $CubeDBName + ";"
         $con = new-object Microsoft.AnalysisServices.AdomdClient.AdomdConnection($connectionString)
         $con.Open() 
         $command = new-object Microsoft.AnalysisServices.AdomdClient.AdomdCommand($MDX, $con)
@@ -41,7 +42,6 @@ function GetItemStoreCount-Cube {
     ,[Parameter(Mandatory=$true)] [string]$Catelog
     )
 
-    $connectionString = "Data Source=" + $DataSource + ";Catalog=" + $Catelog + ";"
     $MDX = @"
     with member measures.cubeName as "$Catelog"
     member measures.itemcount_ne as count(nonempty ([PRODUCT].[ITEM GROUP].[UPC].members * [Measures].[Total Sales Amount]))
@@ -50,7 +50,7 @@ function GetItemStoreCount-Cube {
     from [$Catelog]
 "@
 
-    $dt = GetMdxTo-DataTable -connectionString $connectionString -MDX $MDX 
+    $dt = GetMdxTo-DataTable -CubeServerName $DataSource -CubeDBName $Catelog -MDX $MDX 
     $cubeName = $dt[1][0]
     $itemCount = $dt[1][1]
     $storeCount = $dt[1][2]
@@ -61,22 +61,25 @@ function GetItemStoreCount-Cube {
     return $item
 }
 
-$collectionObject = @()
+$results = @()
 
 foreach ($silo in Get-Silo | select -first 3) {
     $cubeServerName = $silo.IIS_LiveServer_URL
     $cubeName = $silo.Cube_Name
-    write-host "$cubeServerName $cubeName"
-    [regex]$regex = '^http://(.*)/olap$'
+    # write-host "$cubeServerName $cubeName"
+    [regex]$regex = '^http://(.*/LIVE\d)$'
     if($cubeServerName -match $regex) {
         $cubeServerName = $Matches[1]
     }
+    $cubeServerName = $cubeServerName.Replace('/','\');
+    write-host "$cubeServerName $cubeName"
+
     $item = GetItemStoreCount-Cube -DataSource $cubeServerName -Catelog $cubeName
-    $collectionObject += $item
+    $results += $item
 }
 
 $CSVFileFullName = "c:\testCube.csv"
 
-$collectionObject | Format-Table | Out-Default
+# $results | Format-Table | Out-Default
 
-$collectionObject | export-csv -path $CSVFileFullName -Delimiter "," -NoTypeInformation;
+$results | export-csv -path $CSVFileFullName -Delimiter "," -NoTypeInformation;
