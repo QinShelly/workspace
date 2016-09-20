@@ -5,11 +5,11 @@ import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Queue<Item> implements Iterable<Item> {
-    private class Node{
+    private class Node<Item>{
         Item item;
-        Node next;
+        Node<Item> next;
     }
-    private Node first;
+    private Node<Item> first;
     private Node last;
 
     private int N;

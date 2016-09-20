@@ -1,13 +1,21 @@
 # RV #
 
-- JBoss log is at:  
-Change Server name 
-\\PRODP1FS120.colo.retailsolutions.com\c$\RSI\Fusion\domains\PRODP1FS120-Domain\log
+## Get JBoss log location ## 
+### Fusion JBoss log ###   
+Example:  
+\\\PRODP1FS120.colo.retailsolutions.com\c$\RSI\Fusion\domains\PRODP1FS120-Domain\log
+### Nextgen, use 2 config properteis to get JBoss log ###
+- app.server.domain.home
+- app.server.domain.host
 
-## How to get MDX used in RV ##
+Example:
+
+\\\PRODP1HSAPP4.PROD.RSICORP.LOCAL\D$\rsi\fusionV\domains\PRODP1HSAPP4-NXG0-Domain\standalone\log
+
+## Get MDX used in RV ##
 In ticket get Job ID like: 0588-0132744. This is transformed report id, not the report id stored in DB. 
 In Jobs page in RV, filter this Job ID. Click the link in Status column to open the log page.
-You can find MDX in the log page
+Look for MDX in the log page
 
 ## RV tables ## 
 

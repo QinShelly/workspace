@@ -9,10 +9,11 @@ Jul 5
 Jul 29
 - SP5CU5  
 Aug 12
-### in progress ###
-- SP6    
-Sep 14
-- SP6CU1 Sep 23
+### In progress ###
+- **SP6**    
+Sep 16
+- SP6CU1   
+Sep 23
  
 ## 8010 ##
 ### Released ###
@@ -20,8 +21,8 @@ Sep 14
 Aug 26
 - SP1CU1     
 Sep 13
-### in progress ###  
-- SP1CU2 
+### In progress ###  
+- **SP1CU2**  
 Nov 
 - SP2 (WM Global)
 - SP2CU1 (In Country/RDM)
@@ -33,6 +34,6 @@ Nov
 Aug 26
 - 9100SP1    
 Sep 9
-### in progress ###
-- 9100SP2 
+### In progress ###
+- **9100SP2**  
 Oct 20 - 30 
