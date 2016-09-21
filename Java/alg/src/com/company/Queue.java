@@ -1,6 +1,8 @@
 package com.company;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -32,6 +34,32 @@ public class Queue<Item> implements Iterable<Item> {
         N--;
         return item;
     }
+
+    // an iterator, doesn't implement remove() since it's optional
+    private class ListIterator<Item> implements Iterator<Item> {
+        private Node<Item> current;
+        public ListIterator(Node<Item> first) {
+            current = first;
+        }
+
+        public boolean hasNext() {
+            return current != null;
+        }
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+        public Item next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
+    }
+    @Override
+    public Iterator<Item> iterator() {
+        return new ListIterator<Item>(first);
+    }
+
     public static void main(String[] args) {
         Queue<String> q = new Queue<String>();
         while (!StdIn.isEmpty()){
@@ -45,8 +73,4 @@ public class Queue<Item> implements Iterable<Item> {
         StdOut.println("(" + q.size() + " left on queue)");
     }
 
-    @Override
-    public Iterator<Item> iterator() {
-        return null;
-    }
 }

@@ -1,5 +1,8 @@
 package com.company;
 
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
+
 public class BST<Key extends Comparable<Key>, Value> {
     private Node root;
 
@@ -64,6 +67,15 @@ public class BST<Key extends Comparable<Key>, Value> {
     private Node min(Node x) {
         if (x.left == null) return x;
         return min(x.left);
+    }
+
+    public Key max() {
+        return max(root).key;
+    }
+
+    private Node max(Node x) {
+        if (x.right == null) return x;
+        return max(x.right);
     }
 
     public Key floor(Key key){
@@ -135,5 +147,38 @@ public class BST<Key extends Comparable<Key>, Value> {
         }
         x.N = size(x.left) + size(x.right) + 1;
         return x;
+    }
+
+    public Iterable<Key> keys(){
+        return keys(min(), max());
+    }
+
+    private Iterable<Key> keys(Key lo, Key hi) {
+        Queue<Key> queue = new Queue<Key>();
+        keys(root, queue, lo, hi);
+        return queue;
+    }
+
+    private void keys(Node x, Queue<Key> queue, Key lo, Key hi) {
+        if (x == null) return;
+        int cmplo = lo.compareTo(x.key);
+        int cmphi = hi.compareTo(x.key);
+        if(cmplo < 0) keys(x.left, queue, lo, hi);
+        if(cmplo <= 0 && cmphi >= 0) queue.enqueue(x.key);
+        if(cmphi > 0) keys(x.right, queue, lo, hi);
+    }
+
+    public static void main(String[] args){
+        BST<String, Integer> st;
+        st = new BST<String,Integer>();
+
+        for(int i = 0; !StdIn.isEmpty(); i++){
+            String key = StdIn.readString();
+            st.put(key, i);
+        }
+
+        for(String s : st.keys()){
+            StdOut.println(s + " " + st.get(s));
+        }
     }
 }
