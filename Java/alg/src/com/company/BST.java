@@ -28,6 +28,10 @@ public class BST<Key extends Comparable<Key>, Value> {
             return x.N;
         }
     }
+    public boolean contains(Key key) {
+        if (key == null) throw new NullPointerException("argument to contains() is null");
+        return get(key) != null;
+    }
     public Value get(Key key){
         return get(root, key);
     }
