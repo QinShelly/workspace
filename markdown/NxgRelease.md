@@ -9,31 +9,64 @@ Jul 5
 Jul 29
 - SP5CU5  
 Aug 12
-### In progress ###
-- **SP6**    
+- SP6    
 Sep 16
-- SP6CU1   
-Sep 23
- 
+### In Progress ###
+- **SP6CU1**   
+Oct 21
+- **8100**  
+Mid Jan
+- 8100CU1  
+Feb
+
 ## 8010 ##
 ### Released ###
-- SP1 
-Aug 26
+- 8000BetaPhase2
+- SP1  
+Nxg_WM_QA branch  
+Aug 26  
 - SP1CU1     
 Sep 13
-### In progress ###  
+### In Progress ###  
 - **SP1CU2**  
-Nov 
-- SP2 (WM Global)
-- SP2CU1 (In Country/RDM)
-- SP3 (US Features)
+Oct 14
+- SP1CU3  
+Oct 28
+- **SP2 (WM Global)**  
+Nov 14
+- SP2CU1
+No such release
+- SP3
+No such release
 
-## RDP ##
+## 9000 RDP ##
 ### Released ###
 - 9000SP1  
+RDP master branch  
 Aug 26
+- 9000SP1CU1  
+Sep 13
+### In Progress ###
+- **9000SP1CU2**  
+Oct 14
+- 9000SP1CU3  
+Oct 28
+- 9000SP2  
+Nov 14
+- 9000SP2CU1  
+???
+
+## 9100 RDP ##
+### Released ###
 - 9100SP1    
+release/9100SP1  
 Sep 9
-### In progress ###
+- 9100SP1CU1  
+Sep 13
+### In Progress ###
 - **9100SP2**  
-Oct 20 - 30 
+Late Oct
+- **9100SP3**  
+Dec 16
+- **9100SP3CU1**  
+Jan 13
