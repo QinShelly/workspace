@@ -36,7 +36,8 @@ driver.find_element_by_id("rememberMe").click()
 time.sleep(random.uniform(1,3))
 driver.find_element_by_id("login_btn").click()
 # must sleep otherwise login status is lost
-time.sleep(random.uniform(5,7))
+# need more time for inputing the anti bot code
+time.sleep(random.uniform(10,12))
 
 cnt_row = 0
 visited_li = []
