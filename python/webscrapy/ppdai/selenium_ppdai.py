@@ -46,8 +46,10 @@ conn = sqlite3.connect('example.db')
 
 while True:
     # Get item to bid
-    
+    view_name = ppdai.config.view_name
     sql = "select id, amount_bid from vw_ppdai_low_rate where amount_bid > 0 and bid is null"
+    sql = "select id, amount_bid from " + view_name + " where amount_bid > 0 and bid is null"
+    print sql
     found = False
 
     attempts = 0
