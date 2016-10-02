@@ -47,7 +47,7 @@ conn = sqlite3.connect('example.db')
 while True:
     # Get item to bid
     
-    sql = "select id, amount_bid from vw_ppdai where amount_bid > 0 and bid is null"
+    sql = "select id, amount_bid from vw_ppdai_low_rate where amount_bid > 0 and bid is null"
     found = False
 
     attempts = 0

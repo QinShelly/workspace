@@ -1,6 +1,6 @@
 
-drop view vw_ppdai;
-create view vw_ppdai as
+drop view vw_ppdai_original;
+create view vw_ppdai_original as
 SELECT p.id,  amount,
 CASE WHEN age <= 39
        AND rate > 18

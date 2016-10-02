@@ -1,9 +1,9 @@
 
-drop view vw_ppdai_2time;
-create view vw_ppdai_2time as
+drop view vw_ppdai_2time_low_rate;
+create view vw_ppdai_2time_low_rate as
 SELECT p.id,  amount,
 CASE WHEN age <= 39
-       AND rate > 18
+       AND rate > 15
        AND amount + waiting_to_pay <= 15000
        AND title NOT LIKE '%闪电%'
        AND cnt_return_less_than_15 < 3

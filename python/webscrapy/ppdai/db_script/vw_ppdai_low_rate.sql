@@ -1,6 +1,6 @@
 
-drop view vw_ppdai_2time;
-create view vw_ppdai_2time as
+drop view vw_ppdai_low_rate;
+create view vw_ppdai_low_rate as
 SELECT p.id,  amount,
 CASE WHEN age <= 39
        AND rate > 18
@@ -10,12 +10,12 @@ CASE WHEN age <= 39
        AND education_level IN ('本科', ' 硕士研究生', '博士研究生', '硕士', '第二学士学位', '博士')
      THEN CASE WHEN education_method IN ('普通', '普通全日制', '研究生')
                THEN CASE
-                   WHEN wsl_rank < 10  THEN 200 * 2 + CASE WHEN sex = '女' THEN 40 ELSE 0 END
-                   WHEN wsl_rank < 20  THEN 150 * 2 + CASE WHEN sex = '女' THEN 30 ELSE 0 END
-                   WHEN wsl_rank < 40  THEN 100 * 2 + CASE WHEN sex = '女' THEN 20 ELSE 0 END
-                   WHEN wsl_rank < 80  THEN 75 * 2 + CASE WHEN sex = '女' THEN 15 ELSE 0 END
-                   WHEN wsl_rank < 120 THEN 75 * 2  + CASE WHEN sex = '女' THEN 15 ELSE 0 END
-                   WHEN wsl_rank < 150 THEN 50 * 2  + CASE WHEN sex = '女' THEN 10 ELSE 0 END
+                   WHEN wsl_rank < 10  THEN 200 + CASE WHEN sex = '女' THEN 40 ELSE 0 END
+                   WHEN wsl_rank < 20  THEN 150 + CASE WHEN sex = '女' THEN 30 ELSE 0 END
+                   WHEN wsl_rank < 40  THEN 100 + CASE WHEN sex = '女' THEN 20 ELSE 0 END
+                   WHEN wsl_rank < 80  THEN 75  + CASE WHEN sex = '女' THEN 15 ELSE 0 END
+                   WHEN wsl_rank < 120 THEN 75  + CASE WHEN sex = '女' THEN 15 ELSE 0 END
+                   WHEN wsl_rank < 150 THEN 50  + CASE WHEN sex = '女' THEN 10 ELSE 0 END
                    WHEN star >= 6 THEN 50 + CASE WHEN sex = '女' THEN 0 ELSE 0 END
                    WHEN star >= 5 THEN 50 + CASE WHEN sex = '女' THEN 0 ELSE 0 END
                    WHEN star >= 4 THEN 50 + CASE WHEN sex = '女' THEN 0 ELSE 0 END
