@@ -7,14 +7,14 @@ import sys
 import argparse
 parser = argparse.ArgumentParser(description="My parser")
 
-parser.add_argument("-g", "--games", type=int, default=600547,
+parser.add_argument("-g", "--games", type=int,dest='stockid', default=600547,
                     help="The stockid")
 parser.add_argument('--feature', dest='feature', action='store_true')
 parser.add_argument('--no-feature', dest='feature', action='store_false')
 parser.set_defaults(feature=True)
 parsed_args = parser.parse_args()
 
-file = "%s.csv" % sys.argv[2]
+file = "%s.csv" % parsed_args.stockid
 if parsed_args.feature:
 	df = ts.get_h_data(sys.argv[1],start='2015-01-01') #一次性获取全部日k线数据
 	df.to_csv(file)
