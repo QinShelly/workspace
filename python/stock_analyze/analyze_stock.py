@@ -4,9 +4,18 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+import argparse
+parser = argparse.ArgumentParser(description="My parser")
 
-file = "%s.csv" % sys.argv[1]
-if sys.argv[2]:
+parser.add_argument("-g", "--games", type=int, default=600547,
+                    help="The stockid")
+parser.add_argument('--feature', dest='feature', action='store_true')
+parser.add_argument('--no-feature', dest='feature', action='store_false')
+parser.set_defaults(feature=True)
+parsed_args = parser.parse_args()
+
+file = "%s.csv" % sys.argv[2]
+if parsed_args.feature:
 	df = ts.get_h_data(sys.argv[1],start='2015-01-01') #一次性获取全部日k线数据
 	df.to_csv(file)
 
@@ -28,7 +37,10 @@ df['reason'] = np.NaN
 seenHighest = 0 
 seenLowest = 999
 determineFirstStatus = True
+lastPivotalStatus = 'Unknown'
 currentStatus = 'Unknown'
+redNaturalReaction = 0
+blackNaturalRally = 999
 upwardTrend = downwardTrend = naturalReaction  = 0
 naturalRally = secondaryRally = secondaryReaction =0
 
@@ -60,12 +72,13 @@ for index, row in df.iterrows():
 		row['secondaryRally'] = secondaryRally = row['high']
 		row['reason'] = 11
 		continue
-
+	# SecondaryRally -- DownwardTrend
+	# SecondaryRally -- NaturalReaction
+	# SecondaryRally -- SecondaryReaction
 # =============================================
 	# 5.a
 	# NatualRally -- +3 blackNaturalRally -- UpwardTrend
-	if currentStatus == 'NaturalRally' and 'blackNaturalRally' in locals() \
-	and row['high'] > blackNaturalRally + 3:
+	if currentStatus == 'NaturalRally' and row['high'] > blackNaturalRally + 3:
 		currentStatus = 'UpwardTrend'
 		row['upwardTrend'] = upwardTrend = row['high']
 		row['reason'] = 231
@@ -116,11 +129,13 @@ for index, row in df.iterrows():
 	# UpwardTrend -- -6 -- NatualReaction
 	if currentStatus == 'UpwardTrend' and row['low'] < upwardTrend - 6:
 		redUpwardTrend = upwardTrend
+		blackNaturalRally = 999
 		row['red'] = 9999
 		row['naturalReaction'] = naturalReaction = row['low']
 		currentStatus = 'NaturalReaction'
 		row['reason'] = 35
 		continue
+	# UpwardTrend -- -6 -- SecondaryReaction
 # =============================================
 	# 6.b(3)
 	# DownwardTrend -- continue down -- DownwardTrend
@@ -129,24 +144,26 @@ for index, row in df.iterrows():
 		row['reason'] = 44
 		continue
 	# 4.c 6.c(1)
-	# DownTrend -- +6 -- NatualRally
+	# DownwardTrend -- +6 -- NatualRally
 	if currentStatus == 'DownwardTrend' and row['high'] > downwardTrend + 6:
 		blackDownwardTrend = downwardTrend
+		redNaturalReaction = 0
 		row['black'] = 6666
 		row['naturalRally'] = naturalRally = row['high']
 		currentStatus = 'NaturalRally'
 		row['reason'] = 42
 		continue
+	# DownTrend -- +6 -- SecondaryRally
 # =============================================
 	# 5.b
-	# NaturalReaction -- -3 redNaturalReaction-- DownwardTrend
-	if currentStatus == 'NaturalReaction' and 'redNaturalReaction' in locals() \
-	and row['low'] < redNaturalReaction - 3:
+	# NaturalReaction -- -3 redNaturalReaction -- DownwardTrend
+	if currentStatus == 'NaturalReaction' and row['low'] < redNaturalReaction - 3:
 		currentStatus = 'DownwardTrend'
 		row['downwardTrend'] = downwardTrend = row['low']
 		row['reason'] = 541
 		continue
 	#  6.e
+	# NaturalReaction -- DownwardTrend
 	if currentStatus == 'NaturalReaction' and row['low'] < downwardTrend:
 		currentStatus = 'DownwardTrend'
 		row['downwardTrend'] = downwardTrend = row['low']
@@ -158,7 +175,8 @@ for index, row in df.iterrows():
 		row['naturalReaction'] = naturalReaction = row['low']
 		row['reason'] = 55
 		continue
-	# 6.g(1) NaturalReaction -- +6 -- secondaryRally
+	# 6.g(1) 
+	# NaturalReaction -- +6 -- secondaryRally
 	if currentStatus == 'NaturalReaction' and row['high'] > naturalReaction + 6 \
 	and row['high'] < naturalRally and naturalRally != 999:
 		currentStatus = 'SecondaryRally'
@@ -194,7 +212,8 @@ for index, row in df.iterrows():
 		row['secondaryReaction'] = secondaryReaction = row['low']
 		row['reason'] = 66
 		continue
-
+	# SecondaryReaction -- UpwardTrend
+	# SecondaryReaction -- NaturalRally
 #=============================================
 
 for index, row in df.iterrows():
@@ -211,11 +230,6 @@ for index, row in df.iterrows():
 # 	 % (index, row['high'], row['low'], row['reason'],\
 # 	 row['secondaryRally'], row['naturalRally'],row['upwardTrend'], \
 # 	 row['downwardTrend'],row['naturalReaction'],row['secondaryReaction'] ,row['black'],row['red'])
-
-
-# for index, row in df.iterrows():
-# 	print "%s %6.2f %6.2f %10s| %6.2f %6.2f %6.2f %6.2f" % (index, row['high'], row['low'], row['reason'],\
-# 		 row['naturalRally'],row['upwardTrend'], row['downwardTrend'],row['naturalReaction'] )
 
 #df.plot(x='date', y='close')
 #plt.show()
