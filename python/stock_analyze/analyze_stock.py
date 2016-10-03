@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import sys
 
 file = "%s.csv" % sys.argv[1]
-# df = ts.get_h_data('601318',start='2015-01-01') #一次性获取全部日k线数据
-# df.to_csv('601318.csv')
+if sys.argv[2]:
+	df = ts.get_h_data(sys.argv[1],start='2015-01-01') #一次性获取全部日k线数据
+	df.to_csv(file)
 
 df = pd.read_csv(file)
 df = df.sort_values('date')
@@ -121,7 +122,7 @@ for index, row in df.iterrows():
 		row['reason'] = 35
 		continue
 # =============================================
-	# 6.b (3)
+	# 6.b(3)
 	# DownwardTrend -- continue down -- DownwardTrend
 	if  currentStatus == 'DownwardTrend' and row['low'] < downwardTrend :
 		row['downwardTrend'] = downwardTrend = row['low']
