@@ -46,12 +46,6 @@ for index, row in df.iterrows():
 		currentStatus = 'DownwardTrend'
 
 # =============================================
-	#  6.g(2)
-	# SecondaryRally -- SecondaryRally
-	if  currentStatus == 'SecondaryRally' and row['high'] > secondaryRally :
-		row['secondaryRally'] = secondaryRally = row['high']
-		row['reason'] = 11
-		continue
 	#  6.g(3)
 	# SecondaryRally -- NaturalRally
 	if  currentStatus == 'SecondaryRally' and row['high'] > naturalRally :
@@ -59,6 +53,13 @@ for index, row in df.iterrows():
 		row['naturalRally'] = naturalRally = row['high']
 		row['reason'] = 12
 		continue
+	#  6.g(2)
+	# SecondaryRally -- SecondaryRally
+	if  currentStatus == 'SecondaryRally' and row['high'] > secondaryRally :
+		row['secondaryRally'] = secondaryRally = row['high']
+		row['reason'] = 11
+		continue
+
 # =============================================
 	# 6.c(2) 6.d(2)
 	# NatualRally -- NatualRally
@@ -67,7 +68,7 @@ for index, row in df.iterrows():
 		row['reason'] = 22
 		continue
 	# 6.h(1) NatualRally -- -6 -- secondaryReaction
-	if currentStatus == 'NaturalRally' and row['low'] < naturalRally + 6 \
+	if currentStatus == 'NaturalRally' and row['low'] < naturalRally - 6 \
 	and row['low'] > naturalReaction and naturalReaction > 0:
 		currentStatus = 'SecondaryReaction'
 		row['secondaryReaction'] = secondaryReaction = row['low']
@@ -177,12 +178,6 @@ for index, row in df.iterrows():
 		row['reason'] = 54
 		continue
 # =============================================
-	#  6.h(2)
-	# SecondaryReaction -- SecondaryReaction
-	if  currentStatus == 'SecondaryReaction' and row['low'] < secondaryReaction :
-		row['secondaryReaction'] = secondaryReaction = row['low']
-		row['reason'] = 66
-		continue
 	#  6.h(3)
 	# SecondaryReaction -- NaturalReaction
 	if  currentStatus == 'SecondaryReaction' and row['low'] < naturalReaction :
@@ -190,6 +185,13 @@ for index, row in df.iterrows():
 		row['naturalReaction'] = naturalReaction = row['low']
 		row['reason'] = 65
 		continue
+	#  6.h(2)
+	# SecondaryReaction -- SecondaryReaction
+	if  currentStatus == 'SecondaryReaction' and row['low'] < secondaryReaction :
+		row['secondaryReaction'] = secondaryReaction = row['low']
+		row['reason'] = 66
+		continue
+
 #=============================================
 
 for index, row in df.iterrows():
