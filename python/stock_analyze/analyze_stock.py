@@ -61,6 +61,21 @@ for index, row in df.iterrows():
 		continue
 
 # =============================================
+	# 5.a
+	# NatualRally -- +3 blackNaturalRally -- UpwardTrend
+	if currentStatus == 'NaturalRally' and 'blackNaturalRally' in locals() \
+	and row['high'] > blackNaturalRally + 3:
+		currentStatus = 'UpwardTrend'
+		row['upwardTrend'] = upwardTrend = row['high']
+		row['reason'] = 231
+		continue
+	#  6.f
+	# NatualRally --  Higher than UpwardTrend -- UpwardTrend
+	if currentStatus == 'NaturalRally' and row['high'] > upwardTrend:
+		currentStatus = 'UpwardTrend'
+		row['upwardTrend'] = upwardTrend = row['high']
+		row['reason'] = 232
+		continue
 	# 6.c(2) 6.d(2)
 	# NatualRally -- NatualRally
 	if  currentStatus == 'NaturalRally' and row['high'] > naturalRally :
@@ -88,21 +103,7 @@ for index, row in df.iterrows():
 			row['naturalReaction'] = naturalReaction = row['low']
 			row['reason'] = 25
 		continue
-	# 5.a
-	# NatualRally -- +3 blackNaturalRally -- UpwardTrend
-	if currentStatus == 'NaturalRally' and 'blackNaturalRally' in locals() \
-	and row['high'] > blackNaturalRally + 3:
-		currentStatus = 'UpwardTrend'
-		row['upwardTrend'] = upwardTrend = row['high']
-		row['reason'] = 23
-		continue
-	#  6.f
-	# NatualRally --  Higher than UpwardTrend -- UpwardTrend
-	if currentStatus == 'NaturalRally' and row['high'] > upwardTrend:
-		currentStatus = 'UpwardTrend'
-		row['upwardTrend'] = upwardTrend = row['high']
-		row['reason'] = 23
-		continue
+	
 # =============================================
 	# 6.d (3)
 	# UpwardTrend -- continue up -- UpwardTrend
@@ -136,6 +137,20 @@ for index, row in df.iterrows():
 		row['reason'] = 42
 		continue
 # =============================================
+	# 5.b
+	# NaturalReaction -- -3 redNaturalReaction-- DownwardTrend
+	if currentStatus == 'NaturalReaction' and 'redNaturalReaction' in locals() \
+	and row['low'] < redNaturalReaction - 3:
+		currentStatus = 'DownwardTrend'
+		row['downwardTrend'] = downwardTrend = row['low']
+		row['reason'] = 541
+		continue
+	#  6.e
+	if currentStatus == 'NaturalReaction' and row['low'] < downwardTrend:
+		currentStatus = 'DownwardTrend'
+		row['downwardTrend'] = downwardTrend = row['low']
+		row['reason'] = 542
+		continue
 	#  6.b(2)
 	# NaturalReaction -- NaturalReaction
 	if  currentStatus == 'NaturalReaction' and row['low'] < naturalReaction :
@@ -163,20 +178,7 @@ for index, row in df.iterrows():
 			row['naturalRally'] = naturalRally = row['high']
 			row['reason'] = 52
 		continue
-	# 5.b
-	# NaturalReaction -- -3 redNaturalReaction-- DownwardTrend
-	if currentStatus == 'NaturalReaction' and 'redNaturalReaction' in locals() \
-	and row['low'] < redNaturalReaction - 3:
-		currentStatus = 'DownwardTrend'
-		row['downwardTrend'] = downwardTrend = row['low']
-		row['reason'] = 54
-		continue
-	#  6.e
-	if currentStatus == 'NaturalReaction' and row['low'] < downwardTrend:
-		currentStatus = 'DownwardTrend'
-		row['downwardTrend'] = downwardTrend = row['low']
-		row['reason'] = 54
-		continue
+	
 # =============================================
 	#  6.h(3)
 	# SecondaryReaction -- NaturalReaction
