@@ -29,7 +29,7 @@ CASE WHEN age <= 39
                  + CASE WHEN certificates_in_str LIKE '%公积金资料%' AND rate > 18 THEN 49 * 2 ELSE 0 END
                WHEN education_method IN ('成人', '自考', '自学考试')
                THEN CASE
-                   	WHEN wsl_rank < 150 THEN 51 + CASE WHEN sex = '女' THEN 25 ELSE 0 END
+                   	WHEN wsl_rank < 150 THEN 0 + CASE WHEN sex = '女' THEN 0 ELSE 0 END
                    	ELSE 0
                    	END
            END

@@ -15,7 +15,7 @@ class PpdaispiderSpider(InitSpider):
     login_page = 'https://ac.ppdai.com/User/Login'
     allowed_domains = ["ppdai.com"]
     start_urls = (
-        'http://invest.ppdai.com/loan/list_riskmiddle',
+        'http://invest.ppdai.com/loan/listnew?LoanCategoryId=4&CreditCodes=&ListTypes=&Rates=&Months=&AuthInfo=&BorrowCount=&didibid=&SortType=0&MinAmount=0&MaxAmount=0',
         # 'http://invest.ppdai.com/loan/list_riskmiddle_s4_p2?Rate=18&DidIBid=on',
     )
 
