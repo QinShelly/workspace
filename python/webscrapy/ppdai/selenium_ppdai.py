@@ -43,13 +43,14 @@ cnt_row = 0
 visited_li = []
 
 conn = sqlite3.connect('example.db')
-
+base_url = "http://invest.ppdai.com/"
 while True:
     # Get item to bid
     view_name = ppdai.config.view_name
-    sql = "select id, amount_bid from vw_ppdai_low_rate where amount_bid > 0 and bid is null"
+    times = ppdai.config.times
     sql = "select id, amount_bid from " + view_name + " where amount_bid > 0 and bid is null"
     print sql
+    print "%s times" % times
     found = False
 
     attempts = 0
@@ -64,35 +65,35 @@ while True:
             time.sleep(1)
 
     for row in result:
-        if row[0] in visited_li:
+        id = row[0]
+        if id in visited_li:
             break
         found = True
-        visited_li.append(row[0])
+        visited_li.append(id)
 
         # update bid to 0
-        sql = "update ppdai set bid = 0 where id = '%s'" % row[0]
-        print "set bid %s to 0 start" % row[0]
+        sql = "update ppdai set bid = 0 where id = '%s'" % id
+        print "set bid %s to 0 start" % id
 
-        attempts = 0
-
+        attempts = 0  
         while attempts < 100:
             try:
                 conn.execute(sql)
                 conn.commit()
-                print "set bid %s to 0 complete" % row[0]
+                print "set bid %s to 0 complete" % id
                 break
             except sqlite3.OperationalError:
                 attempts += 1
                 print("warning!!! : database locked when set bid to 0")
                 time.sleep(1)
 
-        print "bid for %s " % row[0]
-        loan_id = row[0].replace("http://invest.ppdai.com/loan/info?id=", "")
-        bid_amount = row[1]
-        base_url = "http://invest.ppdai.com/"
+        print "bid for %s " % id
+        loan_id = id.replace("http://invest.ppdai.com/loan/info?id=", "")
+        bid_amount = row[1] * times
+
         try:
             bid_success = True
-            driver.get(row[0])
+            driver.get(id)
             time.sleep(random.uniform(1, 3))
             driver.implicitly_wait(10)
             driver.find_element_by_id(loan_id).click()
@@ -116,8 +117,8 @@ while True:
 
         if bid_success:
             # update bid to 1
-            sql = "update ppdai set bid = 1 where id = '%s'" % row[0]
-            print "set bid %s to 1 start" % row[0]
+            sql = "update ppdai set bid = 1 where id = '%s'" % id
+            print "set bid %s to 1 start" % id
 
             attempts = 0
 
@@ -125,7 +126,7 @@ while True:
                 try:
                     conn.execute(sql)
                     conn.commit()
-                    print "set bid %s to 1 complete" % row[0]
+                    print "set bid %s to 1 complete" % id
                     break
                 except sqlite3.OperationalError:
                     attempts += 1
@@ -138,8 +139,6 @@ while True:
         except UnexpectedAlertPresentException:
             print("got Unexpected Alert exception")
 
-
-    
     # if not found:
     #     sql = "select count(*) from ppdai"
     #     for row in conn.execute(sql):
