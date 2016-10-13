@@ -90,7 +90,8 @@ while True:
         print "bid for %s " % id
         loan_id = id.replace("http://invest.ppdai.com/loan/info?id=", "")
         bid_amount = row[1] * times
-
+        if bid_amount > 1000:
+            bid_amount = 1000
         try:
             bid_success = True
             driver.get(id)
