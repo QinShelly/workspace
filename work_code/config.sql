@@ -1,5 +1,5 @@
 /* ------------------------------------------
-Retailer / Vendor Fusion
+Retailer / Vendor SQL Server
 -- ------------------------------------------*/
 select * from RSI_DIM_RETAILER
 where RETAILER_NAME like 'b%'
@@ -41,12 +41,27 @@ update RSI_CORE_CFGPROPERTY
 set value = '200'
 where name like '%etl.blackout.starttime%'
 
+-- common configs
 select * from RSI_CORE_CFGPROPERTY
-where Name not like '%osm%' and Name not like 'rsi.alert%' and Name not like 'rsi.baseline%' and Name not like 'rsi.rr%' and Name not like 'rsi.scorecard%' and Name not like 'rsi.izs%' and Name not like 'rsi.pm%' and Name not like 'rsi.report%' and  Name not like 'ap%' and  Name not like 'dq%' and  Name not like 'rsi.dq%' and  Name not like 'report%' and  Name not like 'demo%' and  Name not like 'rsi.wm%' and  Name not like 'cube.aa%'
+where Name not like '%osm%' and Name not like 'rsi.alert%' 
+and Name not like 'rsi.baseline%' and Name not like 'rsi.rr%' 
+and Name not like 'rsi.scorecard%' and Name not like 'rsi.izs%' 
+and Name not like 'rsi.pm%' and Name not like 'rsi.report%' 
+and Name not like 'ap%' and  Name not like 'dq%' and  Name not like 'rsi.dq%' 
+and  Name not like 'report%' and  Name not like 'demo%' and  Name not like 'rsi.wm%' 
+and  Name not like 'cube.aa%'
 and Name like '%custom%'
 
 select * from metadata_hub.silo
 
+-- common configs
 select * from metadata_hub.SILO_CONFIG
-where Name not like '%osm%' and Name not like 'rsi.alert%' and Name not like 'rsi.baseline%' and Name not like 'rsi.rr%' and Name not like 'rsi.scorecard%' and Name not like 'rsi.izs%' and Name not like 'rsi.pm%' and Name not like 'rsi.report%' and  Name not like 'ap%' and  Name not like 'dq%' and  Name not like 'rsi.dq%' and  Name not like 'report%' and   Name not like 'demo%' and  Name not like 'rsi.wm%' and  Name not like 'cube.aa%'
+where Name not like '%osm%' and Name not like 'rsi.alert%' 
+and Name not like 'rsi.baseline%' and Name not like 'rsi.rr%' 
+and Name not like 'rsi.scorecard%' and Name not like 'rsi.izs%' 
+and Name not like 'rsi.pm%' and Name not like 'rsi.report%' 
+and  Name not like 'ap%' and  Name not like 'dq%' 
+and  Name not like 'rsi.dq%' and  Name not like 'report%' 
+and   Name not like 'demo%' and  Name not like 'rsi.wm%' 
+and  Name not like 'cube.aa%'
 and silo_id = 'CANDY_FDCAT'

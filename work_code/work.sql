@@ -160,7 +160,7 @@ SELECT su.silo_id, su.vendor_key, r.retailer_key, su.whse_retailer_key, su.retai
    AND r.retailer_sname IN ($bfwRetailers)
 
 /* ------------------------------------------
-CTE find last recovered TS
+CTE find last recovered TS for any TS
 --------------------------------------------*/
 WITH cte AS( 
 SELECT old_transfer_set_key, new_transfer_set_key, 1 AS lev 

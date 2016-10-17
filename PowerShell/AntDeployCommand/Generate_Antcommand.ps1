@@ -11,9 +11,9 @@ $cpDBName = 'CP'
 $siloDBServerName = 'engv2qa3.ENG.RSICORP.LOCAL'
 $dwServerName = '10.172.32.16'
 $hubServerName  = 'engv2qa3.ENG.RSICORP.LOCAL'
-$hubDBName = 'HUB'
+$hubDBName = 'Ken_HUB'
 $metricsGroup = 'Target'  # find metric group
-$releaseName = 'Release'
+$releaseName = 'SP6'
 $olapServerName = 'engv2qa3.ENG.RSICORP.LOCAL'
 
 $cp_connection  = Create-SqlConnection $cpServerName $cpDBName
@@ -47,7 +47,7 @@ $verticaConnection = Create-VerticaConnection -config $vConfig
 $knonwMetricsGroup = @{ahold='Ahold USA'}
 $metricsGroup = $knonwMetricsGroup["$retailerName"]
 if (-not $metricsGroup) {
-    $metricsGroup = $verticaConnection.QueryScalar("select distinct retailer_name from metadata_hub.MEASURES_core where retailer_name  = '$retailerName'")
+    $metricsGroup = $verticaConnection.QueryScalar("select distinct retailer_name from metadata_ken_hub.MEASURES_core where retailer_name  = '$retailerName'")
 }
 if (-not $metricsGroup){
     "metricsgroup not found "
