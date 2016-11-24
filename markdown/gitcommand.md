@@ -75,7 +75,7 @@
 
     git reset --hard <commit>
 
-将HEAD重置到commit，并将之后修改标记为未添加到缓存区的修改
+将HEAD重置到commit，并将之后修改标记为未添加到缓存区的修改,可用于将多个乱七八糟的commit合并
 
     git reset --soft <commit>
 
@@ -107,10 +107,6 @@
 谁，何时，修改什么内容
 
     git blame <file>
-
-将多个乱七八糟的commit合并
-
-    git reset --soft <commit>
 
 ## 分支 ##
 显示远程端有哪些分支以及本地分支怎样关联远程分支
