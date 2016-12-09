@@ -16,6 +16,19 @@ import ppdai.config
 import random
 import datetime
 
+def getTimes():
+    times = 1
+    with open('./ppdai/config.py', 'r') as f:
+        for line in f.readlines():
+            m = re.match("times\W*=\W*(\d+)", line)
+            if m: 
+                #print line.strip()
+                times = m.group(1)
+                break
+   
+    return int(times)
+
+# ==================================================================    
 # open Firefox
 driver = webdriver.Firefox()
 
@@ -47,14 +60,16 @@ base_url = "http://invest.ppdai.com/"
 while True:
     # Get item to bid
     view_name = ppdai.config.view_name
-    times = ppdai.config.times
+    # using ppdai.config.times cannot get update to the config when program is running
+    # times = ppdai.config.times
+    times = getTimes()
     sql = "select id, amount_bid from " + view_name + " where amount_bid > 0 and bid is null"
     print sql
     print "%s times" % times
     found = False
 
     attempts = 0
-    print("in loop %s" % datetime.datetime.now())
+    print("in loop %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
     while attempts < 100:
         try:
             result = conn.execute(sql)
@@ -92,6 +107,7 @@ while True:
         bid_amount = row[1] * times
         if bid_amount > 1000:
             bid_amount = 1000
+
         try:
             bid_success = True
             driver.get(id)
@@ -112,7 +128,7 @@ while True:
             # must sleep otherwise click not work
             time.sleep(random.uniform(5, 7))
             driver.find_element_by_id("btBid").click()
-        except NoSuchElementException:
+        except NoSuchElementException,ElementNotVisibleException:
             print("it's already bid by others :(")
             bid_success = False
 

@@ -14,8 +14,17 @@ class PpdaiPipeline(object):
 
         # Insert a row of data
         c.execute("INSERT INTO ppdai (id , ppdai_level , title , rate , amount "
-                  ", limitTime , purpose, sex ,age , marriage , education "
-                  ", house , car ,school , education_level , education_method "
+                  ", limitTime "
+                  ", purpose "
+                  ", sex "
+                  ",age "
+                  ", marriage "
+                  ", education "
+                  ", house "
+                  ", car "
+                  ", school "
+                  ", education_level "
+                  ", education_method "
                   ", detail, hukou , certificates_in_str, cnt_return_on_time, cnt_return_less_than_15, over15plus "
                   ", total_borrow, waiting_to_pay, waiting_to_get_back) "
                   "VALUES (?,?,?,?,?"
@@ -24,12 +33,19 @@ class PpdaiPipeline(object):
                   ",?, ? ,?, ?, ?, ?"
                   ",? ,? ,?)",
                   (item['id'], item['rank'], item['title'][0], item['brate'][0], item['qty']
-                   , item['limitTime'][0], item['purpose'], item['sex'][0], item['age'][0], item['marriage'][0],
-                        item['education'][0]
-                   , item['house'][0], item['car'][0], item['school'], item['study_level'],
-                        item['study_format']
-                   ,item['detail'], item['hukou'], item['audit'], item['pay_clear'], item['over1_15'],item['over15plus']
-                   ,item['total_borrow'],item['to_pay'],item['to_receive']
+                   , item['limitTime'][0]
+                   , "purpose"
+                   , item['sex']
+                   , item['age']
+                   , "marriage"
+                   , item['education']
+                   , item['house']
+                   , item['car']
+                   , item['school']
+                   , item['study_level']
+                   , item['study_format']
+                   , item['detail'], item['hukou'], item['audit'], item['pay_clear'], item['over1_15'],item['over15plus']
+                   , item['total_borrow'],item['to_pay'],item['to_receive']
                    )
                   )
         # Save (commit) the changes

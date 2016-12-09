@@ -26,9 +26,9 @@ class PpdaispiderSpider(InitSpider):
     def login(self, response):
         """Generate a login request."""
         return FormRequest.from_response(response,
-                                        formdata={'UserName': ppdai.config.accounts['username'],
-                                                  'Password': ppdai.config.accounts['password']},
-                                        callback=self.check_login_response)
+                                             formdata={'UserName': ppdai.config.accounts['username']
+                                             , 'Password': ppdai.config.accounts['password']},
+                                         callback=self.check_login_response)
 
     def check_login_response(self, response):
         """Check the response returned by a login request to see if we are
@@ -52,16 +52,7 @@ class PpdaispiderSpider(InitSpider):
             visited_link.append(row[0])
 
         conn.close()
-
-        # uncomment to test a specific page
-        """
-        link = 'http://invest.ppdai.com/loan/info?id=27097888'
-        request = scrapy.Request(link, callback=self.parse_item)
-        yield request
-        """
-
-        # go through link in list of riskmiddle page
-        
+        """go through link in list of riskmiddle page"""
         for link in response.xpath("//div[@class='w230 listtitle']/a/@href").extract():
             if link in visited_link:
                 self.log("link %s is visited before" % link)
@@ -70,8 +61,11 @@ class PpdaispiderSpider(InitSpider):
                 request = scrapy.Request(link, callback=self.parse_item)
                 yield request
 
-        
-        
+        # to test a specific page
+        # link = 'http://invest.ppdai.com/loan/info?id=15711524'
+        # request = scrapy.Request(link, callback=self.parse_item)
+        # yield request
+
         pages = response.xpath("//a[@class='nextpage']/@href").extract()
         print('next page: %s' % pages)
         if len(pages) >= 1:
@@ -79,7 +73,6 @@ class PpdaispiderSpider(InitSpider):
             page_link = page_link.replace('/a/', '')
             request = scrapy.Request('http://invest.ppdai.com/%s' % page_link, callback=self.parse)
             yield request
-            
 
     def parse_item(self, response):
         item = PpdaiItem()
@@ -95,48 +88,13 @@ class PpdaispiderSpider(InitSpider):
         purpose = response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[1]/text()").extract()
         if purpose:
             item["purpose"] = purpose[0]
-
-        item["age"] = ""
-        age = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'年龄')]/text()").extract()
-        if age:
-            item["age"] = age[0].replace(u'年龄：','')  
-
-        item["sex"] = ""
-        sex = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'性别')]/text()").extract()
-        if sex:
-            item["sex"] = sex[0].replace(u'性别：','').strip()
-
+        item["sex"] = response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[2]/text()").extract()
+        item["age"] = response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[3]/text()").extract()
         item["marriage"] = response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[4]/text()").extract()
+        item["education"] = response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[5]/text()").extract()
+        item["house"] = map(unicode.strip,response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[6]/text()").extract())
+        item["car"] = map(unicode.strip,response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[7]/text()").extract())
 
-        item["education"] = "" 
-        education = response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[5]/text()").extract()
-        if education:
-            item["education"] = education[0].replace(u'文化程度：','').strip()
-
-        item["study_level"] = ""
-        study_level = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'文化程度')]/text()").extract()
-        if study_level:
-            item["study_level"] = study_level[0].replace(u'文化程度：','').strip()
-
-        item["school"] = ""
-        school = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'毕业院校')]/text()").extract()
-        if school:
-            item["school"] = school[0].replace(u'毕业院校：','').strip()
-
-        item["study_format"] = ""
-        study_format = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'学习形式')]/text()").extract()
-        if study_format:
-            item["study_format"] = study_format[0].replace(u'学习形式：','').strip()
-
-        item["house"] = ""
-        house =  map(unicode.strip,response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[6]/text()").extract())
-        if house:
-            item["house"] = house[0]
-        item["car"] = ""
-        car = map(unicode.strip,response.xpath("//table[@class='lendDetailTab_tabContent_table1'][1]/tr[2]/td[7]/text()").extract())
-        if car:
-            item["car"] = car[0]
-        """
         # 学历认证
         item["school"] = ""
         item["study_level"] = ""
@@ -156,7 +114,7 @@ class PpdaispiderSpider(InitSpider):
             m = re.match(u".*学习形式：([^，]*)）", t)
             if m:
                 item["study_format"] = m.group(1)
-        """
+
         # 户口
         item["hukou"] = ""
         hukou = response.xpath(
@@ -181,21 +139,8 @@ class PpdaispiderSpider(InitSpider):
 
         # 拍拍贷统计信息
         item["pay_clear"] = ""
-        pay_clear = response.xpath(u"//div[@class='flex']/p[contains(text(),'正常还清次数')]/span/text()").extract()
-        if pay_clear:
-            item["pay_clear"] = pay_clear[0]
-
         item["over1_15"] = ""
-        over1_15 = response.xpath(u"//div[@class='flex']/p[contains(text(),'逾期(0-15天)还清次数')]/span/text()").extract()
-        if over1_15:
-            item["over1_15"] = over1_15[0]
-        
         item["over15plus"] = ""
-        over15plus = response.xpath(u"//div[@class='flex']/p[contains(text(),'逾期(15天以上)还清次数')]/span/text()").extract()
-        if over15plus:
-            item["over15plus"] = over15plus[0]
-
-        """
         history = response.xpath(
                 u"//div[@class='lendDetailTab_tabContent']/h3[contains(text(),'拍拍贷统计信息')]/following-sibling::p[contains(text(),'正常还清：')]/text()").extract()
         if history:
@@ -211,23 +156,23 @@ class PpdaispiderSpider(InitSpider):
             m = re.match(u".*逾期还清\(>15\)：(\d+).*次", t)
             if m:
                 item["over15plus"] = m.group(1)
-        """
+
         item["total_borrow"] = ""
         total_borrow = response.xpath(
-            u"//div[@class='flex wid630']/p[contains(text(),'剩余借款金额')]/text()").extract()
+                u"//div[@class='lendDetailTab_tabContent']/h3[contains(text(),'拍拍贷统计信息')]/following-sibling::p[contains(text(),'共计借入：')]/span[1]/text()").extract()
         if total_borrow:
-            item["total_borrow"] = total_borrow[0].replace(u'¥', '').replace(u',', '').replace(u'剩余借款金额：','').strip()
+            item["total_borrow"] = total_borrow[0].replace(u'¥', '').replace(u',', '')
 
         item["to_pay"] = ""
         to_pay = response.xpath(
-            u"//div[@class='flex wid630']/p[contains(text(),'待还金额')]/text()").extract()
+           u"//div[@class='lendDetailTab_tabContent']/h3[contains(text(),'拍拍贷统计信息')]/following-sibling::p[contains(text(),'共计借入：')]/span[2]/text()").extract()
         if to_pay:
-            item["to_pay"] = to_pay[0].replace(u'¥', '').replace(u',', '').replace(u'待还金额：','').strip()
+            item["to_pay"] = to_pay[0].replace(u'¥', '').replace(u',', '')
 
         item["to_receive"] = ""
         to_receive = map(unicode.strip,response.xpath(
-            u"//div[@class='flex wid630']/p[contains(text(),'待收金额')]/text()").extract())
+           u"//div[@class='lendDetailTab_tabContent']/h3[contains(text(),'拍拍贷统计信息')]/following-sibling::p[contains(text(),'共计借入：')]/span[3]/text()").extract())
         if to_receive:
-            item["to_receive"] = to_receive[0].replace(u'¥', '').replace(u',', '').replace(u'待收金额：','').strip()
+            item["to_receive"] = to_receive[0].replace(u'¥', '').replace(u',', '')
 
         yield item
