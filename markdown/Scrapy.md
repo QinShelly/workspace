@@ -18,7 +18,8 @@ Install pip and virtualenv for Ubuntu 10.10 Maverick and newer
 
 ## Install Selenium ##
 	sudo pip install selenium
-Downgrade to 2.53.6 to work with FireFox 28   
+Selenium 2.53.6 work with FireFox 28   
+Selenium 3.0.2 work with Firefox 47.0.1
 	
 `sudo pip install selenium==2.53.6`
 
