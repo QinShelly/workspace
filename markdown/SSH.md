@@ -7,16 +7,24 @@
 [Set Github on Ubuntu](http://www.ubuntumanual.org/posts/393/how-to-setup-and-use-github-in-ubuntu)
 
 # Add SSH Key # 
-- On Windows   
+
+
+- Navigate to ssh folder
+
+- On Windows
+open Git Bash   
 `cd C:\Users\<user>\.ssh`
 
 - On Linux  
+`cd ~`  
+`mkdir .ssh`  
 `$cd ~/.ssh`
 
+- Generate SSH key  
 `ssh-keygen -t rsa -C your.name@retailsolutions.com`
 
 Open `id_rsa.pub` file, copy content
-Add to Stash -- > Manage Account
+Add key content to Stash -- > Manage Account
 
 On Linux, have to run SSH-add to make it work 
 
