@@ -97,12 +97,12 @@ class PpdaispiderSpider(InitSpider):
             item["purpose"] = purpose[0]
 
         item["age"] = ""
-        age = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'年龄')]/text()").extract()
+        age = response.xpath(u"//div[@class='lender-info']/div/p[contains(text(),'年龄')]/span/text()").extract()
         if age:
             item["age"] = age[0].replace(u'年龄：','')  
 
         item["sex"] = ""
-        sex = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'性别')]/text()").extract()
+        sex = response.xpath(u"//div[@class='lender-info']/div/p[contains(text(),'性别')]/span/text()").extract()
         if sex:
             item["sex"] = sex[0].replace(u'性别：','').strip()
 
@@ -114,17 +114,17 @@ class PpdaispiderSpider(InitSpider):
             item["education"] = education[0].replace(u'文化程度：','').strip()
 
         item["study_level"] = ""
-        study_level = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'文化程度')]/text()").extract()
+        study_level = response.xpath(u"//div[@class='lender-info']/div/p[contains(text(),'文化程度')]/span/text()").extract()
         if study_level:
             item["study_level"] = study_level[0].replace(u'文化程度：','').strip()
 
         item["school"] = ""
-        school = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'毕业院校')]/text()").extract()
+        school = response.xpath(u"//div[@class='lender-info']/div/p[contains(text(),'毕业院校')]/span/text()").extract()
         if school:
             item["school"] = school[0].replace(u'毕业院校：','').strip()
 
         item["study_format"] = ""
-        study_format = response.xpath(u"//table[@class='lendDetailTab_tabContent_table1']/tr/td/span[contains(text(),'学习形式')]/text()").extract()
+        study_format = response.xpath(u"//div[@class='lender-info']/div/p[contains(text(),'学习形式')]/span/text()").extract()
         if study_format:
             item["study_format"] = study_format[0].replace(u'学习形式：','').strip()
 
@@ -183,17 +183,17 @@ class PpdaispiderSpider(InitSpider):
         item["pay_clear"] = ""
         pay_clear = response.xpath(u"//div[@class='flex']/p[contains(text(),'正常还清次数')]/span/text()").extract()
         if pay_clear:
-            item["pay_clear"] = pay_clear[0]
+            item["pay_clear"] = pay_clear[0].replace(u'次','').strip()
 
         item["over1_15"] = ""
         over1_15 = response.xpath(u"//div[@class='flex']/p[contains(text(),'逾期(0-15天)还清次数')]/span/text()").extract()
         if over1_15:
-            item["over1_15"] = over1_15[0]
+            item["over1_15"] = over1_15[0].replace(u'次','').strip()
         
         item["over15plus"] = ""
         over15plus = response.xpath(u"//div[@class='flex']/p[contains(text(),'逾期(15天以上)还清次数')]/span/text()").extract()
         if over15plus:
-            item["over15plus"] = over15plus[0]
+            item["over15plus"] = over15plus[0].replace(u'次','').strip()
 
         """
         history = response.xpath(
@@ -214,19 +214,19 @@ class PpdaispiderSpider(InitSpider):
         """
         item["total_borrow"] = ""
         total_borrow = response.xpath(
-            u"//div[@class='flex wid630']/p[contains(text(),'剩余借款金额')]/text()").extract()
+            u"//div/p[contains(text(),'累计借款金额')]/span/text()").extract()
         if total_borrow:
             item["total_borrow"] = total_borrow[0].replace(u'¥', '').replace(u',', '').replace(u'剩余借款金额：','').strip()
 
         item["to_pay"] = ""
         to_pay = response.xpath(
-            u"//div[@class='flex wid630']/p[contains(text(),'待还金额')]/text()").extract()
+            u"//div/p[contains(text(),'待还金额')]/span/text()").extract()
         if to_pay:
             item["to_pay"] = to_pay[0].replace(u'¥', '').replace(u',', '').replace(u'待还金额：','').strip()
 
         item["to_receive"] = ""
         to_receive = map(unicode.strip,response.xpath(
-            u"//div[@class='flex wid630']/p[contains(text(),'待收金额')]/text()").extract())
+            u"//div/p[contains(text(),'待收金额')]/span/text()").extract())
         if to_receive:
             item["to_receive"] = to_receive[0].replace(u'¥', '').replace(u',', '').replace(u'待收金额：','').strip()
 
