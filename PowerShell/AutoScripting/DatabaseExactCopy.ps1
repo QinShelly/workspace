@@ -8,7 +8,7 @@ $ErrorActionPreference = "stop" # you can opt to stagger on, bleeding, if an err
 $ms='Microsoft.SqlServer'
 $v = [System.Reflection.Assembly]::LoadWithPartialName( "$ms.SMO")
 if ((($v.FullName.Split(','))[1].Split('='))[1].Split('.')[0] -ne '9') {
-[System.Reflection.Assembly]::LoadWithPartialName("$ms.SMOExtended") | out-null
+[System.Reflection.Assembly]::LoadWithPcartialName("$ms.SMOExtended") | out-null
    }
 $My="$ms.Management.Smo" #
 $s = new-object ("$My.Server") $DataSource
