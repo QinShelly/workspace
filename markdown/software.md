@@ -14,7 +14,6 @@ SublimeText3
 VSCodeSetup-stable.exe  
 WinMerge  
 grepWin-1.6.13-x64.msi  
-WinMerge
 
 ## Virtual Machine ##
 VMWare Player  
@@ -49,7 +48,6 @@ spacesniffer
 TotalCommand (TCEE)  
 Teracopy  
 RemoteDesktopConnectionManager (RDCMan)   
-VirtualWin
 
 ## PowerShell ##
 PowerGUI.3.8.0.129.msi
