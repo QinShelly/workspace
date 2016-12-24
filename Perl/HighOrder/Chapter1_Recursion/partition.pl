@@ -42,7 +42,7 @@ sub partition {
 	}
 
 	# return ($share_1, $share_2);
-	return $share_1;
+	return ($share_1, $share_2);
 }
 
 # $a = find_share(5, [1,2,3,4]);
@@ -52,7 +52,10 @@ sub partition {
 #say @$a;
 
 #dump(find_share(5, [1,2,4,8]));
-$a = partition(qw/ 1 2 3 4 /);
+my ($a, $b);
+($a,$b) = partition(qw/ 1 2 3 4 5 6 7 8N /);
 print join(", ",@$a) if $a;
+print "\n";
 
+print join(", ",@$b) if $b;
 print "\n";
