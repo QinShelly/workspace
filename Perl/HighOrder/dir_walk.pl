@@ -72,3 +72,15 @@ $total_size = dir_walk ('.',\&file_size, \&dir_size);
 dir_walk('.', \&print_filename, \&print_filename);
 # call style 4
 dir_walk('.', \&dangles);
+
+
+
+
+
+
+
+
+
+
+
+
