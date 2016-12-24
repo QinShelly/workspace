@@ -1,0 +1,3 @@
+VERBOSITY	8
+CHDIR		/usr/local
+LOGFILE		log
