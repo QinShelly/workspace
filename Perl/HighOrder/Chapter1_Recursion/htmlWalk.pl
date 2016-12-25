@@ -61,7 +61,7 @@ sub extract_headers {
                              sub { ['maybe', $_[0]] }, 
                              sub { promote_if(
                                      sub { $_[0] eq 'h1' },
-                                     $_[0])
+                                     @_)
                              });
 	my @keepers = grep {$_->[0] eq 'KEEPER'} @tagged_texts;
 	my @keeper_text = map { $_->[1] } @keepers;
