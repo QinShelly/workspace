@@ -8,16 +8,16 @@ $tree->eof();
 
 
 sub walk_html {
-	my($html, $textfunc, $elementfunc) = @_;
-	return $textfunc->($html) unless ref $html; #It's a plain string
+  my ($html, $textfunc, $elementfunc) = @_;
+  return $textfunc->($html) unless ref $html;   # It's a plain string
 
-	my @results;
-	for my $item (@{$html->{_content}}){
-		push @results, walk_html($item, $textfunc, $elementfunc);
-	}
-
-	return $elementfunc->($html, @results);
+  my @results;
+  for my $item (@{$html->{_content}}) {
+    push @results, walk_html($item, $textfunc, $elementfunc);
+  }
+  return $elementfunc->($html, @results);
 }
+
 
 sub print_if_h1tag {
 	my $element = shift;
@@ -43,26 +43,26 @@ sub promote_if_h1tag {
 }
 
 sub promote_if {
-	my $is_interesting = shift;
+	my $is_interesting = shift;          
 	my $element = shift;
 	if ($is_interesting->($element->{_tag})) {
 		return ['KEEPER', join '', map {$_->[1]} @_];
 	} else {
-		return @_; 
+		return @_;
 	}
 }
 
 sub extract_headers {
 	my $tree = shift;
 	# use promote_if_h1tag
-	my @tagged_texts = walk_html($tree, sub{['MAYBE', $_[0]]}, \&promote_if_h1tag);
+	#my @tagged_texts = walk_html($tree, sub{['MAYBE', $_[0]]}, \&promote_if_h1tag);
 	# use promote_if, doesn't work
-	# my @tagged_texts = walk_html($tree,
- #                              sub { ['maybe', $_[0]] },
- #                              sub { promote_if(
- #                                       sub { $_[0] eq 'h1'},
- #                                       $_[0])
- #                              });
+	my @tagged_texts = walk_html($tree, 
+                             sub { ['maybe', $_[0]] }, 
+                             sub { promote_if(
+                                     sub { $_[0] eq 'h1' },
+                                     $_[0])
+                             });
 	my @keepers = grep {$_->[0] eq 'KEEPER'} @tagged_texts;
 	my @keeper_text = map { $_->[1] } @keepers;
 	my $header_text = join '', @keeper_text;

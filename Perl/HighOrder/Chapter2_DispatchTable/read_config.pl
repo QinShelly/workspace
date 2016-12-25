@@ -8,7 +8,7 @@ sub read_config {
 		my($directive,$rest) = split /\s+/,$_,2;
 		#print "$directive\n";
 		if (exists $actions->{$directive}){
-			print "exists: $directive\n";
+			#print "exists: $directive\n";
 			$actions->{$directive}->($rest, $actions);
 		} else {
 			die "Unrecognized directive $directive on line $. of $filename; aborting";
