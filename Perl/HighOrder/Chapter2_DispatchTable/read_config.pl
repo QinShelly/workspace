@@ -43,26 +43,24 @@ sub set_verbosity {
 }
 
 sub define_config_directive {
-	print "define config directive\n";
-	my ($rest,$dispatch_table) = @_;
-	$rest =~ s/^\s+//;
-	my ($new_directive, $def_text) = split /\s+/, $rest, 2;
-	print "$new_directive\n";
-	print "$def_text\n";
-	if (exists $dispatch_table{$new_directive}) {
-		warn "$new_directive already defined; skipping. \n";
-		return;
-	}
+  my ($rest, $dispatch_table) = @_;
+  $rest =~ s/^\s+//;
+  my ($new_directive, $def_txt) = split /\s+/, $rest, 2;
 
-	my $def = eval "sub { $def_txt }";
+  if (exists $dispatch_table->{$new_directive}) {
+    warn "$new_directive already defined; skipping.\n";
+    return;
+  }
 
-	if (not defined $def) {
-		warn "Could not compile definition for '$new_directive': $@; skipping.\n";
-		return;
-	}
+  my $def = eval "sub { $def_txt }";
+  if (not defined $def) {
+    warn "Could not compile definition for `$new_directive': $@; skipping.\n";
+    return;       
+  }
 
-	$dispatch_table{$new_directive} = $def;
+  $dispatch_table->{$new_directive} = $def;
 }
+
 
 read_config('config_sample', $dispatch_table);
 

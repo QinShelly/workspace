@@ -1,7 +1,7 @@
 VERBOSITY	8
 DEFINE HOME chdir('/Users/yaoyongzhen/workspace')
-HOME
 CHDIR		/Users/yaoyongzhen/
 LOGFILE		log
-VERBOSITY	8
+HOME
+VERBOSITY	6
 LOGFILE		log
