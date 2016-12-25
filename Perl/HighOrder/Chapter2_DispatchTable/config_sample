@@ -1,3 +1,7 @@
 VERBOSITY	8
-CHDIR		/usr/local
+DEFINE HOME chdir('/Users/yaoyongzhen/workspace')
+HOME
+CHDIR		/Users/yaoyongzhen/
+LOGFILE		log
+VERBOSITY	8
 LOGFILE		log
