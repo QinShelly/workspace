@@ -38,7 +38,7 @@ END
 + CASE WHEN ppdai_level = 'C' AND rate = 22 AND age < 40 AND cnt_return_on_time > 10 AND cnt_return_less_than_15 < 3
        AND title NOT LIKE '%闪电%' AND education_level IS NOT NULL
        THEN 0 * 2 ELSE 0 END
-+ CASE WHEN waiting_to_get_back - 1.2 * amount >= 0 AND rate > 18 THEN 50 ELSE 0 END
++ CASE WHEN (waiting_to_get_back - waiting_to_pay ) - 1.2 * amount >= 0 AND rate > 18 THEN 50 ELSE 0 END
        as amount_bid,
        p.sex,
        p.insert_dt,

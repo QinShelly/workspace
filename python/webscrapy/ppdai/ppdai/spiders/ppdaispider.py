@@ -216,7 +216,7 @@ class PpdaispiderSpider(InitSpider):
         total_borrow = response.xpath(
             u"//div/p[contains(text(),'累计借款金额')]/span/text()").extract()
         if total_borrow:
-            item["total_borrow"] = total_borrow[0].replace(u'¥', '').replace(u',', '').replace(u'剩余借款金额：','').strip()
+            item["total_borrow"] = total_borrow[0].replace(u'¥', '').replace(u',', '').replace(u'累计借款金额','').strip()
 
         item["to_pay"] = ""
         to_pay = response.xpath(
