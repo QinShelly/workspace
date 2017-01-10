@@ -103,7 +103,7 @@ public class Huffman {
 
         // print number of bytes in original uncompressed message
         BinaryStdOut.write(input.length);
-
+//        BinaryStdOut.close();
         // use Huffman code to encode input
         for (int i = 0; i < input.length; i++) {
             String code = st[input[i]];
@@ -215,14 +215,14 @@ public class Huffman {
      */
     public static void main(String[] args) {
         try {
-            FileInputStream input = new FileInputStream("h.txt");
+            FileInputStream input = new FileInputStream("out.txt");
             System.setIn(input);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
         try {
-            File f=new File("out.txt");
+            File f=new File("out2.txt");
             f.createNewFile();
             FileOutputStream fileOutputStream = new FileOutputStream(f);
             PrintStream printStream = new PrintStream(fileOutputStream);
@@ -231,14 +231,10 @@ public class Huffman {
             e.printStackTrace();
         }
 
-        BinaryStdOut.write(true);
-        BinaryStdOut.write(false);
-        BinaryStdOut.write(true);
-//        BinaryStdOut.write('a',8);
-        BinaryStdOut.close();
-//        if      (args[0].equals("-")) compress();
-//        else if (args[0].equals("+")) expand();
-//        else throw new IllegalArgumentException("Illegal command line argument");
+
+        if      (args[0].equals("-")) compress();
+        else if (args[0].equals("+")) expand();
+        else throw new IllegalArgumentException("Illegal command line argument");
     }
 
 }

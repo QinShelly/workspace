@@ -1,4 +1,14 @@
+
 [Scapy install guide](http://doc.scrapy.org/en/latest/intro/install.html)
+
+# PPDai #
+## Ubuntu Desktop ##
+## Firefox ##
+## Python ##
+## Selenium ##
+
+## Scrapy ##
+## SQLite ##
 
 # On Linux #
 ## 安装pip的方法 ##
