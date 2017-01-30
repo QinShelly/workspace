@@ -1,5 +1,5 @@
 
-[Scapy install guide](http://doc.scrapy.org/en/latest/intro/install.html)
+
 
 # PPDai #
 ## Ubuntu Desktop ##
@@ -20,11 +20,27 @@ Install pip and virtualenv for Ubuntu 10.10 Maverick and newer
     $ sudo pip install --upgrade virtualenv 
 
 ## Install Scrapy ##
-    sudo pip install scrapy
+[官方Scapy install guide](http://doc.scrapy.org/en/latest/intro/install.html)
+
+[安装Scrapy的检查步骤]
+(http://wiki.jikexueyuan.com/project/python-crawler-guide/the-configuration-of-scrapy.html)
+
+[安装Cryptograpy的步骤]
+(https://cryptography.io/en/latest/installation/)
+
+	$ sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+
+安装scrapy   
+`sudo pip install scrapy`
+
+
 
 - for pyasn1 error
 
     sudo pip install pyasn1 --upgrade
+- for cryptograpy error, install openssl
+- for openssl error
+- 
 
 ## Install Selenium ##
 	sudo pip install selenium
