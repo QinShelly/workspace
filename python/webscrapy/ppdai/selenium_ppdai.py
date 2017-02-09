@@ -58,18 +58,21 @@ visited_li = []
 conn = sqlite3.connect('example.db')
 base_url = "http://invest.ppdai.com/"
 while True:
+    if random.randint(1,10) == 1:
+        print "running %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S')
     # Get item to bid
     view_name = ppdai.config.view_name
     # using ppdai.config.times cannot get update to the config when program is running
     # times = ppdai.config.times
     times = getTimes()
-    sql = "select id, amount_bid from " + view_name + " where amount_bid > 0 and bid is null"
-    print sql
-    print "%s times" % times
+    #sql = "select id, amount_bid from " + view_name + " where amount_bid > 0 and bid is null"
+    sql = "select bidProcess.id,amount_bid from bidProcess join " + view_name + " a on bidProcess.id = a.id where processFlag is null and amount_bid > 0"
+    #print sql
+    
     found = False
 
     attempts = 0
-    print("in loop %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
+ 
     while attempts < 100:
         try:
             result = conn.execute(sql)
@@ -87,7 +90,8 @@ while True:
         visited_li.append(id)
 
         # update bid to 0
-        sql = "update ppdai set bid = 0 where id = '%s'" % id
+        #sql = "update ppdai set bid = 0 where id = '%s'" % id
+        sql = "update bidProcess set processFlag = 0 where id = '%s'" % id
         print "set bid %s to 0 start" % id
 
         attempts = 0  
@@ -107,6 +111,9 @@ while True:
         bid_amount = row[1] * times
         if bid_amount > 1000:
             bid_amount = 1000
+        print "%s times" % times
+        print "%s bid_amount" % bid_amount
+        print("bid at %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
 
         try:
             bid_success = True
@@ -134,11 +141,11 @@ while True:
 
         if bid_success:
             # update bid to 1
-            sql = "update ppdai set bid = 1 where id = '%s'" % id
+            #sql = "update ppdai set bid = 1 where id = '%s'" % id
+            sql = "update bidProcess set processFlag = 1 where id = '%s'" % id
             print "set bid %s to 1 start" % id
 
             attempts = 0
-
             while attempts < 100:
                 try:
                     conn.execute(sql)
@@ -166,6 +173,6 @@ while True:
 
     #conn.close()
 
-    sleep_secs = random.uniform(20,30)
+    sleep_secs = random.uniform(2,3)
     # print "sleep %.2f secs" % sleep_secs
     time.sleep(sleep_secs)

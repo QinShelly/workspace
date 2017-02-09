@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS ppdai
 CREATE TABLE IF NOT EXISTS another
                      (id text  , star text)
 
+CREATE TABLE IF NOT EXISTS bidProcess
+                     (id text  , processFlag text)
 
 CREATE TABLE IF NOT EXISTS school_rank
                      (wsl_rank real  , school text)

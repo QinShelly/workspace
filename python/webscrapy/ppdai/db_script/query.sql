@@ -1,4 +1,19 @@
 
+delete 	from ppdai
+
+delete from bidProcess
+
+select * from ppdai
+
+select * from bidProcess
+
+select bidProcess.id,amount_bid from bidProcess 
+join vw_ppdai on bidProcess.id = vw_ppdai.id 
+where processFlag is null and amount_bid > 0
+
+select amount_bid from vw_ppdai 
+where id = 'http://invest.ppdai.com/loan/info?id=33710278'
+
 -- 待投
 select * from vw_ppdai
 where amount_bid > 0 and bid  is null

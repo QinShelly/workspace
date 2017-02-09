@@ -21,8 +21,13 @@ import datetime
 cnt_row = 0
 visited_li = []
 conn = sqlite3.connect('example.db')
+c = conn.cursor()
 
 while True:
+    c.execute("select amount_bid from vw_ppdai where id = ?", ('http://invest.ppdai.com/loan/info?id=33708125',) )
+    if c.fetchone() > 0:
+        c.execute("INSERT INTO bidProcess(id) values (?)",('http://invest.ppdai.com/loan/info?id=33708125',))
+
     # Get item to bid
     
     sql = "select id, amount_bid from vw_ppdai where amount_bid > 0 and bid is null"

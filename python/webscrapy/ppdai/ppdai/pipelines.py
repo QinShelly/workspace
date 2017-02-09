@@ -48,6 +48,13 @@ class PpdaiPipeline(object):
                    , item['total_borrow'],item['to_pay'],item['to_receive']
                    )
                   )
+        conn.commit()
+        c.execute("select amount_bid from vw_ppdai where id = ?", (item['id'],) )
+        amount_bid = c.fetchone()
+        print "amount_bid %s" % amount_bid
+        if int(amount_bid[0]) > 0:
+            c.execute("INSERT INTO bidProcess(id) values (?)",(item['id'],))
+
         # Save (commit) the changes
         conn.commit()
 
