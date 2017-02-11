@@ -39,13 +39,17 @@ ppdai_level,  limitTime,  purpose, marriage, education, house, car, detail, huko
 certificates_in_str, cnt_return_on_time, over15plus, total_borrow, waiting_to_get_back
 FROM ppdai p
 LEFT JOIN school_rank s
-  ON p.school = s.school
+  ON p.school = s.school;
 
-
+drop view vw_clean_ppdai;
 create view vw_clean_ppdai as
 select amount_bid,id,rate,amount,waiting_to_pay to_pay,
 waiting_to_get_back get_back,school,
-education_level,education_method,wsl_rank,age,title,
-ppdai_level,cnt_return_on_time,cnt_return_less_than_15 l15,over15plus
-,waiting_to_get_back,* from ppdai
+education_level e_level,
+education_method e_method,
+wsl_rank,age,title,
+ppdai_level,cnt_return_on_time ontime,
+cnt_return_less_than_15 l15,
+over15plus o15
+,waiting_to_get_back,* from vw_ppdai
       
