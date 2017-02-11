@@ -85,7 +85,7 @@ class PpdaispiderSpider(InitSpider):
         item = PpdaiItem()
         item["id"] = response.url
         rank = response.xpath("//div[@class='newLendDetailInfoLeft']/a[@class='altQust']/span/@class").extract()
-        item["rank"] = rank[0].replace('creditRating', '')
+        item["rank"] = rank[0].replace('creditRating', '').strip()
         item["title"] = response.xpath("//div[@class='newLendDetailbox']/h3/span/text()").extract()
         item["brate"] = map(unicode.strip,response.xpath("//div[@class='newLendDetailMoneyLeft']/dl[2]/dd/text()").extract())
         item["qty"] = response.xpath("//div[@class='newLendDetailMoneyLeft']/dl[1]/dd/text()").extract()[0].replace(u',', '')
