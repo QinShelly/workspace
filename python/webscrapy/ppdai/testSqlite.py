@@ -28,6 +28,10 @@ while True:
     if c.fetchone() > 0:
         c.execute("INSERT INTO bidProcess(id) values (?)",('http://invest.ppdai.com/loan/info?id=33708125',))
 
+c.execute("select amount_bid from vw_ppdai where id = '%s'" % item['id']) 
+        amount_bid = c.fetchone()
+        print "amount_bid %s" % amount_bid
+
     # Get item to bid
     
     sql = "select id, amount_bid from vw_ppdai where amount_bid > 0 and bid is null"

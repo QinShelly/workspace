@@ -49,11 +49,31 @@ class PpdaiPipeline(object):
                    )
                   )
         conn.commit()
-        c.execute("select amount_bid from vw_ppdai where id = ?", (item['id'],) )
-        amount_bid = c.fetchone()
-        print "amount_bid %s" % amount_bid
-        if int(amount_bid[0]) > 0:
-            c.execute("INSERT INTO bidProcess(id) values (?)",(item['id'],))
+        sql = "select amount_bid from vw_ppdai where id = '%s'" % item['id']
+        print sql
+        data = conn.execute(sql) 
+
+        # one row or an empty list is in data. 
+        for row in data:
+          amount_bid = row[0] 
+          if amount_bid is None:
+            print "not a bid :("
+          else:
+            if int(amount_bid) > 0:
+              print "!!!!!!!!!!!!!!!!insert into bidProcess!!!!!!!!!!!!!!"
+              conn.execute("INSERT INTO bidProcess(id) values ('%s')" % item['id'])
+            else:
+              print "not a bid :("
+          
+        # fetchone not working
+        # data = c.fetchone()
+        # if data is None: 
+        #     print "not a bid" 
+        # else:
+        #   print data[0]
+        #   if int(data[0]) > 0:
+        #     print "insert into bidProcess"
+        #     c.execute("INSERT INTO bidProcess(id) values ('%s')" % item['id'])
 
         # Save (commit) the changes
         conn.commit()

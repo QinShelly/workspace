@@ -1,4 +1,4 @@
 #!/bin/bash
 scrapy crawl ppdaispider
-sleep $[($RANDOM % 10) + 10]s
+sleep $[($RANDOM % 10)]s
 exec $0

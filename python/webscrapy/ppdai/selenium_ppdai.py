@@ -36,17 +36,17 @@ driver = webdriver.Firefox()
 driver.get("http://invest.ppdai.com/account/lend")
 driver.implicitly_wait(10)
 driver.find_element_by_id("UserName").clear()
-time.sleep(random.uniform(1,3))
+time.sleep(random.uniform(1,2))
 driver.find_element_by_id("UserName").send_keys(ppdai.config.accounts['username'])
-time.sleep(random.uniform(1,3))
+time.sleep(random.uniform(1,2))
 driver.implicitly_wait(10)
 driver.find_element_by_id("Password").clear()
-time.sleep(random.uniform(1,3))
+time.sleep(random.uniform(1,2))
 driver.find_element_by_id("Password").send_keys(ppdai.config.accounts['password'])
-time.sleep(random.uniform(1,3))
+time.sleep(random.uniform(1,2))
 driver.implicitly_wait(10)
 driver.find_element_by_id("rememberMe").click()
-time.sleep(random.uniform(1,3))
+time.sleep(random.uniform(1,2))
 driver.find_element_by_id("login_btn").click()
 # must sleep otherwise login status is lost
 # need more time for inputing the anti bot code
@@ -58,7 +58,7 @@ visited_li = []
 conn = sqlite3.connect('example.db')
 base_url = "http://invest.ppdai.com/"
 while True:
-    if random.randint(1,10) == 1:
+    if random.randint(1,50) == 1:
         print "running %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S')
     # Get item to bid
     view_name = ppdai.config.view_name
@@ -118,22 +118,22 @@ while True:
         try:
             bid_success = True
             driver.get(id)
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(1, 2))
             driver.implicitly_wait(10)
             driver.find_element_by_id(loan_id).click()
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(1, 2))
             driver.find_element_by_id(loan_id).clear()
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(1, 2))
             driver.find_element_by_id(loan_id).send_keys(bid_amount)
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(1, 2))
             driver.implicitly_wait(10)
             driver.find_element_by_css_selector("input.subBtn.orange").click()
-            time.sleep(random.uniform(1, 3))
+            time.sleep(random.uniform(1, 2))
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "btBid"))
             )
             # must sleep otherwise click not work
-            time.sleep(random.uniform(5, 7))
+            time.sleep(random.uniform(4, 6))
             driver.find_element_by_id("btBid").click()
         except NoSuchElementException,ElementNotVisibleException:
             print("it's already bid by others :(")
@@ -157,7 +157,7 @@ while True:
                     print("warning!!! : database locked when set bid to 1")
                     time.sleep(1)
 
-        time.sleep(5)
+        time.sleep(2)
         try:
             driver.get('http://invest.ppdai.com/account/lend')
         except UnexpectedAlertPresentException:
@@ -173,6 +173,6 @@ while True:
 
     #conn.close()
 
-    sleep_secs = random.uniform(2,3)
+    #sleep_secs = random.uniform(2,3)
     # print "sleep %.2f secs" % sleep_secs
-    time.sleep(sleep_secs)
+    time.sleep(1)

@@ -1,19 +1,21 @@
 --drop table ppdai
 CREATE TABLE IF NOT EXISTS ppdai
-                     (id text PRIMARY KEY, ppdai_level text, title text, rate real, amount real, limitTime real, sex text
-			 	,purpose text, age real, marriage text, education text, house text, car text
-			 		,school text, education_level text, education_method text, detail text, hukou text
-			 		,certificates_in_str text, cnt_return_on_time real, cnt_return_less_than_15 real, over15plus real, total_borrow text
-			 		, waiting_to_pay text, waiting_to_get_back text, bid integer, insert_dt dt default current_timestamp)
+ (id text PRIMARY KEY, ppdai_level text, title text, rate real, amount real, limitTime real, sex text
+,purpose text, age real, marriage text, education text, house text, car text
+	,school text, education_level text, education_method text, detail text, hukou text
+	,certificates_in_str text, cnt_return_on_time real, cnt_return_less_than_15 real, over15plus real, total_borrow text
+	, waiting_to_pay text, waiting_to_get_back text, bid integer, insert_dt dt default current_timestamp)
 
 CREATE TABLE IF NOT EXISTS another
-                     (id text  , star text)
+ (id text  , star text)
 
 CREATE TABLE IF NOT EXISTS bidProcess
-                     (id text  , processFlag text)
+ (id text  , processFlag text, insert_dt dt default current_timestamp
+ 	update_bid0_dt dt,
+ 	update_bid1_dt dt)
 
 CREATE TABLE IF NOT EXISTS school_rank
-                     (wsl_rank real  , school text)
+ (wsl_rank real  , school text)
 
 -- from http://news.koolearn.com/20160315/1077611.html
 insert into school_rank ( wsl_rank,school)
