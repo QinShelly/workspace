@@ -58,7 +58,7 @@ visited_li = []
 conn = sqlite3.connect('example.db')
 base_url = "http://invest.ppdai.com/"
 while True:
-    if random.randint(1,50) == 1:
+    if random.randint(1,100) == 1:
         print "running %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S')
     # Get item to bid
     view_name = ppdai.config.view_name
@@ -72,7 +72,6 @@ while True:
     found = False
 
     attempts = 0
- 
     while attempts < 100:
         try:
             result = conn.execute(sql)
@@ -91,7 +90,7 @@ while True:
 
         # update bid to 0
         #sql = "update ppdai set bid = 0 where id = '%s'" % id
-        sql = "update bidProcess set processFlag = 0 where id = '%s'" % id
+        sql = "update bidProcess set processFlag = 0 ,update_bid0_dt=current_timestamp where id = '%s'" % id
         print "set bid %s to 0 start" % id
 
         attempts = 0  
@@ -118,31 +117,34 @@ while True:
         try:
             bid_success = True
             driver.get(id)
-            time.sleep(random.uniform(1, 2))
+            time.sleep(random.uniform(0, 1))
             driver.implicitly_wait(10)
             driver.find_element_by_id(loan_id).click()
-            time.sleep(random.uniform(1, 2))
             driver.find_element_by_id(loan_id).clear()
-            time.sleep(random.uniform(1, 2))
+            time.sleep(random.uniform(0, 1))
             driver.find_element_by_id(loan_id).send_keys(bid_amount)
-            time.sleep(random.uniform(1, 2))
+            time.sleep(random.uniform(0, 1))
             driver.implicitly_wait(10)
             driver.find_element_by_css_selector("input.subBtn.orange").click()
-            time.sleep(random.uniform(1, 2))
+            time.sleep(random.uniform(0, 1))
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.ID, "btBid"))
             )
             # must sleep otherwise click not work
-            time.sleep(random.uniform(4, 6))
+            time.sleep(random.uniform(3, 5))
             driver.find_element_by_id("btBid").click()
         except NoSuchElementException,ElementNotVisibleException:
             print("it's already bid by others :(")
             bid_success = False
 
+        sql = "update bidProcess set update_bid1_dt=current_timestamp where id = '%s'" % id
+        conn.execute(sql)
+        conn.commit()
+
         if bid_success:
             # update bid to 1
             #sql = "update ppdai set bid = 1 where id = '%s'" % id
-            sql = "update bidProcess set processFlag = 1 where id = '%s'" % id
+            sql = "update bidProcess set processFlag = 1,update_bid1_dt=current_timestamp where id = '%s'" % id
             print "set bid %s to 1 start" % id
 
             attempts = 0
