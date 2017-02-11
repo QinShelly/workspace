@@ -33,21 +33,19 @@ CASE WHEN rate > 18 AND age <= 39
   + CASE WHEN  (waiting_to_get_back - waiting_to_pay ) - 1.2 * amount >= 0 
           THEN 50 ELSE 0 END
 end as amount_bid,
-p.sex,
-p.insert_dt,
-p.school,
-p.education_level,
-p.education_method,
-s.wsl_rank,
-p.rate,
-p.age,
-p.title,
-p.waiting_to_pay,
-p.cnt_return_less_than_15,
+p.sex, p.insert_dt, p.school, p.education_level, p.education_method, s.wsl_rank,
+p.rate, p.age, p.title, p.waiting_to_pay, p.cnt_return_less_than_15,
 ppdai_level,  limitTime,  purpose, marriage, education, house, car, detail, hukou,
-certificates_in_str, cnt_return_on_time, over15plus, total_borrow, waiting_to_get_back,
-p.bid
+certificates_in_str, cnt_return_on_time, over15plus, total_borrow, waiting_to_get_back
 FROM ppdai p
 LEFT JOIN school_rank s
   ON p.school = s.school
+
+
+create view vw_clean_ppdai as
+select amount_bid,id,rate,amount,waiting_to_pay to_pay,
+waiting_to_get_back get_back,school,
+education_level,education_method,wsl_rank,age,title,
+ppdai_level,cnt_return_on_time,cnt_return_less_than_15 l15,over15plus
+,waiting_to_get_back,* from ppdai
       

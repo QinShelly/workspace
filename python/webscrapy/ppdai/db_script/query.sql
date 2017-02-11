@@ -1,15 +1,16 @@
 
-delete 	from ppdai
+--delete 	from ppdai
 
-delete from bidProcess
+--delete from bidProcess
 
 select * from ppdai
 
 select * from bidProcess
 
-select id,amount,total_borrow,school,education_level,education_method,wsl_rank,age,title,waiting_to_pay,
-cnt_return_less_than_15 l15,ppdai_level,cnt_return_on_time,over15plus
+select amount_bid,id,amount,waiting_to_pay,waiting_to_get_back,school,education_level,education_method,wsl_rank,age,title,
+ppdai_level,cnt_return_on_time,cnt_return_less_than_15 l15,over15plus
 ,waiting_to_get_back,* from vw_ppdai
+--where id = 'http://invest.ppdai.com/loan/info?id=33890448'
 order by amount_bid
 
 select bidProcess.id,amount_bid from bidProcess 
