@@ -41,15 +41,25 @@ FROM ppdai p
 LEFT JOIN school_rank s
   ON p.school = s.school;
 
+
+
 drop view vw_clean_ppdai;
 create view vw_clean_ppdai as
-select amount_bid,id,rate,amount,waiting_to_pay to_pay,
-waiting_to_get_back get_back,school,
-education_level e_level,
-education_method e_method,
-wsl_rank,age,title,
-ppdai_level,cnt_return_on_time ontime,
+select amount_bid bid,
+rate rt,
+amount amnt,
+waiting_to_pay pay,
+waiting_to_get_back b,
+school,
+education_level e_lv,
+education_method e_m,
+wsl_rank rk,
+age,
+ppdai_level lv,
+cnt_return_on_time rot,
 cnt_return_less_than_15 l15,
-over15plus o15
-,waiting_to_get_back,* from vw_ppdai
-      
+over15plus o15,
+id,
+title,
+insert_dt
+from vw_ppdai
