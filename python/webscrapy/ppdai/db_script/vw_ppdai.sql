@@ -2,7 +2,7 @@
 drop view vw_ppdai;
 create view vw_ppdai as
 SELECT p.id,  amount,
-CASE WHEN rate >= 20 AND age <= 39 
+CASE WHEN rate >= 16 AND age <= 39 
         and amount + waiting_to_pay <= 15000
         and cnt_return_less_than_15 < 3
         and over15plus = 0 then 
@@ -28,7 +28,7 @@ CASE WHEN rate >= 20 AND age <= 39
   END
   + CASE WHEN ppdai_level in ('A','B','C') AND cnt_return_on_time >= 12 
         AND education_level <> '无'
-        AND title NOT LIKE '%闪电%'
+        --AND title NOT LIKE '%闪电%'
           THEN 50 ELSE 0 END
   + CASE WHEN  (waiting_to_get_back - waiting_to_pay ) - 1.2 * amount >= 0 
           THEN 50 ELSE 0 END
