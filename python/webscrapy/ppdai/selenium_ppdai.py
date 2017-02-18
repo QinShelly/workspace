@@ -36,17 +36,17 @@ driver = webdriver.Firefox()
 driver.get("http://invest.ppdai.com/account/lend")
 driver.implicitly_wait(10)
 driver.find_element_by_id("UserName").clear()
-time.sleep(random.uniform(1,2))
+time.sleep(random.uniform(0,1))
 driver.find_element_by_id("UserName").send_keys(ppdai.config.accounts['username'])
-time.sleep(random.uniform(1,2))
+time.sleep(random.uniform(0,1))
 driver.implicitly_wait(10)
 driver.find_element_by_id("Password").clear()
-time.sleep(random.uniform(1,2))
+time.sleep(random.uniform(0,1))
 driver.find_element_by_id("Password").send_keys(ppdai.config.accounts['password'])
-time.sleep(random.uniform(1,2))
+time.sleep(random.uniform(0,1))
 driver.implicitly_wait(10)
 driver.find_element_by_id("rememberMe").click()
-time.sleep(random.uniform(1,2))
+time.sleep(random.uniform(0,1))
 driver.find_element_by_id("login_btn").click()
 # must sleep otherwise login status is lost
 # need more time for inputing the anti bot code
@@ -58,7 +58,7 @@ visited_li = []
 conn = sqlite3.connect('example.db')
 base_url = "http://invest.ppdai.com/"
 while True:
-    if random.randint(1,100) == 1:
+    if random.randint(1,50) == 1:
         print "running %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S')
     # Get item to bid
     view_name = ppdai.config.view_name
@@ -136,10 +136,9 @@ while True:
         except NoSuchElementException,ElementNotVisibleException:
             print("it's already bid by others :(")
             bid_success = False
-
-        sql = "update bidProcess set update_bid1_dt=current_timestamp where id = '%s'" % id
-        conn.execute(sql)
-        conn.commit()
+        except UnexpectedAlertPresentException:
+            print("it's already bid by others :(")
+            bid_success = False
 
         if bid_success:
             # update bid to 1
@@ -159,7 +158,7 @@ while True:
                     print("warning!!! : database locked when set bid to 1")
                     time.sleep(1)
 
-        time.sleep(2)
+        #time.sleep(2)
         try:
             driver.get('http://invest.ppdai.com/account/lend')
         except UnexpectedAlertPresentException:
