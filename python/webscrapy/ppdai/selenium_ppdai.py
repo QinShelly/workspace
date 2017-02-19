@@ -143,6 +143,9 @@ while True:
         except UnexpectedAlertPresentException:
             print("it's already bid by others :(")
             bid_success = False
+        except TimeoutException:
+            print("it's already bid by others :(")
+            bid_success = False
 
         if bid_success:
             # update bid to 1
