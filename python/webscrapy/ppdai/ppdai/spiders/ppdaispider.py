@@ -7,6 +7,8 @@ from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request, FormRequest
 from ppdai.items import PpdaiItem
 import sqlite3
+import time
+import random
 
 #inherit from InitSpider for authentication
 class PpdaispiderSpider(InitSpider):
@@ -14,8 +16,9 @@ class PpdaispiderSpider(InitSpider):
     # have to visit login otherwise cannot see sex, age, etc
     login_page = 'https://ac.ppdai.com/User/Login'
     allowed_domains = ["ppdai.com"]
+    middle_risk_list_url = 'http://invest.ppdai.com/loan/listnew?LoanCategoryId=4&CreditCodes=&ListTypes=&Rates=&Months=&AuthInfo=&BorrowCount=&didibid=&SortType=0&MinAmount=0&MaxAmount=0'
     start_urls = (
-        'http://invest.ppdai.com/loan/listnew?LoanCategoryId=4&CreditCodes=&ListTypes=&Rates=&Months=&AuthInfo=&BorrowCount=&didibid=&SortType=0&MinAmount=0&MaxAmount=0',
+        middle_risk_list_url ,
         # 'http://invest.ppdai.com/loan/list_riskmiddle_s4_p2?Rate=18&DidIBid=on',
     )
 
@@ -61,7 +64,6 @@ class PpdaispiderSpider(InitSpider):
         """
 
         # go through link in list of riskmiddle page
-        
         for link in response.xpath("//div[@class='w230 listtitle']/a/@href").extract():
             if link in visited_link:
                 self.log("link %s is visited before" % link)
@@ -70,8 +72,6 @@ class PpdaispiderSpider(InitSpider):
                 request = scrapy.Request(link, callback=self.parse_item)
                 yield request
 
-        
-        
         pages = response.xpath("//a[@class='nextpage']/@href").extract()
         print('next page: %s' % pages)
         if len(pages) >= 1:
@@ -79,7 +79,12 @@ class PpdaispiderSpider(InitSpider):
             page_link = page_link.replace('/a/', '')
             request = scrapy.Request('http://invest.ppdai.com/%s' % page_link, callback=self.parse)
             yield request
-            
+        #go back to initial page when there is no next page
+        else:
+            time.sleep(random.uniform(4,6))
+            #request = scrapy.Request('http://invest.ppdai.com/loan/listnew?LoanCategoryId=4&CreditCodes=&ListTypes=&Rates=&Months=&AuthInfo=&BorrowCount=&didibid=&SortType=0&MinAmount=0&MaxAmount=0', callback=self.parse, dont_filter = True)
+            request = scrapy.Request(self.middle_risk_list_url, callback=self.parse, dont_filter = True)
+            yield request
 
     def parse_item(self, response):
         item = PpdaiItem()
