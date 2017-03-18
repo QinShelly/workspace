@@ -29,6 +29,13 @@ def getTimes():
    
     return int(times)
 
+def check_exists_by_xpath(webdriver,xpath):
+    try:
+        webdriver.find_element_by_xpath(xpath)
+    except NoSuchElementException:
+        return False
+    return True
+
 # ==================================================================    
 # open Firefox
 driver = webdriver.Firefox()
@@ -113,31 +120,40 @@ while True:
             bid_amount = 1000
         print "%s times" % times
         print "%s bid_amount" % bid_amount
+
         print("page open %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
+        bid_success = False
 
         try:
-            bid_success = True
             driver.get(id)
             time.sleep(random.uniform(0, 1))
             driver.implicitly_wait(10)
-            print("clear amount %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
-            driver.find_element_by_id(loan_id).click()
-            driver.find_element_by_id(loan_id).clear()
-            time.sleep(random.uniform(0, 1))
-            print("update bid amount %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
-            driver.find_element_by_id(loan_id).send_keys(bid_amount)
-            time.sleep(random.uniform(0, 1))
-            driver.implicitly_wait(10)
-            print("click submit button %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
-            driver.find_element_by_css_selector("input.subBtn.orange").click()
-            time.sleep(random.uniform(0, 1))
-            element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "btBid"))
-            )
-            # must sleep otherwise click not work
-            time.sleep(random.uniform(2, 3))
-            print("click confirm button %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
-            driver.find_element_by_id("btBid").click()
+
+            if check_exists_by_xpath(driver, "//img[@src='http://www.ppdaicdn.com/invest/2014/img/detail/mb.jpg']") == False:
+                print("clear amount %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
+                driver.find_element_by_id(loan_id).click()
+                driver.find_element_by_id(loan_id).clear()
+                time.sleep(random.uniform(0, 1))
+                
+                print("update bid amount %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
+                driver.find_element_by_id(loan_id).send_keys(bid_amount)
+                time.sleep(random.uniform(0, 1))
+                driver.implicitly_wait(10)
+
+                print("click submit button %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
+                driver.find_element_by_css_selector("input.subBtn.orange").click()
+                time.sleep(random.uniform(0, 1))
+                element = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.ID, "btBid"))
+                )
+                # must sleep otherwise click not work
+                time.sleep(random.uniform(2, 3))
+
+                print("click confirm button %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S'))
+                driver.find_element_by_id("btBid").click()
+                bid_success = True
+            else:
+                print("it's already bid by others :(")
         except NoSuchElementException,ElementNotVisibleException:
             print("it's already bid by others :(")
             bid_success = False
