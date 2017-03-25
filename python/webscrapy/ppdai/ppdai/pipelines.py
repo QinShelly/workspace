@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import sqlite3
+import time
 # import MySQLdb
 
 class PpdaiPipeline(object):
