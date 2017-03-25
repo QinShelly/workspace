@@ -36,6 +36,27 @@ def check_exists_by_xpath(webdriver,xpath):
         return False
     return True
 
+def getTimesFromBalance():
+    times = 1
+    try:
+        driver.get('http://invest.ppdai.com/account/lend')
+        balance = float(driver.find_element_by_xpath("//span[@class='my-ac-ps-yue']").text.replace(u'¥','').replace(',',''))
+        print "balance is %s" % balance
+        if balance >= 6000:
+            times = 6
+        elif balance >= 5000:
+            times = 5
+        elif balance >= 4000:
+            times = 4
+        elif balance >= 3000:
+            times = 3
+        elif balance >=1500:
+            times = 2
+        else: 
+            times = 1
+    except (UnexpectedAlertPresentException,NoSuchElementException) as e:
+        print("got Unexpected exception")
+    return times
 # ==================================================================    
 # open Firefox
 driver = webdriver.Firefox()
@@ -65,14 +86,18 @@ visited_li = []
 
 conn = sqlite3.connect('example.db')
 base_url = "http://invest.ppdai.com/"
+
+ # using ppdai.config.times cannot get update to the config when program is running
+# times = ppdai.config.times
+#times = getTimes()
+times = getTimesFromBalance()
+
 while True:
     if random.randint(1,50) == 1:
         print "running %s" % datetime.datetime.now().strftime('%b-%d-%y %H:%M:%S')
     # Get item to bid
     view_name = ppdai.config.view_name
-    # using ppdai.config.times cannot get update to the config when program is running
-    # times = ppdai.config.times
-    times = getTimes()
+   
     #sql = "select id, amount_bid from " + view_name + " where amount_bid > 0 and bid is null"
     sql = "select bidProcess.id,amount_bid from bidProcess join " + view_name + " a on bidProcess.id = a.id where processFlag is null and amount_bid > 0"
     #print sql
@@ -177,10 +202,7 @@ while True:
                     time.sleep(1)
 
         #time.sleep(2)
-        try:
-            driver.get('http://invest.ppdai.com/account/lend')
-        except UnexpectedAlertPresentException:
-            print("got Unexpected Alert exception")
+        times = getTimesFromBalance()
 
     # if not found:
     #     sql = "select count(*) from ppdai"
