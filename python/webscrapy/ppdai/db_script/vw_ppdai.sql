@@ -26,7 +26,7 @@ CASE WHEN rate >= 16 AND age <= 39
              END
        ELSE 0
   END
-  + CASE WHEN ppdai_level in ('A','B','C') AND cnt_return_on_time >= 12 
+  + CASE WHEN ppdai_level in ('A','B','C') AND cnt_return_on_time >= 13 
         AND education_level <> '无'
         --AND title NOT LIKE '%闪电%'
           THEN 50 ELSE 0 END
