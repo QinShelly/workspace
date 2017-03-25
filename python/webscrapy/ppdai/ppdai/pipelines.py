@@ -51,15 +51,16 @@ class PpdaiPipeline(object):
                    )
                   )
 
-        attempts = 0  
-        while attempts < 100:
-            try:
-                conn.commit()
-                break
-            except sqlite3.OperationalError:
-                attempts += 1
-                print("warning!!! insert new bid to db")
-                time.sleep(1)
+        conn.commit()
+        # attempts = 0  
+        # while attempts < 100:
+        #     try:
+        #         conn.commit()
+        #         break
+        #     except sqlite3.OperationalError:
+        #         attempts += 1
+        #         print("warning!!! insert new bid to db")
+        #         time.sleep(1)
 
         sql = "select amount_bid from vw_ppdai where id = '%s'" % item['id']
         print sql
