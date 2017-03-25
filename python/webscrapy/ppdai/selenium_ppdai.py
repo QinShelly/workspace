@@ -154,13 +154,7 @@ while True:
                 bid_success = True
             else:
                 print("it's already bid by others :(")
-        except NoSuchElementException,ElementNotVisibleException:
-            print("it's already bid by others :(")
-            bid_success = False
-        except UnexpectedAlertPresentException:
-            print("it's already bid by others :(")
-            bid_success = False
-        except TimeoutException:
+        except (NoSuchElementException,UnexpectedAlertPresentException,TimeoutException) as e :
             print("it's already bid by others :(")
             bid_success = False
 
