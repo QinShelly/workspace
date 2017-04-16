@@ -43,18 +43,20 @@ def getTimesFromBalance():
         balance = float(driver.find_element_by_xpath("//span[@class='my-ac-ps-yue']").text.replace(u'¥','').replace(',',''))
         print "balance is %s" % balance
         if balance >= 6000:
-            times = 6
+            times = 7
         elif balance >= 5000:
-            times = 5
+            times = 6
         elif balance >= 4000:
-            times = 4
+            times = 5
         elif balance >= 3000:
+            times = 4
+        elif balance >= 2000:
             times = 3
         elif balance >=1500:
             times = 2
         else: 
             times = 1
-    except (UnexpectedAlertPresentException,NoSuchElementException) as e:
+    except (UnexpectedAlertPresentException,NoSuchElementException,TimeoutException) as e:
         print("got Unexpected exception")
     return times
 # ==================================================================    
