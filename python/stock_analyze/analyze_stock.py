@@ -16,7 +16,7 @@ parsed_args = parser.parse_args()
 
 file = "%s.csv" % parsed_args.stockid
 if parsed_args.feature:
-	df = ts.get_h_data(sys.argv[1],start='2015-01-01') #一次性获取全部日k线数据
+	df = ts.get_h_data(sys.argv[1],start='2016-01-01') #一次性获取全部日k线数据
 	df.to_csv(file)
 
 df = pd.read_csv(file)
